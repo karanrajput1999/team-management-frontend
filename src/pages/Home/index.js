@@ -1,29 +1,20 @@
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
-import BreadCrumb from "../../Components/Common/BreadCrumb";
-import comingsoon from "../../assets/images/comingsoon.png";
 
 const Home = () => {
-  document.title = "Home ";
+  document.title = "Home";
   return (
     <React.Fragment>
-      <div className="page-content bg-primary">
-        <Container fluid>
-          <BreadCrumb title="Home" pageTitle="Dashboard" />
-          <Row>
-            <Col xs={12}>
-              <div className="text-center mt-sm-5 pt-4 mb-4 ">
-                <div className="mb-sm-5 pb-sm-4 pb-5">
-                  <img
-                    src={comingsoon}
-                    alt=""
-                    height="120"
-                    className="move-animation"
-                  />
-                </div>
-                <div className="mb-5">
-                  <h1 className="display-2 coming-soon-text">Coming Soon</h1>
-                </div>
+      <div className="page-content">
+        <Container>
+          <Row className="justify-content-center align-items-center">
+            <Col lg={8} sm={10}>
+              <div className="text-center mt-lg-5 pt-5">
+                <h1 className="display-6 fw-semibold mb-3 lh-base">
+                  Welcome to{" "}
+                  <span className="text-success">Credit Card CRM </span>
+                </h1>
+                <p className="lead lh-base">BY WebWers</p>
               </div>
             </Col>
           </Row>

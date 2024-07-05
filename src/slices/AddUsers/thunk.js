@@ -39,25 +39,26 @@ export const createCenterUser = createAsyncThunk(
 
 export const updateCenterUser = createAsyncThunk(
   "addUsers/updateCenterUser",
-  async ({ userId, values }) => {
+  async (data) => {
     try {
-      const response = await updateCenterUserApi(userId, values);
+      console.log("WHILE DELETING THE USER ->", data);
+      const response = await updateCenterUserApi(data);
       return response;
     } catch (error) {
-      console.log("error inside remove user thunk", error);
+      console.log("error inside update user thunk", error);
     }
   }
 );
 
-export const removeCenterUser = createAsyncThunk(
-  "addUsers/removeCenterUser",
-  async ({ userId }) => {
-    try {
-      const response = await removeCenterUserApi(userId);
+// export const removeCenterUser = createAsyncThunk(
+//   "addUsers/removeCenterUser",
+//   async ({ userId }) => {
+//     try {
+//       const response = await removeCenterUserApi(userId);
 
-      return response.data.deletedUser;
-    } catch (error) {
-      console.log("error inside remove user thunk", error);
-    }
-  }
-);
+//       return response.data.deletedUser;
+//     } catch (error) {
+//       console.log("error inside remove user thunk", error);
+//     }
+//   }
+// );

@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 export const initialState = {
-  users: [],
+  centerUsers: [],
   alreadyRegisteredError: null,
   error: "",
 };
@@ -23,7 +23,7 @@ const usersSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.users = action.payload?.data.users;
+        state.centerUsers = action.payload?.data.users;
         state.error = "";
       }
     });
@@ -33,7 +33,7 @@ const usersSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        state.users = [...state.users, action.payload.data];
+        state.centerUsers = [...state.centerUsers, action.payload.data];
         state.alreadyRegisteredError = null;
         state.error = "";
         toast.success("Center user has been added !", {
@@ -49,39 +49,52 @@ const usersSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const updatedCenterUserId = action.payload.data.updatedCenterUser.id;
-        state.users = state.users.map((user) => {
-          if (user.id == updatedCenterUserId) {
-            user = action.payload.data.updatedCenterUser;
-            return user;
-          } else {
-            return user;
-          }
-        });
+        const updatedCenterUser = action.payload?.data?.updatedCenterUser;
 
-        state.alreadyRegisteredError = null;
-        state.error = "";
+        if (updatedCenterUser.status === 0) {
+          state.centerUsers = state.centerUsers.filter(
+            (user) => user.id !== updatedCenterUser.id
+          );
+          state.error = "";
+          toast.error("Center user has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.centerUsers = state.centerUsers.map((user) => {
+            if (user.id == updatedCenterUser.id) {
+              user = action.payload.data.updatedCenterUser;
+              return user;
+            } else {
+              return user;
+            }
+          });
 
-        toast.success("Center User details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          state.alreadyRegisteredError = null;
+          state.error = "";
+
+          toast.success("Center User details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeCenterUser.fulfilled, (state, action) => {
-      const deletedCenterUserId = action.payload.id;
-      state.users = state.users.filter(
-        (user) => user.id !== deletedCenterUserId
-      );
-      state.error = "";
-      toast.error("Center user has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    // builder.addCase(removeCenterUser.fulfilled, (state, action) => {
+    //   const deletedCenterUserId = action.payload.id;
+    //   state.centerUsers = state.centerUsers.filter(
+    //     (user) => user.id !== deletedCenterUserId
+    //   );
+    //   state.error = "";
+    //   toast.error("Center user has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 

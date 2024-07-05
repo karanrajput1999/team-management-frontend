@@ -58,39 +58,52 @@ const centersSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const updatedCenterId = action.payload.data.updatedCenter.id;
-        state.centers = state.centers.map((center) => {
-          if (center.id == updatedCenterId) {
-            center = action.payload.data.updatedCenter;
-            return center;
-          } else {
-            return center;
-          }
-        });
+        const updatedCenter = action.payload.data.updatedCenter;
 
-        state.alreadyRegisteredError = null;
-        state.error = "";
+        if (updatedCenter.status === 0) {
+          state.centers = state.centers.filter(
+            (center) => center.id !== updatedCenter.id
+          );
+          state.error = "";
+          toast.error("Center has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.centers = state.centers.map((center) => {
+            if (center.id == updatedCenter.id) {
+              center = action.payload.data.updatedCenter;
+              return center;
+            } else {
+              return center;
+            }
+          });
 
-        toast.success("Centers details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          state.alreadyRegisteredError = null;
+          state.error = "";
+
+          toast.success("Centers details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeCenter.fulfilled, (state, action) => {
-      const deletedCenterId = action.payload.deletedCenter.id;
-      state.centers = state.centers.filter(
-        (center) => center.id !== deletedCenterId
-      );
-      state.error = "";
-      toast.error("Center has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    // builder.addCase(removeCenter.fulfilled, (state, action) => {
+    //   const deletedCenterId = action.payload.deletedCenter.id;
+    //   state.centers = state.centers.filter(
+    //     (center) => center.id !== deletedCenterId
+    //   );
+    //   state.error = "";
+    //   toast.error("Center has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 

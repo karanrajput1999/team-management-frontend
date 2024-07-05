@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function AddUserFormModal({
   modal_list, // modal state
@@ -33,6 +33,16 @@ function AddUserFormModal({
   let CenterOptions = centers?.map((center) => {
     return { value: center.centerName, label: center.centerName };
   });
+
+  useEffect(() => {
+    if (isEditingUser) {
+      const centerName = CenterOptions.find(
+        (option) => option.value === validation.values.centerName
+      );
+
+      setSelectedSingleCenterName(centerName);
+    }
+  }, [isEditingUser]);
 
   return (
     <Modal
@@ -231,7 +241,7 @@ function AddUserFormModal({
               name="age"
               className="form-control"
               placeholder="Enter age"
-              type="text"
+              type="number"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.age || ""}
@@ -313,7 +323,7 @@ function AddUserFormModal({
               name="password"
               className="form-control"
               placeholder="Enter Password"
-              type="password"
+              type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.password || ""}

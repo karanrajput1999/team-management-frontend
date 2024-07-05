@@ -513,18 +513,18 @@ export const createCenter = (data) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/center/create`, data);
 };
 
-export const updateCenter = (centerId, data) => {
+export const updateCenter = (centerId, data, status) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/edit`,
-    data
+    { ...data, status }
   );
 };
 
-export const removeCenter = (centerId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/delete`
-  );
-};
+// export const removeCenter = (centerId) => {
+//   return api.delete(
+//     `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/delete`
+//   );
+// };
 
 // *****************************************************************
 // *********************** BANK CODE *******************************
@@ -541,27 +541,24 @@ export const createBankCode = (data) => {
   );
 };
 
-export const updateBankCode = (bankCodeId, data) => {
-  console.log("BANK CODE UPDATE API CALL ->", bankCodeId, data);
+export const updateBankCode = (bankCodeId, data, status) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/bank-code/${bankCodeId}/edit`,
-    data
+    { ...data, status }
   );
 };
 
-export const removeBankCode = (bankCodeId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/bank-code/${bankCodeId}/delete`
-  );
-};
+// export const removeBankCode = (bankCodeId) => {
+//   return api.delete(
+//     `${process.env.REACT_APP_SERVER_URL}/bank-code/${bankCodeId}/delete`
+//   );
+// };
 
 // *****************************************************************
 // *********************** CENTER USERS ****************************
 // *****************************************************************
-export const getCenterUsers = ({ centerId }) => {
-  return api.get(
-    `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/center-users`
-  );
+export const getCenterUsers = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/center/center-users`);
 };
 
 export const createCenterUser = (data) => {
@@ -571,18 +568,28 @@ export const createCenterUser = (data) => {
   );
 };
 
-export const updateCenterUser = (centerId, centerUserId, data) => {
+export const updateCenterUser = ({
+  centerId,
+  centerUserId,
+  branchId,
+  status,
+  values,
+}) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/center-user/${centerUserId}/edit`,
-    data
+    {
+      ...values,
+      branchId,
+      status,
+    }
   );
 };
 
-export const removeCenterUser = (centerId, centerUserId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/center-user/${centerUserId}/delete`
-  );
-};
+// export const removeCenterUser = (centerId, centerUserId) => {
+//   return api.delete(
+//     `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/center-user/${centerUserId}/delete`
+//   );
+// };
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>

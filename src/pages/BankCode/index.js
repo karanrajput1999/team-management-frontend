@@ -297,7 +297,8 @@ const BankCode = () => {
         setmodal_delete={setmodal_delete}
         tog_delete={tog_delete}
         handleDeleteCenter={() => {
-          dispatch(removeBankCode({ bankCodeId: listBankCodeId }));
+          // dispatch(removeBankCode({ bankCodeId: listBankCodeId }));
+          dispatch(updateBankCode({ bankCodeId: listBankCodeId, status: 0 }));
           setmodal_delete(false);
         }}
       />

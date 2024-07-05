@@ -44,11 +44,14 @@ const AddUsers = () => {
   // delete user confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
-  const [listUserId, setListUserId] = useState(null);
+  // const [listUserId, setListUserId] = useState(null);
+  //
+  const [listUser, setListUser] = useState(null);
   // fetching all the roles
   const [roles, setRoles] = useState([]);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+  const { centerUsers } = useSelector((state) => state.AddUsers);
   const { centers } = useSelector((state) => state.Centers);
 
   const dispatch = useDispatch();
@@ -86,21 +89,22 @@ const AddUsers = () => {
   useEffect(() => {
     dispatch(getUsers());
     dispatch(getCenters());
+    dispatch(getCenterUsers());
   }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
     initialValues: {
+      name: "",
+      email: "",
+      password: "",
       centerName: "",
       userType: "",
-      name: "",
       mobileNumber: "",
-      email: "",
       location: "",
       age: "",
       aadharNumber: "",
       panNo: "",
-      password: "",
     },
     validationSchema: Yup.object({
       centerName: Yup.string().required("Please center name"),
@@ -109,18 +113,35 @@ const AddUsers = () => {
       mobileNumber: Yup.string().required("Please enter mobile number"),
       email: Yup.string().required("Please enter email"),
       location: Yup.string().required("Please enter select location"),
-      age: Yup.string().required("Please enter age"),
+      age: Yup.number().required("Please enter age"),
       aadharNumber: Yup.string().required("Please enter aadhar card"),
       panNo: Yup.string().required("Please enter pan card"),
       password: Yup.string().required("Please enter Password"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm, setFieldValue }) => {
+      const selectedCenter = centers?.find(
+        (center) => center.centerName == values.centerName
+      );
+
       isEditingUser
-        ? dispatch(updateCenterUser({ values, userId: listUserId }))
-        : dispatch(createCenterUser(values));
-      // isEditingUser
-      //   ? dispatch(updateUser({ values, userId: listUserId }))
-      //   : dispatch(createUser(values));
+        ? dispatch(
+            updateCenterUser({
+              values,
+              centerUserId: listUser.id,
+              centerId: selectedCenter.id,
+              branchId: selectedCenter.branchId,
+            })
+          )
+        : dispatch(
+            createCenterUser({
+              ...values,
+              centerId: selectedCenter.id,
+              branchId: selectedCenter.branchId,
+            })
+          );
+
+      setFieldValue("centerName", "");
+      resetForm();
     },
   });
 
@@ -142,16 +163,19 @@ const AddUsers = () => {
   function handleEditUser(userData) {
     setIsEditingUser(true);
     setmodal_list(!modal_list);
-    setListUserId(userData.id);
-
-    // setting the value of role according to roleId because in select element roleId is used as value
-    const roleName = roles.find((role) => role.id === userData.roleId);
+    setListUser(userData);
 
     validation.setValues({
-      name: userData.username,
+      name: userData.name,
       email: userData.email,
       password: userData.password,
-      roleId: roleName.id,
+      userType: userData.userType,
+      mobileNumber: userData.mobileNumber,
+      location: userData.location,
+      age: userData.age,
+      aadharNumber: userData.aadharNumber,
+      panNo: userData.panNo,
+      centerName: userData.centerName,
     });
   }
 
@@ -248,62 +272,86 @@ const AddUsers = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {/* {users?.map((user) => ( */}
-                          <tr>
-                            <th scope="row">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  name="checkAll"
-                                  value="option1"
-                                />
-                              </div>
-                            </th>
-                            <td className="id">
-                              <Link to="#" className="fw-medium link-primary">
-                                1
-                              </Link>
-                            </td>
-                            <td className="name">someone</td>
-                            <td className="email">someone@gmail.com </td>
-                            <td className="password">123456</td>
-                            <td className="location">Noida</td>
-                            <td className="branch_id">ABSACC</td>
-                            <td className="type">Manager</td>
-                            <td className="user_status">Active</td>
+                          {centerUsers?.map((user) => (
+                            <tr key={user.id}>
+                              <th scope="row">
+                                <div className="form-check">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    name="checkAll"
+                                    value="option1"
+                                  />
+                                </div>
+                              </th>
+                              <td className="id">
+                                <Link to="#" className="fw-medium link-primary">
+                                  {user.id}
+                                </Link>
+                              </td>
+                              <td className="name">{user.name}</td>
+                              <td className="email">{user.email} </td>
+                              <td className="password">{user.password}</td>
+                              <td className="location">{user.location}</td>
+                              <td className="branch_id">{user.branchId}</td>
+                              <td className="type">
+                                {
+                                  roles?.find(
+                                    (role) => role.id === user.userType
+                                  )?.name
+                                }
+                              </td>
+                              <td className="user_status">
+                                {user?.status === 1 ? (
+                                  <button
+                                    type="button"
+                                    className="btn btn-ghost-success waves-effect waves-light"
+                                  >
+                                    {" "}
+                                    Activate
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="btn btn-ghost-danger waves-effect waves-light"
+                                  >
+                                    {" "}
+                                    Deactivate
+                                  </button>
+                                )}
+                              </td>
 
-                            <td>
-                              <div className="d-flex gap-2">
-                                <div className="edit">
-                                  <button
-                                    className="btn btn-sm btn-primary edit-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#showModal"
-                                    onClick={() => {
-                                      // handleEditUser(user);
-                                    }}
-                                  >
-                                    Edit
-                                  </button>
+                              <td>
+                                <div className="d-flex gap-2">
+                                  <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-primary edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => {
+                                        handleEditUser(user);
+                                      }}
+                                    >
+                                      Edit
+                                    </button>
+                                  </div>
+                                  <div className="remove">
+                                    <button
+                                      className="btn btn-sm btn-danger remove-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#deleteRecordModal"
+                                      onClick={() => {
+                                        setListUser(user);
+                                        setmodal_delete(true);
+                                      }}
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
                                 </div>
-                                <div className="remove">
-                                  <button
-                                    className="btn btn-sm btn-danger remove-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteRecordModal"
-                                    onClick={() => {
-                                      // setListUserId(user.id);
-                                      // setmodal_delete(true);
-                                    }}
-                                  >
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          {/* ))} */}
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>
@@ -365,7 +413,19 @@ const AddUsers = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteUser={() => {
-          dispatch(removeUser({ userId: listUserId }));
+          console.log("WHILE DELETING USER ->", {
+            centerId: listUser.centerId,
+            centerUserId: listUser.id,
+            status: 0,
+          });
+
+          dispatch(
+            updateCenterUser({
+              centerId: listUser.centerId,
+              centerUserId: listUser.id,
+              status: 0,
+            })
+          );
           setmodal_delete(false);
         }}
       />

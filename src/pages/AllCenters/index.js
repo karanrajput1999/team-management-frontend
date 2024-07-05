@@ -243,8 +243,8 @@ const AllCenters = () => {
                               </td>
                               <td className="email_id">{center?.emailId}</td>
                               <td className="password">{center?.password}</td>
-                              <td className="password">{center?.branchId}</td>
-                              <td className="password">
+                              <td className="branchId">{center?.branchId}</td>
+                              <td className="status">
                                 {center?.status === 1 ? (
                                   <button
                                     type="button"
@@ -336,7 +336,9 @@ const AllCenters = () => {
         setmodal_delete={setmodal_delete}
         tog_delete={tog_delete}
         handleDeleteCenter={() => {
-          dispatch(removeCenter({ centerId: listCenterId }));
+          // dispatch(removeCenter({ centerId: listCenterId }));
+          dispatch(updateCenter({ centerId: listCenterId, status: 0 }));
+
           setmodal_delete(false);
         }}
       />

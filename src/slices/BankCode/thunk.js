@@ -34,9 +34,9 @@ export const createBankCode = createAsyncThunk(
 
 export const updateBankCode = createAsyncThunk(
   "bankCode/updateBankCode",
-  async ({ bankCodeId, values }) => {
+  async ({ bankCodeId, values, status }) => {
     try {
-      const response = await updateBankCodeApi(bankCodeId, values);
+      const response = await updateBankCodeApi(bankCodeId, values, status);
       return response;
     } catch (error) {
       console.log("error inside update bank code thunk", error);
@@ -44,15 +44,15 @@ export const updateBankCode = createAsyncThunk(
   }
 );
 
-export const removeBankCode = createAsyncThunk(
-  "bankCode/removeBankCode",
-  async ({ bankCodeId }) => {
-    try {
-      const response = await removeBankCodeApi(bankCodeId);
+// export const removeBankCode = createAsyncThunk(
+//   "bankCode/removeBankCode",
+//   async ({ bankCodeId }) => {
+//     try {
+//       const response = await removeBankCodeApi(bankCodeId);
 
-      return response.data;
-    } catch (error) {
-      console.log("error inside remove bank code thunk", error);
-    }
-  }
-);
+//       return response.data;
+//     } catch (error) {
+//       console.log("error inside remove bank code thunk", error);
+//     }
+//   }
+// );

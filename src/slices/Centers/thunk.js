@@ -33,9 +33,9 @@ export const createCenter = createAsyncThunk(
 
 export const updateCenter = createAsyncThunk(
   "centers/updateCenter",
-  async ({ centerId, values }) => {
+  async ({ centerId, values, status }) => {
     try {
-      const response = await updateCenterApi(centerId, values);
+      const response = await updateCenterApi(centerId, values, status);
       return response;
     } catch (error) {
       console.log("error inside update center thunk", error);
@@ -43,15 +43,15 @@ export const updateCenter = createAsyncThunk(
   }
 );
 
-export const removeCenter = createAsyncThunk(
-  "centers/removeCenter",
-  async ({ centerId }) => {
-    try {
-      const response = await removeCenterApi(centerId);
+// export const removeCenter = createAsyncThunk(
+//   "centers/removeCenter",
+//   async ({ centerId }) => {
+//     try {
+//       const response = await removeCenterApi(centerId);
 
-      return response.data;
-    } catch (error) {
-      console.log("error inside remove center thunk", error);
-    }
-  }
-);
+//       return response.data;
+//     } catch (error) {
+//       console.log("error inside remove center thunk", error);
+//     }
+//   }
+// );

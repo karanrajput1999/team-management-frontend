@@ -64,41 +64,52 @@ const bankCodesSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const updatedBankCodeId = action.payload.data.updatedBankCode.id;
-        state.bankCodes = state.bankCodes.map((bankCode) => {
-          if (bankCode.id == updatedBankCodeId) {
-            bankCode = action.payload.data.updatedBankCode;
-            return bankCode;
-          } else {
-            return bankCode;
-          }
-        });
+        const updatedBankCode = action.payload.data.updatedBankCode;
 
-        console.log("UPDATED BANK CODE ID ->", updatedBankCodeId);
+        if (updatedBankCode.status === 0) {
+          state.bankCodes = state.bankCodes.filter(
+            (bankCode) => bankCode.id !== updatedBankCode.id
+          );
+          state.error = "";
+          toast.error("Bank Code has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.bankCodes = state.bankCodes.map((bankCode) => {
+            if (bankCode.id == updatedBankCode.id) {
+              bankCode = updatedBankCode;
+              return bankCode;
+            } else {
+              return bankCode;
+            }
+          });
 
-        state.alreadyRegisteredError = null;
-        state.error = "";
+          state.alreadyRegisteredError = null;
+          state.error = "";
 
-        toast.success("Bank code details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          toast.success("Bank code details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeBankCode.fulfilled, (state, action) => {
-      const deletedBankCodeId = action.payload.deletedBankCode.id;
-      state.bankCodes = state.bankCodes.filter(
-        (bankCode) => bankCode.id !== deletedBankCodeId
-      );
-      state.error = "";
-      toast.error("Bank Code has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    // builder.addCase(removeBankCode.fulfilled, (state, action) => {
+    //   const deletedBankCodeId = action.payload.deletedBankCode.id;
+    //   state.bankCodes = state.bankCodes.filter(
+    //     (bankCode) => bankCode.id !== deletedBankCodeId
+    //   );
+    //   state.error = "";
+    //   toast.error("Bank Code has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 
