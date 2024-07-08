@@ -191,34 +191,16 @@ const AllCenters = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="id">
-                              ID
-                            </th>
-                            <th className="sort" data-sort="center_name">
-                              Center Name
-                            </th>
-                            <th className="sort" data-sort="owner_name">
-                              Owner Name
-                            </th>
-                            <th className="sort" data-sort="phone_number">
-                              Phone Number
-                            </th>
-                            <th className="sort" data-sort="email_id">
-                              Email ID
-                            </th>
-                            <th className="sort" data-sort="phone_number">
-                              Password
-                            </th>
-                            <th className="sort" data-sort="phone_number">
-                              Branch Id
-                            </th>
-                            <th className="sort" data-sort="phone_number">
-                              Status
-                            </th>
+                            <th>ID</th>
+                            <th>Center Name</th>
+                            <th>Owner Name</th>
+                            <th>Phone Number</th>
+                            <th>Email ID</th>
+                            <th>Password</th>
+                            <th>Branch Id</th>
+                            <th>Status</th>
 
-                            <th className="sort" data-sort="action">
-                              Action
-                            </th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">

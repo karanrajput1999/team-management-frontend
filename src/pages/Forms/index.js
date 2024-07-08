@@ -5,6 +5,7 @@ import {
   Col,
   Container,
   Form,
+  FormFeedback,
   Input,
   Label,
   Nav,
@@ -20,6 +21,15 @@ import { Link } from "react-router-dom";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
+import {
+  employeeOptions,
+  bankOptions,
+  clientTypeOptions,
+} from "../../common/data/Forms";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { createForm } from "../../slices/Form/thunk";
+import { useDispatch } from "react-redux";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -29,6 +39,16 @@ const Forms = () => {
 
   const [selectedSingleClientType, setSelectedSingleClientType] =
     useState(null);
+
+  const [arrowNavTab, setarrowNavTab] = useState("1");
+
+  const dispatch = useDispatch();
+
+  const arrowNavToggle = (tab) => {
+    if (arrowNavTab !== tab) {
+      setarrowNavTab(tab);
+    }
+  };
 
   function handleSelectSingleEmployeeName(employeeName) {
     setSelectedSingleEmployeeName(employeeName);
@@ -40,54 +60,58 @@ const Forms = () => {
     setSelectedSingleClientType(clientType);
   }
 
-  const employeeOptions = [
-    {
-      value: "Already Applied",
-      label: "Already Applied",
+  // formik setup
+  const validation = useFormik({
+    initialValues: {
+      fullName: "",
+      mobileNo: "",
+      email: "",
+      dob: "",
+      panNo: "",
+      fatherName: "",
+      motherName: "",
+      disposition: "",
+      currentAddress: "",
+      pinCode: "",
+      companyName: "",
+      income: "",
+      bankName: "",
+      clientType: "",
     },
-    {
-      value: "Client Denied",
-      label: "Client Denied",
+    validationSchema: Yup.object({
+      fullName: Yup.string().required("Please enter full name"),
+      mobileNo: Yup.string().required("Please enter mobile no"),
+      email: Yup.string().required("Please enter email"),
+      dob: Yup.string().required("Please enter date of birth"),
+      panNo: Yup.string().required("Please enter pan no"),
+      fatherName: Yup.string().required("Please enter father name"),
+      motherName: Yup.string().required("Please enter mother name"),
+      disposition: Yup.string().required("Please select disposition"),
+      currentAddress: Yup.string().required("Please enter current address"),
+      pinCode: Yup.number().required("Please enter pin code"),
+      companyName: Yup.string().required("Please enter company name"),
+      income: Yup.number().required("Please enter income"),
+      bankName: Yup.string().required("Please enter bank name"),
+      clientType: Yup.string().required("Please select client type"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      dispatch(createForm(values));
+
+      setSelectedSingleEmployeeName(null);
+      setSelectedSingleBank(null);
+      setSelectedSingleClientType(null);
+
+      resetForm();
     },
-    {
-      value: "Link Sent",
-      label: "Link Sent",
-    },
-  ];
-  const bankOptions = [
-    {
-      value: "Axis Bank",
-      label: "Axis Bank",
-    },
-    {
-      value: "HDFC Bank",
-      label: "HDFC Bank",
-    },
-    {
-      value: "AU Bank",
-      label: "AU Bank",
-    },
-  ];
-  const clientTypeOptions = [
-    {
-      value: "Salaried",
-      label: "Salaried",
-    },
-    {
-      value: "Self Employed",
-      label: "Self Employed",
-    },
-    {
-      value: "Business Man",
-      label: "Business Man",
-    },
-  ];
-  const [arrowNavTab, setarrowNavTab] = useState("1");
-  const arrowNavToggle = (tab) => {
-    if (arrowNavTab !== tab) {
-      setarrowNavTab(tab);
-    }
-  };
+  });
+
+  function formHandleSubmit(e) {
+    e.preventDefault();
+
+    validation.handleSubmit();
+
+    return false;
+  }
 
   document.title = "Forms";
   return (
@@ -164,38 +188,38 @@ const Forms = () => {
                           <Card>
                             <CardBody>
                               <div className="live-preview">
-                                <Form>
+                                <Form onSubmit={formHandleSubmit}>
                                   <Row>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="firstNameinput"
+                                          htmlFor="disposition"
                                           className="form-label text-muted"
                                         >
-                                          Employee Name
+                                          Disposition
                                         </Label>
                                         <Select
-                                          id="centerName"
-                                          name="centerName"
+                                          id="disposition"
+                                          name="disposition"
                                           value={selectedSingleEmployeeName}
                                           onChange={(employeeName) => {
                                             handleSelectSingleEmployeeName(
                                               employeeName
                                             );
-                                            // validation.setFieldValue(
-                                            //   "centerName",
-                                            //   centerName.value
-                                            // );
+                                            validation.setFieldValue(
+                                              "disposition",
+                                              employeeName.value
+                                            );
                                           }}
                                           options={employeeOptions}
-                                          placeholder="Employee Name"
+                                          placeholder="Disposition"
                                         />
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="lastNameinput"
+                                          htmlFor="bankName"
                                           className="form-label text-muted"
                                         >
                                           Bank Name
@@ -208,10 +232,10 @@ const Forms = () => {
                                             handleSelectSingleBankName(
                                               bankName
                                             );
-                                            // validation.setFieldValue(
-                                            //   "centerName",
-                                            //   centerName.value
-                                            // );
+                                            validation.setFieldValue(
+                                              "bankName",
+                                              bankName.value
+                                            );
                                           }}
                                           options={bankOptions}
                                           placeholder="Bank Name"
@@ -221,7 +245,7 @@ const Forms = () => {
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="compnayNameinput"
+                                          htmlFor="clientType"
                                           className="form-label text-muted"
                                         >
                                           Client Type
@@ -234,10 +258,10 @@ const Forms = () => {
                                             handleSelectSingleClientType(
                                               clientType
                                             );
-                                            // validation.setFieldValue(
-                                            //   "centerName",
-                                            //   centerName.value
-                                            // );
+                                            validation.setFieldValue(
+                                              "clientType",
+                                              clientType.value
+                                            );
                                           }}
                                           options={clientTypeOptions}
                                           placeholder="Client Type"
@@ -247,80 +271,170 @@ const Forms = () => {
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="phonenumberInput"
+                                          htmlFor="fullName"
                                           className="form-label text-muted"
                                         >
                                           Full Name
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="fullName"
+                                          name="fullName"
                                           className="form-control"
-                                          placeholder="Enter full name"
-                                          id="phonenumberInput"
+                                          placeholder="Enter Full Name"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.fullName || ""
+                                          }
+                                          invalid={
+                                            validation.touched.fullName &&
+                                            validation.errors.fullName
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.fullName &&
+                                        validation.errors.fullName ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.fullName}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="emailidInput"
+                                          htmlFor="mobileNo"
                                           className="form-label text-muted"
                                         >
                                           Mobile Number
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="mobileNo"
+                                          name="mobileNo"
                                           className="form-control"
-                                          placeholder="999999999"
-                                          id="emailidInput"
+                                          placeholder="Enter Mobile No"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.mobileNo || ""
+                                          }
+                                          invalid={
+                                            validation.touched.mobileNo &&
+                                            validation.errors.mobileNo
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.mobileNo &&
+                                        validation.errors.mobileNo ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.mobileNo}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="address1ControlTextarea"
+                                          htmlFor="currentAddress"
                                           className="form-label text-muted"
                                         >
                                           Current Address
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="currentAddress"
+                                          name="currentAddress"
                                           className="form-control"
-                                          placeholder="Address 1"
-                                          id="address1ControlTextarea"
+                                          placeholder="Enter Current Address"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.currentAddress ||
+                                            ""
+                                          }
+                                          invalid={
+                                            validation.touched.currentAddress &&
+                                            validation.errors.currentAddress
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.currentAddress &&
+                                        validation.errors.currentAddress ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.currentAddress}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="pinCode"
                                           className="form-label text-muted"
                                         >
                                           Pin Code
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="pinCode"
+                                          name="pinCode"
                                           className="form-control"
-                                          placeholder="Enter pin code"
-                                          id="citynameInput"
+                                          placeholder="Enter Pin Code"
+                                          type="number"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.pinCode || ""
+                                          }
+                                          invalid={
+                                            validation.touched.pinCode &&
+                                            validation.errors.pinCode
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.pinCode &&
+                                        validation.errors.pinCode ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.pinCode}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="ForminputState"
+                                          htmlFor="dob"
                                           className="form-label text-muted"
                                         >
                                           Client DOB
                                         </Label>
                                         <Flatpickr
+                                          id="dob"
+                                          name="dob"
                                           className="form-control border dash-filter-picker"
-                                          placeholder="Date Range"
+                                          placeholder="Choose DOB"
                                           options={{
-                                            dateFormat: "d M, Y",
+                                            dateFormat: "d/m/Y",
+                                            defaultDate:
+                                              validation.values.dob || "",
+                                          }}
+                                          onChange={(date) => {
+                                            const formattedDate = new Date(
+                                              date
+                                            ).toLocaleDateString("en-GB");
+                                            validation.setFieldValue(
+                                              "dob",
+                                              formattedDate
+                                            );
                                           }}
                                         />
                                       </div>
@@ -328,113 +442,241 @@ const Forms = () => {
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="motherName"
                                           className="form-label text-muted"
                                         >
                                           Mother Name
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="motherName"
+                                          name="motherName"
                                           className="form-control"
-                                          placeholder="Enter mother name"
-                                          id="citynameInput"
+                                          placeholder="Enter Mother Name"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.motherName || ""
+                                          }
+                                          invalid={
+                                            validation.touched.motherName &&
+                                            validation.errors.motherName
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.motherName &&
+                                        validation.errors.motherName ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.motherName}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="fatherName"
                                           className="form-label text-muted"
                                         >
                                           Father Name
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="fatherName"
+                                          name="fatherName"
                                           className="form-control"
-                                          placeholder="Enter father name"
-                                          id="citynameInput"
+                                          placeholder="Enter Father Name"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.fatherName || ""
+                                          }
+                                          invalid={
+                                            validation.touched.fatherName &&
+                                            validation.errors.fatherName
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.fatherName &&
+                                        validation.errors.fatherName ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.fatherName}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="companyName"
                                           className="form-label text-muted"
                                         >
                                           Company Name
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="companyName"
+                                          name="companyName"
                                           className="form-control"
-                                          placeholder="Enter company name"
-                                          id="citynameInput"
+                                          placeholder="Enter Company Name"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.companyName || ""
+                                          }
+                                          invalid={
+                                            validation.touched.companyName &&
+                                            validation.errors.companyName
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.companyName &&
+                                        validation.errors.companyName ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.companyName}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="companyAddress"
                                           className="form-label text-muted"
                                         >
                                           Company Address
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="companyAddress"
+                                          name="companyAddress"
                                           className="form-control"
-                                          placeholder="Enter company address"
-                                          id="citynameInput"
+                                          placeholder="Enter Company Address"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={
+                                            validation.values.companyAddress ||
+                                            ""
+                                          }
+                                          invalid={
+                                            validation.touched.companyAddress &&
+                                            validation.errors.companyAddress
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.companyAddress &&
+                                        validation.errors.companyAddress ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.companyAddress}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="income"
                                           className="form-label text-muted"
                                         >
                                           Salary/Gross Income
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="income"
+                                          name="income"
                                           className="form-control"
-                                          placeholder="Enter income"
-                                          id="citynameInput"
+                                          placeholder="Enter Income"
+                                          type="number"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={validation.values.income || ""}
+                                          invalid={
+                                            validation.touched.income &&
+                                            validation.errors.income
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.income &&
+                                        validation.errors.income ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.income}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="email"
                                           className="form-label text-muted"
                                         >
                                           Official Email Id
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="email"
+                                          name="email"
                                           className="form-control"
-                                          placeholder="Enter email id"
-                                          id="citynameInput"
+                                          placeholder="Enter Income"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={validation.values.email || ""}
+                                          invalid={
+                                            validation.touched.email &&
+                                            validation.errors.email
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.email &&
+                                        validation.errors.email ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.email}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="citynameInput"
+                                          htmlFor="panNo"
                                           className="form-label text-muted"
                                         >
                                           Pan Card Number
                                         </Label>
                                         <Input
-                                          type="text"
+                                          id="panNo"
+                                          name="panNo"
                                           className="form-control"
-                                          placeholder="Enter Pan no"
-                                          id="citynameInput"
+                                          placeholder="Enter Pan No"
+                                          type="text"
+                                          onChange={validation.handleChange}
+                                          onBlur={validation.handleBlur}
+                                          value={validation.values.panNo || ""}
+                                          invalid={
+                                            validation.touched.panNo &&
+                                            validation.errors.panNo
+                                              ? true
+                                              : false
+                                          }
                                         />
+
+                                        {validation.touched.panNo &&
+                                        validation.errors.panNo ? (
+                                          <FormFeedback type="invalid">
+                                            {validation.errors.panNo}
+                                          </FormFeedback>
+                                        ) : null}
                                       </div>
                                     </Col>
                                     <Col md={12}>

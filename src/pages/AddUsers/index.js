@@ -241,34 +241,16 @@ const AddUsers = () => {
                                 />
                               </div>
                             </th>
-                            <th className="sort" data-sort="id">
-                              ID
-                            </th>
-                            <th className="sort" data-sort="name">
-                              Name
-                            </th>
-                            <th className="sort" data-sort="email">
-                              Email
-                            </th>
-                            <th className="sort" data-sort="password">
-                              Password
-                            </th>
-                            <th className="sort" data-sort="location">
-                              Location
-                            </th>
-                            <th className="sort" data-sort="branch_id">
-                              Branch ID
-                            </th>
-                            <th className="sort" data-sort="type">
-                              Type
-                            </th>
-                            <th className="sort" data-sort="user_status">
-                              User Status
-                            </th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Location</th>
+                            <th>Branch ID</th>
+                            <th>Type</th>
+                            <th>User Status</th>
 
-                            <th className="sort" data-sort="action">
-                              Action
-                            </th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">

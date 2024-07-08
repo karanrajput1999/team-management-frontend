@@ -14,6 +14,7 @@ import Flatpickr from "react-flatpickr";
 import { getCenters } from "../../slices/Centers/thunk";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
+import { getApplicatinReport } from "../../slices/ApplicationReport/thunk";
 
 const ApplicationReport = () => {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
@@ -30,6 +31,11 @@ const ApplicationReport = () => {
   const dispatch = useDispatch();
 
   const { centers } = useSelector((state) => state.Centers);
+  const { applicationReports } = useSelector(
+    (state) => state.ApplicationReport
+  );
+
+  console.log("APPLICATION REPORTS DATA ->", applicationReports);
 
   function handleSelectSingleCenter(centerName) {
     setSelectedSingleCenterName(centerName);
@@ -116,6 +122,7 @@ const ApplicationReport = () => {
 
   useEffect(() => {
     dispatch(getCenters());
+    dispatch(getApplicatinReport());
   }, [dispatch]);
 
   const bankReportData = [
@@ -276,62 +283,38 @@ const ApplicationReport = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="id">
-                              S.NO
-                            </th>
-                            <th className="sort" data-sort="application_id">
-                              Application Id
-                            </th>
-                            <th className="sort" data-sort="customer_name">
-                              Customer Name
-                            </th>
-                            <th className="sort" data-sort="phone">
-                              Phone
-                            </th>
+                            <th data-sort="id">S.NO</th>
+                            <th data-sort="application_no">Application No</th>
+                            <th data-sort="customer_name">Customer Name</th>
+                            <th data-sort="phone">Phone</th>
 
-                            <th className="sort" data-sort="pan_card">
-                              Pan Card
-                            </th>
+                            <th data-sort="pan_card">Pan Card</th>
 
-                            <th className="sort" data-sort="client_of">
-                              Client of
-                            </th>
+                            <th data-sort="client_of">Client of</th>
 
-                            <th className="sort" data-sort="status_1">
-                              Status 1
-                            </th>
-                            <th className="sort" data-sort="status_2">
-                              Status 2
-                            </th>
+                            <th data-sort="status_1">Status 1</th>
+                            <th data-sort="status_2">Status 2</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {bankReportData?.map((bankReport) => (
+                          {applicationReports?.map((bankReport) => (
                             <tr key={bankReport?.id}>
-                              <td className="id">{bankReport?.id}</td>
-                              <td className="id">
-                                {bankReport?.applicationId}
-                              </td>
-                              <td className="center_name">
-                                {bankReport?.customerName}
-                              </td>
-                              <td className="owner_name">
-                                {bankReport?.phone}
-                              </td>
-                              <td className="phone_number">
-                                {bankReport?.panCard}
-                              </td>
-                              <td className="password">
-                                {bankReport?.clientOf}
-                              </td>
-                              <td className="status1">
+                              <td>{bankReport?.id}</td>
+                              <td>{bankReport?.applicationNo}</td>
+                              <td>{bankReport?.fullName}</td>
+                              <td>{bankReport?.mobileNo}</td>
+                              <td>{bankReport?.panNo}</td>
+                              <td>{bankReport?.clientOf}</td>
+                              <td>
                                 <span className="badge bg-success-subtle text-success">
-                                  {bankReport?.status1}
+                                  {bankReport?.formStatus
+                                    ? bankReport?.formStatus
+                                    : "Pending"}
                                 </span>
                               </td>
-                              <td className="status2">
+                              <td>
                                 <span className="badge bg-primary-subtle text-primary">
-                                  {bankReport?.status2}
+                                  Pending
                                 </span>
                               </td>
                             </tr>

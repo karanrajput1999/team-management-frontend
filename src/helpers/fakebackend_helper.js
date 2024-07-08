@@ -591,6 +591,42 @@ export const updateCenterUser = ({
 //   );
 // };
 
+// *****************************************************************
+// *************************** FORM ********************************
+// *****************************************************************
+export const getForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/forms`);
+};
+
+export const createForm = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/form/create`, data);
+};
+
+// *****************************************************************
+// ************************* FORM STATUS ***************************
+// *****************************************************************
+export const updateFormStatus = (data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/form/status-update`,
+    data
+  );
+};
+
+// *****************************************************************
+// ********************* APPLICATION REPORT ************************
+// *****************************************************************
+export const getApplicationReport = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/application-report`);
+};
+
+// *****************************************************************
+// ************************* PENDING FORMS *************************
+// *****************************************************************
+
+export const getPendingForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/pending-forms`);
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

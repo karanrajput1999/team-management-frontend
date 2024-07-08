@@ -174,30 +174,18 @@ const BankCode = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="id">
-                              S.NO
-                            </th>
-                            <th className="sort" data-sort="center_name">
-                              Center Name
-                            </th>
-                            <th className="sort" data-sort="bank_name">
-                              Bank Name
-                            </th>
-                            <th className="sort" data-sort="user_name/code">
-                              User Name/Code
-                            </th>
+                            <th>S.NO</th>
+                            <th>Center Name</th>
+                            <th>Bank Name</th>
+                            <th>User Name/Code</th>
 
-                            <th className="sort" data-sort="phone_number">
-                              Password
-                            </th>
+                            <th>Password</th>
 
-                            <th className="sort" data-sort="user_status">
+                            {/* <th  data-sort="user_status">
                               User Status
-                            </th>
+                            </th> */}
 
-                            <th className="sort" data-sort="action">
-                              Action
-                            </th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
@@ -221,9 +209,9 @@ const BankCode = () => {
                                 {bankCode?.userNameCode}
                               </td>
                               <td className="password">{bankCode?.password}</td>
-                              <td className="userStatus">
+                              {/* <td className="userStatus">
                                 {bankCode?.userStatus}
-                              </td>
+                              </td> */}
 
                               <td>
                                 <div className="d-flex gap-2">

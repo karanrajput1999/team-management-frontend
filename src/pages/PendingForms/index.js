@@ -13,8 +13,13 @@ import {
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
-import { getCenters } from "../../slices/Centers/thunk";
+import { getForms } from "../../slices/Form/thunk";
 import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { StatusOptions } from "../../common/data/pendingForms";
+import { updateFormStatus } from "../../helpers/fakebackend_helper";
+import { getPendingForms } from "../../slices/PendingForms/thunk";
 
 const PendingForms = () => {
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
@@ -23,39 +28,28 @@ const PendingForms = () => {
     setSelectedSingleStatus(status);
   }
 
-  const StatusOptions = [
-    {
-      value: "Link Sent",
-      label: "Link Sent",
-    },
-    {
-      value: "Anyone",
-      label: "Anyone",
-    },
-  ];
+  const [applicationNo, setApplicationNo] = useState("");
 
-  const bankReportData = [
-    {
-      id: 1,
-      applicationId: 73838,
-      customerName: "Lokesh Kumar",
-      phone: "7691090901",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: 85,
-    },
-    {
-      id: 2,
-      applicationId: 638348,
-      customerName: "Surjit singh	",
-      phone: "8590466998",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: 83,
-    },
-  ];
+  const [formStatus, setFormStatus] = useState("");
+
+  const { forms } = useSelector((state) => state.Forms);
+  const { pendingForms } = useSelector((state) => state.PendingForms);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPendingForms());
+  }, []);
+
+  function formHandleSubmit(e, formId) {
+    e.preventDefault();
+
+    updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
+      console.log("FORM STATUS UPDATED ->", res);
+    });
+  }
+
+  console.log("FORMS ->", forms);
 
   document.title = "Daily Report";
   return (
@@ -81,7 +75,6 @@ const PendingForms = () => {
                               className="form-control bg-light border-light"
                               autoComplete="off"
                               id="searchList"
-                              onChange={() => {}}
                               placeholder="Search name"
                             />
                             <i className="ri-search-line search-icon"></i>
@@ -117,11 +110,11 @@ const PendingForms = () => {
                             <th className="sort" data-sort="id">
                               ID
                             </th>
-                            <th className="sort" data-sort="punch_date">
-                              Punch Date
-                            </th>
                             <th className="sort" data-sort="name">
                               Name
+                            </th>
+                            <th className="sort" data-sort="punch_date">
+                              Punch Date
                             </th>
                             <th className="sort" data-sort="number">
                               Number
@@ -141,7 +134,70 @@ const PendingForms = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          <tr>
+                          {pendingForms?.map((form) => (
+                            <tr key={form.id}>
+                              <td className="id">{form.id}</td>
+                              <td className="name">{form.fullName}</td>
+                              <td className="punch_date">2023/01/08</td>
+                              <td className="number">{form.mobileNo}</td>
+                              <td className="panNumber">{form.panNo}</td>
+                              <td className="bank">{form.bankName}</td>
+                              <td>
+                                <form
+                                  onSubmit={(e) => {
+                                    formHandleSubmit(e, form.id);
+                                  }}
+                                >
+                                  {console.log(
+                                    "SELECTED OPTIONS ->",
+                                    StatusOptions.find((op) => {
+                                      console.log(op);
+                                      console.log(form.formStatus);
+
+                                      return op.value === form.formStatus;
+                                    })
+                                  )}
+                                  <div
+                                    className="tools d-flex"
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <Input
+                                      type="text"
+                                      placeholder="Application number"
+                                      style={{ width: "auto" }}
+                                      value={applicationNo}
+                                      onChange={(e) => {
+                                        setApplicationNo(e.target.value);
+                                      }}
+                                    />
+                                    <Select
+                                      id="formStatus"
+                                      name="formStatus"
+                                      value={
+                                        form.formStatus
+                                          ? StatusOptions.find(
+                                              (op) =>
+                                                op.value === form.formStatus
+                                            )
+                                          : selectedSingleStatus
+                                      }
+                                      onChange={(status) => {
+                                        handleSelectSingleStatus(status);
+                                        setFormStatus(status.value);
+                                      }}
+                                      options={StatusOptions}
+                                      placeholder="Choose Card Status"
+                                      style={{ width: "150px" }}
+                                    />
+                                    <Button type="submit" color="primary">
+                                      Submit
+                                    </Button>
+                                  </div>
+                                </form>
+                              </td>
+                            </tr>
+                          ))}
+                          {/* <tr>
                             <td className="id">1</td>
                             <td className="name">Indrajit Sinha</td>
                             <td className="punch_date">2023/01/08</td>
@@ -172,7 +228,7 @@ const PendingForms = () => {
                               />
                               <Button color="primary">Submit</Button>
                             </td>
-                          </tr>
+                          </tr> */}
                         </tbody>
                       </table>
                     </div>
