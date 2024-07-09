@@ -3,6 +3,7 @@ import { getPendingForms } from "./thunk";
 
 export const initialState = {
   pendingForms: [],
+  updatedForms: [],
   error: "",
 };
 
@@ -15,7 +16,8 @@ const centersSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.pendingForms = action.payload?.data.forms;
+        state.pendingForms = action.payload?.data.pendingForms;
+        state.updatedForms = action.payload?.data.updatedForms;
         state.error = "";
       }
     });

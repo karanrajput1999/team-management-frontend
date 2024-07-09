@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
+
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
-  Input,
-  Label,
+  Nav,
+  NavItem,
+  NavLink,
   Row,
+  TabContent,
+  TabPane,
 } from "reactstrap";
+import classnames from "classnames";
+
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
@@ -19,7 +24,16 @@ import { getPendingForms } from "../../slices/PendingForms/thunk";
 import FormRow from "./FormRow";
 
 const PendingForms = () => {
-  const { pendingForms } = useSelector((state) => state.PendingForms);
+  const { pendingForms, updatedForms } = useSelector(
+    (state) => state.PendingForms
+  );
+
+  const [activeTab, setactiveTab] = useState("1");
+  const toggle = (tab) => {
+    if (activeTab !== tab) {
+      setactiveTab(tab);
+    }
+  };
 
   const dispatch = useDispatch();
 
@@ -85,48 +99,98 @@ const PendingForms = () => {
                       </Col>
                     </Row>
 
-                    <div className="table-card mt-3 mb-1">
-                      <table className="table align-middle table-nowrap">
-                        <thead className="table-light">
-                          <tr>
-                            <th data-sort="id">ID</th>
-                            <th data-sort="name">Name</th>
-                            <th data-sort="punch_date">Punch Date</th>
-                            <th data-sort="number">Number</th>
+                    <Col>
+                      <Nav tabs className="nav-tabs mb-3">
+                        <NavItem>
+                          <NavLink
+                            style={{ cursor: "pointer" }}
+                            className={classnames({
+                              active: activeTab === "1",
+                            })}
+                            onClick={() => {
+                              toggle("1");
+                            }}
+                          >
+                            Pending
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            style={{ cursor: "pointer" }}
+                            className={classnames({
+                              active: activeTab === "2",
+                            })}
+                            onClick={() => {
+                              toggle("2");
+                            }}
+                          >
+                            Updated
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
 
-                            <th data-sort="panNumber">Pan Number</th>
+                      <TabContent activeTab={activeTab}>
+                        <TabPane tabId="1" id="updated">
+                          <div className="table-card mt-3 mb-1">
+                            <table className="table align-middle table-nowrap">
+                              <thead className="table-light">
+                                <tr>
+                                  <th data-sort="id">ID</th>
+                                  <th data-sort="name">Name</th>
+                                  <th data-sort="punch_date">Punch Date</th>
+                                  <th data-sort="number">Number</th>
 
-                            <th data-sort="bank">Bank</th>
+                                  <th data-sort="panNumber">Pan Number</th>
 
-                            <th data-sort="unique_attempts">Tools</th>
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          {pendingForms?.map((form) => (
-                            <FormRow
-                              key={form.id}
-                              form={form}
-                              onUpdate={updateForm}
-                            />
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                                  <th data-sort="bank">Bank</th>
 
-                    <div className="d-flex justify-content-end">
-                      <div className="pagination-wrap hstack gap-2">
-                        <Link
-                          className="page-item pagination-prev disabled"
-                          to="#"
-                        >
-                          Previous
-                        </Link>
-                        <ul className="pagination listjs-pagination mb-0"></ul>
-                        <Link className="page-item pagination-next" to="#">
-                          Next
-                        </Link>
-                      </div>
-                    </div>
+                                  <th data-sort="unique_attempts">Tools</th>
+                                </tr>
+                              </thead>
+                              <tbody className="list form-check-all">
+                                {pendingForms?.map((form) => (
+                                  <FormRow
+                                    key={form.id}
+                                    form={form}
+                                    onUpdate={updateForm}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </TabPane>
+
+                        <TabPane tabId="2" id="product">
+                          <div className="table-card mt-3 mb-1">
+                            <table className="table align-middle table-nowrap">
+                              <thead className="table-light">
+                                <tr>
+                                  <th data-sort="id">ID</th>
+                                  <th data-sort="name">Name</th>
+                                  <th data-sort="punch_date">Punch Date</th>
+                                  <th data-sort="number">Number</th>
+
+                                  <th data-sort="panNumber">Pan Number</th>
+
+                                  <th data-sort="bank">Bank</th>
+
+                                  <th data-sort="unique_attempts">Tools</th>
+                                </tr>
+                              </thead>
+                              <tbody className="list form-check-all">
+                                {updatedForms?.map((form) => (
+                                  <FormRow
+                                    key={form.id}
+                                    form={form}
+                                    onUpdate={updateForm}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </TabPane>
+                      </TabContent>
+                    </Col>
                   </div>
                 </CardBody>
               </Card>
