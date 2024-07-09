@@ -317,7 +317,19 @@ const ApplicationReport = () => {
                                     bankReport?.user?.name}
                               </td>
                               <td>
-                                <span className="badge bg-success-subtle text-success">
+                                <span
+                                  className={`badge ${
+                                    bankReport?.formStatus &&
+                                    bankReport?.formStatus === "VKYC Done"
+                                      ? "bg-success-subtle"
+                                      : "bg-primary-subtle"
+                                  }  ${
+                                    bankReport?.formStatus &&
+                                    bankReport?.formStatus === "VKYC Done"
+                                      ? "text-success"
+                                      : "text-primary"
+                                  } `}
+                                >
                                   {bankReport?.formStatus
                                     ? bankReport?.formStatus
                                     : "Pending"}
