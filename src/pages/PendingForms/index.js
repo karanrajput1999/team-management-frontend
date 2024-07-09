@@ -13,45 +13,28 @@ import {
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
-import { getForms } from "../../slices/Form/thunk";
-import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormik } from "formik";
-import { StatusOptions } from "../../common/data/pendingForms";
 import { updateFormStatus } from "../../helpers/fakebackend_helper";
 import { getPendingForms } from "../../slices/PendingForms/thunk";
+import FormRow from "./FormRow";
 
 const PendingForms = () => {
-  const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
-
-  function handleSelectSingleStatus(status) {
-    setSelectedSingleStatus(status);
-  }
-
-  const [applicationNo, setApplicationNo] = useState("");
-
-  const [formStatus, setFormStatus] = useState("");
-
-  const { forms } = useSelector((state) => state.Forms);
   const { pendingForms } = useSelector((state) => state.PendingForms);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPendingForms());
-  }, []);
+  }, [dispatch]);
 
-  function formHandleSubmit(e, formId) {
-    e.preventDefault();
-
+  function updateForm(formId, applicationNo, formStatus) {
     updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
       console.log("FORM STATUS UPDATED ->", res);
+      dispatch(getPendingForms());
     });
   }
 
-  console.log("FORMS ->", forms);
-
-  document.title = "Daily Report";
+  document.title = "Pending Forms";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -67,7 +50,7 @@ const PendingForms = () => {
                 <CardBody>
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3">
-                      <Col className="col-sm-auto w-100 d-flex align-items-center ">
+                      <Col className="col-sm-auto w-100 d-flex align-items-center">
                         <div className="d-flex" style={{ gap: "10px" }}>
                           <div className="search-box">
                             <input
@@ -102,7 +85,6 @@ const PendingForms = () => {
                       </Col>
                     </Row>
 
-                    {/* Removed this "table-responsive" class */}
                     <div className="table-card mt-3 mb-1">
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
@@ -135,100 +117,12 @@ const PendingForms = () => {
                         </thead>
                         <tbody className="list form-check-all">
                           {pendingForms?.map((form) => (
-                            <tr key={form.id}>
-                              <td className="id">{form.id}</td>
-                              <td className="name">{form.fullName}</td>
-                              <td className="punch_date">2023/01/08</td>
-                              <td className="number">{form.mobileNo}</td>
-                              <td className="panNumber">{form.panNo}</td>
-                              <td className="bank">{form.bankName}</td>
-                              <td>
-                                <form
-                                  onSubmit={(e) => {
-                                    formHandleSubmit(e, form.id);
-                                  }}
-                                >
-                                  {console.log(
-                                    "SELECTED OPTIONS ->",
-                                    StatusOptions.find((op) => {
-                                      console.log(op);
-                                      console.log(form.formStatus);
-
-                                      return op.value === form.formStatus;
-                                    })
-                                  )}
-                                  <div
-                                    className="tools d-flex"
-                                    style={{ gap: "10px" }}
-                                  >
-                                    <Input
-                                      type="text"
-                                      placeholder="Application number"
-                                      style={{ width: "auto" }}
-                                      value={applicationNo}
-                                      onChange={(e) => {
-                                        setApplicationNo(e.target.value);
-                                      }}
-                                    />
-                                    <Select
-                                      id="formStatus"
-                                      name="formStatus"
-                                      value={
-                                        form.formStatus
-                                          ? StatusOptions.find(
-                                              (op) =>
-                                                op.value === form.formStatus
-                                            )
-                                          : selectedSingleStatus
-                                      }
-                                      onChange={(status) => {
-                                        handleSelectSingleStatus(status);
-                                        setFormStatus(status.value);
-                                      }}
-                                      options={StatusOptions}
-                                      placeholder="Choose Card Status"
-                                      style={{ width: "150px" }}
-                                    />
-                                    <Button type="submit" color="primary">
-                                      Submit
-                                    </Button>
-                                  </div>
-                                </form>
-                              </td>
-                            </tr>
+                            <FormRow
+                              key={form.id}
+                              form={form}
+                              onUpdate={updateForm}
+                            />
                           ))}
-                          {/* <tr>
-                            <td className="id">1</td>
-                            <td className="name">Indrajit Sinha</td>
-                            <td className="punch_date">2023/01/08</td>
-                            <td className="number">9982734838</td>
-                            <td className="panNumber">BMPS8399M</td>
-                            <td className="bank">
-                              Indusind Bank Partha Debnath
-                            </td>
-                            <td
-                              className="tools d-flex"
-                              style={{ gap: "10px" }}
-                            >
-                              <Input
-                                type="text"
-                                placeholder="Application number"
-                                style={{ width: "auto" }}
-                              />
-                              <Select
-                                id="formStatus"
-                                name="formStatus"
-                                value={selectedSingleStatus}
-                                onChange={(status) => {
-                                  handleSelectSingleStatus(status);
-                                }}
-                                options={StatusOptions}
-                                placeholder="Status"
-                                style={{ width: "150px" }}
-                              />
-                              <Button color="primary">Submit</Button>
-                            </td>
-                          </tr> */}
                         </tbody>
                       </table>
                     </div>

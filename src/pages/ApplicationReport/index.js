@@ -164,7 +164,7 @@ const ApplicationReport = () => {
                 <CardBody>
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3">
-                      <Col className="col-sm-auto w-100 d-flex align-items-center justify-content-between">
+                      <Col className="col-sm-auto d-flex align-items-center justify-content-between">
                         <div className="search-box">
                           <input
                             type="text"
@@ -175,8 +175,13 @@ const ApplicationReport = () => {
                           />
                           <i className="ri-search-line search-icon"></i>
                         </div>
+                      </Col>
 
-                        <div className="d-flex" style={{ gap: "10px" }}>
+                      <Col>
+                        <div
+                          className="d-flex"
+                          style={{ gap: "10px", flexWrap: "wrap" }}
+                        >
                           <div className="d-flex">
                             <Flatpickr
                               className="form-control border dash-filter-picker"

@@ -30,6 +30,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createForm } from "../../slices/Form/thunk";
 import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -94,12 +96,13 @@ const Forms = () => {
       bankName: Yup.string().required("Please enter bank name"),
       clientType: Yup.string().required("Please select client type"),
     }),
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values, { resetForm, setFieldValue }) => {
       dispatch(createForm(values));
 
       setSelectedSingleEmployeeName(null);
       setSelectedSingleBank(null);
       setSelectedSingleClientType(null);
+      setFieldValue("dob", "");
 
       resetForm();
     },
@@ -420,6 +423,7 @@ const Forms = () => {
                                         <Flatpickr
                                           id="dob"
                                           name="dob"
+                                          value={validation.values.dob || ""}
                                           className="form-control border dash-filter-picker"
                                           placeholder="Choose DOB"
                                           options={{
@@ -713,6 +717,7 @@ const Forms = () => {
           </Row>
         </Container>
       </div>
+      <ToastContainer />
     </React.Fragment>
   );
 };

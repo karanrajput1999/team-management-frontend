@@ -107,7 +107,7 @@ const Login = (props) => {
                     <div className="text-center">
                       <img src={webwersLogo} style={{ height: "150px" }} />
                       {/* <h5 className="text-primary">Welcome Back !</h5> */}
-                      <p className="text-muted">WebWers Admin Login</p>
+                      {/* <p className="text-muted">WebWers Admin Login</p> */}
                     </div>
                     {error && error ? (
                       <Alert color="danger"> {error} </Alert>
@@ -149,11 +149,11 @@ const Login = (props) => {
                         </div>
 
                         <div className="mb-3">
-                          <div className="float-end">
+                          {/* <div className="float-end">
                             <Link to="/forgot-password" className="text-muted">
                               Forgot password?
                             </Link>
-                          </div>
+                          </div> */}
                           <Label
                             className="form-label"
                             htmlFor="password-input"
@@ -192,7 +192,7 @@ const Login = (props) => {
                             </button>
                           </div>
                         </div>
-
+                        {/* 
                         <div className="form-check">
                           <Input
                             className="form-check-input"
@@ -206,7 +206,7 @@ const Login = (props) => {
                           >
                             Remember me
                           </Label>
-                        </div>
+                        </div> */}
 
                         <div className="mt-4">
                           <Button
