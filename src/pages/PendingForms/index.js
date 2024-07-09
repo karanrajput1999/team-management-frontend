@@ -89,30 +89,16 @@ const PendingForms = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="id">
-                              ID
-                            </th>
-                            <th className="sort" data-sort="name">
-                              Name
-                            </th>
-                            <th className="sort" data-sort="punch_date">
-                              Punch Date
-                            </th>
-                            <th className="sort" data-sort="number">
-                              Number
-                            </th>
+                            <th data-sort="id">ID</th>
+                            <th data-sort="name">Name</th>
+                            <th data-sort="punch_date">Punch Date</th>
+                            <th data-sort="number">Number</th>
 
-                            <th className="sort" data-sort="panNumber">
-                              Pan Number
-                            </th>
+                            <th data-sort="panNumber">Pan Number</th>
 
-                            <th className="sort" data-sort="bank">
-                              Bank
-                            </th>
+                            <th data-sort="bank">Bank</th>
 
-                            <th className="sort" data-sort="unique_attempts">
-                              Tools
-                            </th>
+                            <th data-sort="unique_attempts">Tools</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">

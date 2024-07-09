@@ -207,33 +207,17 @@ const BankReport = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="id">
-                              S.NO
-                            </th>
-                            <th className="sort" data-sort="application_id">
-                              Application Id
-                            </th>
-                            <th className="sort" data-sort="customer_name">
-                              Customer Name
-                            </th>
-                            <th className="sort" data-sort="phone">
-                              Phone
-                            </th>
+                            <th data-sort="id">S.NO</th>
+                            <th data-sort="application_id">Application Id</th>
+                            <th data-sort="customer_name">Customer Name</th>
+                            <th data-sort="phone">Phone</th>
 
-                            <th className="sort" data-sort="pan_card">
-                              Pan Card
-                            </th>
+                            <th data-sort="pan_card">Pan Card</th>
 
-                            <th className="sort" data-sort="client_of">
-                              Client of
-                            </th>
+                            <th data-sort="client_of">Client of</th>
 
-                            <th className="sort" data-sort="status_1">
-                              Status 1
-                            </th>
-                            <th className="sort" data-sort="status_2">
-                              Status 2
-                            </th>
+                            <th data-sort="status_1">Status 1</th>
+                            <th data-sort="status_2">Status 2</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">

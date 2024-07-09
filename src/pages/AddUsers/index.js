@@ -123,22 +123,42 @@ const AddUsers = () => {
         (center) => center.centerName == values.centerName
       );
 
-      isEditingUser
-        ? dispatch(
-            updateCenterUser({
-              values,
-              centerUserId: listUser.id,
-              centerId: selectedCenter.id,
-              branchId: selectedCenter.branchId,
-            })
-          )
-        : dispatch(
-            createCenterUser({
-              ...values,
-              centerId: selectedCenter.id,
-              branchId: selectedCenter.branchId,
-            })
-          );
+      if (isEditingUser) {
+        dispatch(
+          updateCenterUser({
+            values,
+            centerUserId: listUser.id,
+            centerId: selectedCenter.id,
+            branchId: selectedCenter.branchId,
+          })
+        );
+
+        dispatch(
+          updateUser({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            roleId: values.userType,
+          })
+        );
+      } else {
+        dispatch(
+          createCenterUser({
+            ...values,
+            centerId: selectedCenter.id,
+            branchId: selectedCenter.branchId,
+          })
+        );
+
+        dispatch(
+          createUser({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            roleId: values.userType,
+          })
+        );
+      }
 
       setFieldValue("centerName", "");
       resetForm();

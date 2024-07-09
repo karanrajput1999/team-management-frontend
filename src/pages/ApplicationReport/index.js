@@ -309,7 +309,13 @@ const ApplicationReport = () => {
                               <td>{bankReport?.fullName}</td>
                               <td>{bankReport?.mobileNo}</td>
                               <td>{bankReport?.panNo}</td>
-                              <td>{bankReport?.clientOf}</td>
+                              <td>
+                                {" "}
+                                {Object.keys(bankReport?.user).length !== 0 &&
+                                  bankReport?.user?.centerName +
+                                    " By " +
+                                    bankReport?.user?.name}
+                              </td>
                               <td>
                                 <span className="badge bg-success-subtle text-success">
                                   {bankReport?.formStatus

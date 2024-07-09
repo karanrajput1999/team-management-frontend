@@ -116,39 +116,21 @@ const DailyReport = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th className="sort" data-sort="sno">
-                              S.NO
-                            </th>
-                            <th className="sort" data-sort="name">
-                              Name
-                            </th>
-                            <th className="sort" data-sort="DOJ">
-                              DOJ
-                            </th>
-                            <th className="sort" data-sort="vintage">
-                              Vintage
-                            </th>
+                            <th data-sort="sno">S.NO</th>
+                            <th data-sort="name">Name</th>
+                            <th data-sort="DOJ">DOJ</th>
+                            <th data-sort="vintage">Vintage</th>
 
-                            <th className="sort" data-sort="talktime">
-                              Talktime
-                            </th>
+                            <th data-sort="talktime">Talktime</th>
 
-                            <th className="sort" data-sort="attempts">
-                              Attempts
-                            </th>
+                            <th data-sort="attempts">Attempts</th>
 
-                            <th className="sort" data-sort="unique_attempts">
-                              Unique Attempts
-                            </th>
-                            <th className="sort" data-sort="interested_client">
+                            <th data-sort="unique_attempts">Unique Attempts</th>
+                            <th data-sort="interested_client">
                               Interested Client
                             </th>
-                            <th className="sort" data-sort="pending">
-                              Pending
-                            </th>
-                            <th className="sort" data-sort="vkyc">
-                              VKYC
-                            </th>
+                            <th data-sort="pending">Pending</th>
+                            <th data-sort="vkyc">VKYC</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
