@@ -46,7 +46,7 @@ const FormRow = ({ form, onUpdate }) => {
   return (
     <tr
       key={form.id}
-      className={`${daysDifference > 7 ? "bg-danger text-white" : ""}`}
+      style={daysDifference > 7 ? { backgroundColor: "#FCE3DE" } : {}}
     >
       <td className="id">{form.id}</td>
       <td className="name">{form.fullName}</td>

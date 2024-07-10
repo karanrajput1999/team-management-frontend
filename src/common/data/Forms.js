@@ -34,11 +34,30 @@ export const clientTypeOptions = [
     label: "Salaried",
   },
   {
-    value: "Self Employed",
-    label: "Self Employed",
+    value: "Self-Employed",
+    label: "Self-Employed",
   },
   {
     value: "Business Man",
     label: "Business Man",
+  },
+  {
+    value: "Card To Card",
+    label: "Card To Card",
+  },
+];
+
+export const loanTypeOptions = [
+  {
+    value: "Home Loan",
+    label: "Home Loan",
+  },
+  {
+    value: "Personal Loan",
+    label: "Personal Loan",
+  },
+  {
+    value: "Education Loan",
+    label: "Education Loan",
   },
 ];

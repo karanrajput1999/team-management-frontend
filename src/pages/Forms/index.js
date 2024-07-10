@@ -14,7 +14,6 @@ import {
   Row,
   TabContent,
   TabPane,
-  UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
@@ -22,9 +21,9 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import {
-  employeeOptions,
   bankOptions,
   clientTypeOptions,
+  loanTypeOptions,
 } from "../../common/data/Forms";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -39,6 +38,10 @@ import {
   removeCenterUser,
   updateCenterUser,
 } from "../../slices/AddUsers/thunk";
+import CreditCardForm from "./CreditCardForm";
+import LoanForm from "./LoanForm";
+import InsuranceForm from "./InsuranceForm";
+import DematAccountForm from "./DematAccountForm";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -49,11 +52,11 @@ const Forms = () => {
   const [selectedSingleClientType, setSelectedSingleClientType] =
     useState(null);
 
+  const [selectedSingleLoanType, setSelectedSingleLoanType] = useState(null);
+
   const [arrowNavTab, setarrowNavTab] = useState("1");
 
   const { allCenterUsers } = useSelector((state) => state.AddUsers);
-
-  console.log("ALL CENTER USERS ->", allCenterUsers);
 
   const dispatch = useDispatch();
 
@@ -75,6 +78,9 @@ const Forms = () => {
   }
   function handleSelectSingleClientType(clientType) {
     setSelectedSingleClientType(clientType);
+  }
+  function handleSelectSingleLoanType(loanType) {
+    setSelectedSingleLoanType(loanType);
   }
 
   const employeeUserOptions = allCenterUsers.map((user) => {
@@ -208,7 +214,7 @@ const Forms = () => {
 
                   <TabContent activeTab={arrowNavTab} className="text-muted">
                     <TabPane tabId="1">
-                      <Row>
+                      {/* <Row>
                         <Col xxl={6}>
                           <Card>
                             <CardBody>
@@ -721,16 +727,61 @@ const Forms = () => {
                             </CardBody>
                           </Card>
                         </Col>
-                      </Row>
+                      </Row> */}
+
+                      <CreditCardForm
+                        validation={validation}
+                        formHandleSubmit={formHandleSubmit}
+                        employeeUserOptions={employeeUserOptions}
+                        selectedSingleEmployeeName={selectedSingleEmployeeName}
+                        handleSelectSingleEmployeeName={
+                          handleSelectSingleEmployeeName
+                        }
+                        bankOptions={bankOptions}
+                        selectedSingleBank={selectedSingleBank}
+                        handleSelectSingleBankName={handleSelectSingleBankName}
+                        clientTypeOptions={clientTypeOptions}
+                        selectedSingleClientType={selectedSingleClientType}
+                        handleSelectSingleClientType={
+                          handleSelectSingleClientType
+                        }
+                      />
                     </TabPane>
                     <TabPane tabId="2">
-                      <h5>Coming Soon!</h5>
+                      <LoanForm
+                        loanTypeOptions={loanTypeOptions}
+                        selectedSingleLoanType={selectedSingleLoanType}
+                        handleSelectSingleLoanType={handleSelectSingleLoanType}
+                        clientTypeOptions={clientTypeOptions}
+                        selectedSingleClientType={selectedSingleClientType}
+                        handleSelectSingleClientType={
+                          handleSelectSingleClientType
+                        }
+                      />
                     </TabPane>
                     <TabPane tabId="3">
-                      <h5>Coming Soon!</h5>
+                      <InsuranceForm
+                        loanTypeOptions={loanTypeOptions}
+                        selectedSingleLoanType={selectedSingleLoanType}
+                        handleSelectSingleLoanType={handleSelectSingleLoanType}
+                        clientTypeOptions={clientTypeOptions}
+                        selectedSingleClientType={selectedSingleClientType}
+                        handleSelectSingleClientType={
+                          handleSelectSingleClientType
+                        }
+                      />
                     </TabPane>
                     <TabPane tabId="4">
-                      <h5>Coming Soon!</h5>
+                      <DematAccountForm
+                        loanTypeOptions={loanTypeOptions}
+                        selectedSingleLoanType={selectedSingleLoanType}
+                        handleSelectSingleLoanType={handleSelectSingleLoanType}
+                        clientTypeOptions={clientTypeOptions}
+                        selectedSingleClientType={selectedSingleClientType}
+                        handleSelectSingleClientType={
+                          handleSelectSingleClientType
+                        }
+                      />
                     </TabPane>
                   </TabContent>
                 </CardBody>
