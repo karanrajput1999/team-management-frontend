@@ -305,7 +305,16 @@ const ApplicationReport = () => {
                           {applicationReports?.map((bankReport) => (
                             <tr key={bankReport?.id}>
                               <td>{bankReport?.id}</td>
-                              <td>{bankReport?.applicationNo}</td>
+                              <td>
+                                {bankReport?.applicationNo ? (
+                                  bankReport?.applicationNo
+                                ) : (
+                                  <span className="text-muted">
+                                    {" "}
+                                    ---Not Assigned Yet---{" "}
+                                  </span>
+                                )}
+                              </td>
                               <td>{bankReport?.fullName}</td>
                               <td>{bankReport?.mobileNo}</td>
                               <td>{bankReport?.panNo}</td>

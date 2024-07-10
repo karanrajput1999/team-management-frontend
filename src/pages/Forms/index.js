@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -32,6 +32,13 @@ import { createForm } from "../../slices/Form/thunk";
 import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import {
+  getCenterUsers,
+  createCenterUser,
+  removeCenterUser,
+  updateCenterUser,
+} from "../../slices/AddUsers/thunk";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -44,6 +51,10 @@ const Forms = () => {
 
   const [arrowNavTab, setarrowNavTab] = useState("1");
 
+  const { allCenterUsers } = useSelector((state) => state.AddUsers);
+
+  console.log("ALL CENTER USERS ->", allCenterUsers);
+
   const dispatch = useDispatch();
 
   const arrowNavToggle = (tab) => {
@@ -51,6 +62,10 @@ const Forms = () => {
       setarrowNavTab(tab);
     }
   };
+
+  useEffect(() => {
+    dispatch(getCenterUsers());
+  }, [dispatch]);
 
   function handleSelectSingleEmployeeName(employeeName) {
     setSelectedSingleEmployeeName(employeeName);
@@ -62,6 +77,14 @@ const Forms = () => {
     setSelectedSingleClientType(clientType);
   }
 
+  const employeeUserOptions = allCenterUsers.map((user) => {
+    return {
+      id: user.id,
+      label: user.name,
+      value: user.name,
+    };
+  });
+
   // formik setup
   const validation = useFormik({
     initialValues: {
@@ -72,7 +95,7 @@ const Forms = () => {
       panNo: "",
       fatherName: "",
       motherName: "",
-      disposition: "",
+      employeeName: "",
       currentAddress: "",
       pinCode: "",
       companyName: "",
@@ -88,7 +111,7 @@ const Forms = () => {
       panNo: Yup.string().required("Please enter pan no"),
       fatherName: Yup.string().required("Please enter father name"),
       motherName: Yup.string().required("Please enter mother name"),
-      disposition: Yup.string().required("Please select disposition"),
+      employeeName: Yup.string().required("Please select employee"),
       currentAddress: Yup.string().required("Please enter current address"),
       pinCode: Yup.number().required("Please enter pin code"),
       companyName: Yup.string().required("Please enter company name"),
@@ -98,7 +121,6 @@ const Forms = () => {
     }),
     onSubmit: (values, { resetForm, setFieldValue }) => {
       dispatch(createForm(values));
-
       setSelectedSingleEmployeeName(null);
       setSelectedSingleBank(null);
       setSelectedSingleClientType(null);
@@ -196,26 +218,26 @@ const Forms = () => {
                                     <Col md={4}>
                                       <div className="mb-3">
                                         <Label
-                                          htmlFor="disposition"
+                                          htmlFor="employeeName"
                                           className="form-label text-muted"
                                         >
-                                          Disposition
+                                          Employee Name
                                         </Label>
                                         <Select
-                                          id="disposition"
-                                          name="disposition"
+                                          id="employeeName"
+                                          name="employeeName"
                                           value={selectedSingleEmployeeName}
                                           onChange={(employeeName) => {
                                             handleSelectSingleEmployeeName(
                                               employeeName
                                             );
                                             validation.setFieldValue(
-                                              "disposition",
+                                              "employeeName",
                                               employeeName.value
                                             );
                                           }}
-                                          options={employeeOptions}
-                                          placeholder="Disposition"
+                                          options={employeeUserOptions}
+                                          placeholder="Employee Name"
                                         />
                                       </div>
                                     </Col>

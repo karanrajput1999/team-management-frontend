@@ -20,13 +20,19 @@ import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFormStatus } from "../../helpers/fakebackend_helper";
-import { getPendingForms } from "../../slices/PendingForms/thunk";
+import {
+  getPendingForms,
+  pendingFormsFilter,
+} from "../../slices/PendingForms/thunk";
 import FormRow from "./FormRow";
 
 const PendingForms = () => {
-  const { pendingForms, updatedForms } = useSelector(
-    (state) => state.PendingForms
-  );
+  const {
+    pendingForms,
+    updatedForms,
+    filteredPendingForms,
+    filteredUpdatedForms,
+  } = useSelector((state) => state.PendingForms);
 
   const [activeTab, setactiveTab] = useState("1");
   const toggle = (tab) => {
@@ -43,7 +49,6 @@ const PendingForms = () => {
 
   function updateForm(formId, applicationNo, formStatus) {
     updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
-      console.log("FORM STATUS UPDATED ->", res);
       dispatch(getPendingForms());
     });
   }
@@ -72,7 +77,14 @@ const PendingForms = () => {
                               className="form-control bg-light border-light"
                               autoComplete="off"
                               id="searchList"
-                              placeholder="Search name"
+                              placeholder="Search name or bank"
+                              onChange={(e) =>
+                                dispatch(
+                                  pendingFormsFilter({
+                                    searchQuery: e.target.value,
+                                  })
+                                )
+                              }
                             />
                             <i className="ri-search-line search-icon"></i>
                           </div>
@@ -85,11 +97,14 @@ const PendingForms = () => {
                                 mode: "range",
                                 dateFormat: "d M, Y",
                               }}
+                              onChange={(date) => {
+                                console.log("DATE FILTERING ->", date);
+                              }}
                             />
                           </div>
 
                           <button
-                            type="button"
+                            type="submit"
                             className="btn btn-primary btn-label waves-effect waves-light"
                           >
                             <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
@@ -130,7 +145,9 @@ const PendingForms = () => {
                       </Nav>
 
                       <TabContent activeTab={activeTab}>
-                        <TabPane tabId="1" id="updated">
+                        <TabPane tabId="1" id="pending">
+                          {/* <div className="table-responsive table-card mt-3 mb-1"> */}
+                          {/* will use this later for responsiveness */}
                           <div className="table-card mt-3 mb-1">
                             <table className="table align-middle table-nowrap">
                               <thead className="table-light">
@@ -148,7 +165,10 @@ const PendingForms = () => {
                                 </tr>
                               </thead>
                               <tbody className="list form-check-all">
-                                {pendingForms?.map((form) => (
+                                {(filteredPendingForms.length !== 0
+                                  ? filteredPendingForms
+                                  : pendingForms
+                                )?.map((form) => (
                                   <FormRow
                                     key={form.id}
                                     form={form}
@@ -160,8 +180,11 @@ const PendingForms = () => {
                           </div>
                         </TabPane>
 
-                        <TabPane tabId="2" id="product">
+                        <TabPane tabId="2" id="updated">
+                          {/* <div className="table-responsive table-card mt-3 mb-1"> */}
                           <div className="table-card mt-3 mb-1">
+                            {" "}
+                            {/* will use this later for responsiveness */}
                             <table className="table align-middle table-nowrap">
                               <thead className="table-light">
                                 <tr>
@@ -178,7 +201,10 @@ const PendingForms = () => {
                                 </tr>
                               </thead>
                               <tbody className="list form-check-all">
-                                {updatedForms?.map((form) => (
+                                {(filteredUpdatedForms.length !== 0
+                                  ? filteredUpdatedForms
+                                  : updatedForms
+                                )?.map((form) => (
                                   <FormRow
                                     key={form.id}
                                     form={form}

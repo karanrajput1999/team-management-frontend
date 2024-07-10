@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   centerUsers: [],
+  allCenterUsers: [],
   alreadyRegisteredError: null,
   error: "",
 };
@@ -24,6 +25,7 @@ const usersSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.centerUsers = action.payload?.data.users;
+        state.allCenterUsers = action.payload?.data.centerUsers; // these users are going to be used on the form page
         state.error = "";
       }
     });

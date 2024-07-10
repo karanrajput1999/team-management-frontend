@@ -627,6 +627,13 @@ export const getPendingForms = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/pending-forms`);
 };
 
+export const pendingFormsFilter = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/pending-forms/filter`,
+    data
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);
