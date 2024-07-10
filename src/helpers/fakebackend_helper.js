@@ -618,6 +618,12 @@ export const updateFormStatus = (data) => {
 export const getApplicationReport = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/application-report`);
 };
+export const filterApplicationReport = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/application-report/filter`,
+    data
+  );
+};
 
 // *****************************************************************
 // ************************* PENDING FORMS *************************

@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getApplicatinReport } from "./thunk";
+import { getApplicatinReport, filterApplicatinReport } from "./thunk";
 
 export const initialState = {
   applicationReports: [],
+  filteredApplicationReports: [],
   error: "",
 };
 
@@ -12,11 +13,19 @@ const centersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getApplicatinReport.fulfilled, (state, action) => {
-      console.log("APPLICATION REPORT DATA IN REDUCER ->", action.payload);
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.applicationReports = action.payload?.data.applicationReports;
+        state.error = "";
+      }
+    });
+    builder.addCase(filterApplicatinReport.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.filteredApplicationReports =
+          action.payload?.data.applicationReports;
         state.error = "";
       }
     });

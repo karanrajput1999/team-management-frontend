@@ -43,10 +43,11 @@ const FormRow = ({ form, onUpdate }) => {
   const now = moment();
   const daysDifference = now.diff(form.createdAt, "days");
 
-  console.log("DAYS DIFFERENCE ->", daysDifference);
-
   return (
-    <tr key={form.id} className={`${daysDifference > 7 ? "bg-danger" : ""}`}>
+    <tr
+      key={form.id}
+      className={`${daysDifference > 7 ? "bg-danger text-white" : ""}`}
+    >
       <td className="id">{form.id}</td>
       <td className="name">{form.fullName}</td>
       <td className="punch_date">{formattedDateWithZeroPadding}</td>

@@ -14,7 +14,10 @@ import Flatpickr from "react-flatpickr";
 import { getCenters } from "../../slices/Centers/thunk";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
-import { getApplicatinReport } from "../../slices/ApplicationReport/thunk";
+import {
+  getApplicatinReport,
+  filterApplicatinReport,
+} from "../../slices/ApplicationReport/thunk";
 
 const ApplicationReport = () => {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
@@ -31,11 +34,9 @@ const ApplicationReport = () => {
   const dispatch = useDispatch();
 
   const { centers } = useSelector((state) => state.Centers);
-  const { applicationReports } = useSelector(
+  const { applicationReports, filteredApplicationReports } = useSelector(
     (state) => state.ApplicationReport
   );
-
-  console.log("APPLICATION REPORTS DATA ->", applicationReports);
 
   function handleSelectSingleCenter(centerName) {
     setSelectedSingleCenterName(centerName);
@@ -172,6 +173,13 @@ const ApplicationReport = () => {
                             autoComplete="off"
                             id="searchList"
                             placeholder="Search report"
+                            onChange={(e) => {
+                              dispatch(
+                                filterApplicatinReport({
+                                  searchQuery: e.target.value,
+                                })
+                              );
+                            }}
                           />
                           <i className="ri-search-line search-icon"></i>
                         </div>
@@ -302,7 +310,10 @@ const ApplicationReport = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {applicationReports?.map((bankReport) => (
+                          {(filteredApplicationReports.length !== 0
+                            ? filteredApplicationReports
+                            : applicationReports
+                          )?.map((bankReport) => (
                             <tr key={bankReport?.id}>
                               <td>{bankReport?.id}</td>
                               <td>

@@ -16,7 +16,6 @@ import {
 import classnames from "classnames";
 
 import BreadCrumb from "../../Components/Common/BreadCrumb";
-import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFormStatus } from "../../helpers/fakebackend_helper";
@@ -27,6 +26,10 @@ import {
 import FormRow from "./FormRow";
 
 const PendingForms = () => {
+  const [activeTab, setactiveTab] = useState("1");
+
+  const [dateRange, setDateRange] = useState(null);
+
   const {
     pendingForms,
     updatedForms,
@@ -34,7 +37,6 @@ const PendingForms = () => {
     filteredUpdatedForms,
   } = useSelector((state) => state.PendingForms);
 
-  const [activeTab, setactiveTab] = useState("1");
   const toggle = (tab) => {
     if (activeTab !== tab) {
       setactiveTab(tab);
@@ -51,6 +53,14 @@ const PendingForms = () => {
     updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
       dispatch(getPendingForms());
     });
+  }
+
+  function handleFilterByDate() {
+    dispatch(
+      pendingFormsFilter({
+        date: dateRange,
+      })
+    );
   }
 
   document.title = "Pending Forms";
@@ -98,7 +108,7 @@ const PendingForms = () => {
                                 dateFormat: "d M, Y",
                               }}
                               onChange={(date) => {
-                                console.log("DATE FILTERING ->", date);
+                                setDateRange(date);
                               }}
                             />
                           </div>
@@ -106,6 +116,7 @@ const PendingForms = () => {
                           <button
                             type="submit"
                             className="btn btn-primary btn-label waves-effect waves-light"
+                            onClick={handleFilterByDate}
                           >
                             <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
                             Apply Filters
