@@ -180,9 +180,9 @@ const PendingForms = () => {
                                 {(filteredPendingForms.length !== 0
                                   ? filteredPendingForms
                                   : pendingForms
-                                )?.map((form) => (
+                                )?.map((form, idx) => (
                                   <FormRow
-                                    key={form.id}
+                                    key={idx}
                                     form={form}
                                     onUpdate={updateCreditCardForm}
                                   />
@@ -216,9 +216,9 @@ const PendingForms = () => {
                                 {(filteredUpdatedForms.length !== 0
                                   ? filteredUpdatedForms
                                   : updatedForms
-                                )?.map((form) => (
+                                )?.map((form, idx) => (
                                   <FormRow
-                                    key={form.id}
+                                    key={idx}
                                     form={form}
                                     onUpdate={updateCreditCardForm}
                                   />

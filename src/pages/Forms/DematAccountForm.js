@@ -2,36 +2,20 @@ import {
   Card,
   CardBody,
   Col,
-  Container,
   Form,
   FormFeedback,
   Input,
   Label,
-  Nav,
-  NavItem,
-  NavLink,
   Row,
-  TabContent,
-  TabPane,
 } from "reactstrap";
 import Select from "react-select";
-import Flatpickr from "react-flatpickr";
 
 function DematAccountForm({
-  formHandleSubmit,
-  validation,
-  employeeUserOptions,
-  selectedSingleEmployeeName,
-  handleSelectSingleEmployeeName,
-  bankOptions,
-  selectedSingleBank,
-  handleSelectSingleBankName,
+  dematAccountValidation,
+  dematAccountFormHandleSubmit,
   clientTypeOptions,
   selectedSingleClientType,
   handleSelectSingleClientType,
-  loanTypeOptions,
-  selectedSingleLoanType,
-  handleSelectSingleLoanType,
 }) {
   return (
     <Row>
@@ -39,7 +23,7 @@ function DematAccountForm({
         <Card>
           <CardBody>
             <div className="live-preview">
-              <Form onSubmit={formHandleSubmit}>
+              <Form onSubmit={dematAccountFormHandleSubmit}>
                 <Row>
                   <Col md={6}>
                     <div className="mb-3">
@@ -55,10 +39,10 @@ function DematAccountForm({
                         value={selectedSingleClientType}
                         onChange={(clientType) => {
                           handleSelectSingleClientType(clientType);
-                          // validation.setFieldValue(
-                          //   "clientType",
-                          //   clientType.value
-                          // );
+                          dematAccountValidation.setFieldValue(
+                            "employeeType",
+                            clientType.value
+                          );
                         }}
                         options={clientTypeOptions}
                         placeholder="Employee Type"
@@ -66,27 +50,6 @@ function DematAccountForm({
                     </div>
                   </Col>
 
-                  <Col md={6}>
-                    <div className="mb-3">
-                      <Label
-                        htmlFor="loanType"
-                        className="form-label text-muted"
-                      >
-                        Loan Type
-                      </Label>
-                      <Select
-                        id="loanType"
-                        name="loanType"
-                        value={selectedSingleLoanType}
-                        onChange={(loanType) => {
-                          handleSelectSingleLoanType(loanType);
-                          // validation.setFieldValue("bankName", bankName.value);
-                        }}
-                        options={loanTypeOptions}
-                        placeholder="Loan Type"
-                      />
-                    </div>
-                  </Col>
                   <Col md={6}>
                     <div className="mb-3">
                       <Label htmlFor="name" className="form-label text-muted">
@@ -98,23 +61,53 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Full Name"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.fullName || ""}
-                        // invalid={
-                        //   validation.touched.fullName &&
-                        //   validation.errors.fullName
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={dematAccountValidation.values.name || ""}
+                        invalid={
+                          dematAccountValidation.touched.name &&
+                          dematAccountValidation.errors.name
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.fullName &&
-                      validation.errors.fullName ? (
+                      {dematAccountValidation.touched.name &&
+                      dematAccountValidation.errors.name ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.fullName}
+                          {dematAccountValidation.errors.name}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="mb-3">
+                      <Label htmlFor="panNo" className="form-label text-muted">
+                        Pan No
+                      </Label>
+                      <Input
+                        id="panNo"
+                        name="panNo"
+                        className="form-control"
+                        placeholder="Enter pan no"
+                        type="text"
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={dematAccountValidation.values.panNo || ""}
+                        invalid={
+                          dematAccountValidation.touched.panNo &&
+                          dematAccountValidation.errors.panNo
+                            ? true
+                            : false
+                        }
+                      />
+
+                      {dematAccountValidation.touched.panNo &&
+                      dematAccountValidation.errors.panNo ? (
+                        <FormFeedback type="invalid">
+                          {dematAccountValidation.errors.panNo}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                   </Col>
 
@@ -132,23 +125,23 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.mobileNo || ""}
-                        // invalid={
-                        //   validation.touched.mobileNo &&
-                        //   validation.errors.mobileNo
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={dematAccountValidation.values.mobileNo || ""}
+                        invalid={
+                          dematAccountValidation.touched.mobileNo &&
+                          dematAccountValidation.errors.mobileNo
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.mobileNo &&
-                      validation.errors.mobileNo ? (
+                      {dematAccountValidation.touched.mobileNo &&
+                      dematAccountValidation.errors.mobileNo ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.mobileNo}
+                          {dematAccountValidation.errors.mobileNo}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -165,23 +158,25 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Current Address"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.currentAddress || ""}
-                        // invalid={
-                        //   validation.touched.currentAddress &&
-                        //   validation.errors.currentAddress
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={
+                          dematAccountValidation.values.currentAddress || ""
+                        }
+                        invalid={
+                          dematAccountValidation.touched.currentAddress &&
+                          dematAccountValidation.errors.currentAddress
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.currentAddress &&
-                      validation.errors.currentAddress ? (
+                      {dematAccountValidation.touched.currentAddress &&
+                      dematAccountValidation.errors.currentAddress ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.currentAddress}
+                          {dematAccountValidation.errors.currentAddress}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 
@@ -196,21 +191,23 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Income"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.income || ""}
-                        // invalid={
-                        //   validation.touched.income && validation.errors.income
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={dematAccountValidation.values.income || ""}
+                        invalid={
+                          dematAccountValidation.touched.income &&
+                          dematAccountValidation.errors.income
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.income && validation.errors.income ? (
+                      {dematAccountValidation.touched.income &&
+                      dematAccountValidation.errors.income ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.income}
+                          {dematAccountValidation.errors.income}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -227,23 +224,23 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Pin Code"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.pinCode || ""}
-                        // invalid={
-                        //   validation.touched.pinCode &&
-                        //   validation.errors.pinCode
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={dematAccountValidation.handleChange}
+                        onBlur={dematAccountValidation.handleBlur}
+                        value={dematAccountValidation.values.pinCode || ""}
+                        invalid={
+                          dematAccountValidation.touched.pinCode &&
+                          dematAccountValidation.errors.pinCode
+                            ? true
+                            : false
+                        }
                       />
-                      {/* 
-                      {validation.touched.pinCode &&
-                      validation.errors.pinCode ? (
+
+                      {dematAccountValidation.touched.pinCode &&
+                      dematAccountValidation.errors.pinCode ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.pinCode}
+                          {dematAccountValidation.errors.pinCode}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 

@@ -45,6 +45,7 @@ import InsuranceForm from "./InsuranceForm";
 import DematAccountForm from "./DematAccountForm";
 import { createLoanForm } from "../../slices/LoanForm/thunk";
 import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
+import { createDematAccountForm } from "../../slices/DematAccountForm/thunk";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -229,6 +230,44 @@ const Forms = () => {
 
     return false;
   }
+  // Demat Account form formik setup
+  const dematAccountValidation = useFormik({
+    initialValues: {
+      employeeType: "",
+      name: "",
+      mobileNo: "",
+      currentAddress: "",
+      pinCode: "",
+      panNo: "",
+      income: "",
+    },
+    validationSchema: Yup.object({
+      employeeType: Yup.string().required("Please select employee type"),
+
+      name: Yup.string().required("Please enter name"),
+      mobileNo: Yup.string().required("Please enter mobile number"),
+      currentAddress: Yup.string().required("Please enter current address"),
+      pinCode: Yup.number().required("Please enter pin code"),
+      panNo: Yup.string().required("Please enter pan no"),
+      income: Yup.number().required("Please enter income"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      dispatch(
+        createDematAccountForm({ ...values, formType: "Demat Account" })
+      );
+      setSelectedSingleClientType(null);
+
+      resetForm();
+    },
+  });
+
+  function dematAccountFormHandleSubmit(e) {
+    e.preventDefault();
+
+    dematAccountValidation.handleSubmit();
+
+    return false;
+  }
 
   document.title = "Forms";
   return (
@@ -352,9 +391,10 @@ const Forms = () => {
                     </TabPane>
                     <TabPane tabId="4">
                       <DematAccountForm
-                        loanTypeOptions={loanTypeOptions}
-                        selectedSingleLoanType={selectedSingleLoanType}
-                        handleSelectSingleLoanType={handleSelectSingleLoanType}
+                        dematAccountValidation={dematAccountValidation}
+                        dematAccountFormHandleSubmit={
+                          dematAccountFormHandleSubmit
+                        }
                         clientTypeOptions={clientTypeOptions}
                         selectedSingleClientType={selectedSingleClientType}
                         handleSelectSingleClientType={

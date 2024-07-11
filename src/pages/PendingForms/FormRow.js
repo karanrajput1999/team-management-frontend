@@ -6,6 +6,7 @@ import moment from "moment/moment";
 
 const FormRow = ({ form, onUpdate }) => {
   const [applicationNo, setApplicationNo] = useState("");
+
   const [formStatus, setFormStatus] = useState(form.formStatus || "");
 
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
@@ -44,10 +45,7 @@ const FormRow = ({ form, onUpdate }) => {
   const daysDifference = now.diff(form.createdAt, "days");
 
   return (
-    <tr
-      key={form.id}
-      style={daysDifference > 7 ? { backgroundColor: "#FCE3DE" } : {}}
-    >
+    <tr style={daysDifference > 7 ? { backgroundColor: "#FCE3DE" } : {}}>
       <td className="id">{form.id}</td>
       <td className="name">{form.fullName}</td>
       <td className="punch_date">{formattedDateWithZeroPadding}</td>
@@ -55,7 +53,7 @@ const FormRow = ({ form, onUpdate }) => {
       <td className="panNumber">{form.panNo}</td>
       <td className="bank">{form.bankName ? form.bankName : "-----"}</td>
       <td className="formType">
-        <span class="badge border border-primary text-primary fs-12">
+        <span className="badge border border-primary text-primary fs-12">
           {form.formType}
         </span>
       </td>

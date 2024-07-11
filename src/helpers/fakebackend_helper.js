@@ -630,6 +630,19 @@ export const createInsuranceForm = (data) => {
     data
   );
 };
+// *****************************************************************
+// ********************** DEMAT ACCOUNT FORM ***********************
+// *****************************************************************
+export const getDematAccountForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/demat-account-forms`);
+};
+
+export const createDematAccountForm = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/demat-account-form/create`,
+    data
+  );
+};
 
 // *****************************************************************
 // ****************** CREDIT CARD FORM STATUS **********************

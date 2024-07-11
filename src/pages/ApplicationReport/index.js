@@ -18,6 +18,7 @@ import {
   getApplicatinReport,
   filterApplicatinReport,
 } from "../../slices/ApplicationReport/thunk";
+import moment from "moment-timezone";
 
 const ApplicationReport = () => {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
@@ -303,6 +304,7 @@ const ApplicationReport = () => {
 
                             <th data-sort="pan_card">Pan Card</th>
 
+                            <th data-sort="client_of">Form Type</th>
                             <th data-sort="client_of">Client of</th>
 
                             <th data-sort="status_1">Status 1</th>
@@ -313,8 +315,8 @@ const ApplicationReport = () => {
                           {(filteredApplicationReports.length !== 0
                             ? filteredApplicationReports
                             : applicationReports
-                          )?.map((bankReport) => (
-                            <tr key={bankReport?.id}>
+                          )?.map((bankReport, idx) => (
+                            <tr key={idx}>
                               <td>{bankReport?.id}</td>
                               <td>
                                 {bankReport?.applicationNo ? (
@@ -330,11 +332,41 @@ const ApplicationReport = () => {
                               <td>{bankReport?.mobileNo}</td>
                               <td>{bankReport?.panNo}</td>
                               <td>
-                                {" "}
-                                {Object.keys(bankReport?.user).length !== 0 &&
-                                  bankReport?.user?.centerName +
-                                    " By " +
-                                    bankReport?.user?.name}
+                                <span className="badge border border-primary text-primary fs-12">
+                                  {bankReport?.formType}
+                                </span>
+                              </td>
+
+                              <td>
+                                {Object.keys(bankReport?.user).length !== 0 && (
+                                  <div>
+                                    <div>
+                                      <span
+                                        className="fs-13"
+                                        style={{ textTransform: "uppercase" }}
+                                      >
+                                        {bankReport?.user?.centerName}
+                                      </span>
+                                      <span> By </span>
+                                      <span
+                                        className="fs-13"
+                                        style={{ textTransform: "uppercase" }}
+                                      >
+                                        {bankReport?.user?.name}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="fs-13">
+                                        {" "}
+                                        On{" "}
+                                        {moment
+                                          .utc(bankReport?.createdAt)
+                                          .tz("Asia/Kolkata")
+                                          .format("DD MMM, YY")}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
                               </td>
                               <td>
                                 <span
