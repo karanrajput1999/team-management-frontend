@@ -46,6 +46,7 @@ import DematAccountForm from "./DematAccountForm";
 import { createLoanForm } from "../../slices/LoanForm/thunk";
 import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
 import { createDematAccountForm } from "../../slices/DematAccountForm/thunk";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -66,6 +67,10 @@ const Forms = () => {
   const { allCenterUsers } = useSelector((state) => state.AddUsers);
 
   const dispatch = useDispatch();
+
+  const loggedInUser = getLoggedinUser();
+
+  console.log("LOGGED IN USER ->", loggedInUser);
 
   const arrowNavToggle = (tab) => {
     if (arrowNavTab !== tab) {

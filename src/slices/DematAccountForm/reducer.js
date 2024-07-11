@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getInsuranceForms, createInsuranceForm } from "./thunk";
+import { getDematAccountForms, createDematAccountForm } from "./thunk";
 
 export const initialState = {
   forms: [],
@@ -12,7 +12,7 @@ const dematAccountFormSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getInsuranceForms.fulfilled, (state, action) => {
+    builder.addCase(getDematAccountForms.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
@@ -21,7 +21,7 @@ const dematAccountFormSlice = createSlice({
       }
     });
 
-    builder.addCase(createInsuranceForm.fulfilled, (state, action) => {
+    builder.addCase(createDematAccountForm.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = "";
       } else {

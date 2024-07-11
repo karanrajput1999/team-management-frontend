@@ -208,6 +208,7 @@ const PendingForms = () => {
                                   <th data-sort="panNo">Pan No</th>
 
                                   <th data-sort="bank">Bank</th>
+                                  <th data-sort="bank">Form Type</th>
 
                                   <th data-sort="unique_attempts">Tools</th>
                                 </tr>

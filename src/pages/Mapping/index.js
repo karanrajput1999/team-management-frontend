@@ -262,6 +262,7 @@ const Mapping = () => {
                                   {menu.label}
                                 </th>
                               ))}
+                              <th>Form Permissions</th>
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
@@ -269,7 +270,6 @@ const Mapping = () => {
                               {/* menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha */}
                               {menus.map((menu) => (
                                 <td
-                                  className="campaign-management"
                                   style={{
                                     borderLeft: "1px solid #e9ebec",
                                     verticalAlign: "top",
@@ -311,6 +311,62 @@ const Mapping = () => {
                                   )}
                                 </td>
                               ))}
+                              <td
+                                style={{
+                                  borderLeft: "1px solid #e9ebec",
+                                  verticalAlign: "top",
+                                }}
+                              >
+                                <div style={{ display: "flex", gap: "5px" }}>
+                                  <Input
+                                    id="credit-card"
+                                    name="credit-card"
+                                    type="checkbox"
+                                  />
+                                  <Label
+                                    htmlFor="credit-card"
+                                    className="form-label"
+                                  >
+                                    Credit Card
+                                  </Label>
+                                </div>
+                                <div style={{ display: "flex", gap: "5px" }}>
+                                  <Input
+                                    id="loan"
+                                    name="loan"
+                                    type="checkbox"
+                                  />
+                                  <Label htmlFor="loan" className="form-label">
+                                    Loan
+                                  </Label>
+                                </div>
+                                <div style={{ display: "flex", gap: "5px" }}>
+                                  <Input
+                                    id="insurance"
+                                    name="insurance"
+                                    type="checkbox"
+                                  />
+                                  <Label
+                                    htmlFor="insurance"
+                                    className="form-label"
+                                  >
+                                    Insurance
+                                  </Label>
+                                </div>
+                                <div style={{ display: "flex", gap: "5px" }}>
+                                  <Input
+                                    id="demat-account"
+                                    name="demat-account"
+                                    type="checkbox"
+                                  />
+                                  <Label
+                                    htmlFor="demat-account"
+                                    className="form-label"
+                                  >
+                                    Demat Account
+                                  </Label>
+                                </div>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
