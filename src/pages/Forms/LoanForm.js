@@ -2,31 +2,17 @@ import {
   Card,
   CardBody,
   Col,
-  Container,
   Form,
   FormFeedback,
   Input,
   Label,
-  Nav,
-  NavItem,
-  NavLink,
   Row,
-  TabContent,
-  TabPane,
 } from "reactstrap";
 import Select from "react-select";
-import Flatpickr from "react-flatpickr";
 
 function LoanForm({
-  // validation,
   loanValidation,
   loanFormHandleSubmit,
-  // employeeUserOptions,
-  // selectedSingleEmployeeName,
-  // handleSelectSingleEmployeeName,
-  // bankOptions,
-  // selectedSingleBank,
-  // handleSelectSingleBankName,
   clientTypeOptions,
   selectedSingleClientType,
   handleSelectSingleClientType,

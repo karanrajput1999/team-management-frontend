@@ -2,36 +2,23 @@ import {
   Card,
   CardBody,
   Col,
-  Container,
   Form,
   FormFeedback,
   Input,
   Label,
-  Nav,
-  NavItem,
-  NavLink,
   Row,
-  TabContent,
-  TabPane,
 } from "reactstrap";
 import Select from "react-select";
-import Flatpickr from "react-flatpickr";
 
 function InsuranceForm({
-  formHandleSubmit,
-  validation,
-  employeeUserOptions,
-  selectedSingleEmployeeName,
-  handleSelectSingleEmployeeName,
-  bankOptions,
-  selectedSingleBank,
-  handleSelectSingleBankName,
+  insuranceValidation,
+  insuranceFormHandleSubmit,
   clientTypeOptions,
   selectedSingleClientType,
   handleSelectSingleClientType,
-  loanTypeOptions,
-  selectedSingleLoanType,
-  handleSelectSingleLoanType,
+  insuranceTypeOptions,
+  selectedSingleInsuranceType,
+  handleSelectSingleInsuranceType,
 }) {
   return (
     <Row>
@@ -39,7 +26,7 @@ function InsuranceForm({
         <Card>
           <CardBody>
             <div className="live-preview">
-              <Form onSubmit={formHandleSubmit}>
+              <Form onSubmit={insuranceFormHandleSubmit}>
                 <Row>
                   <Col md={6}>
                     <div className="mb-3">
@@ -55,10 +42,10 @@ function InsuranceForm({
                         value={selectedSingleClientType}
                         onChange={(clientType) => {
                           handleSelectSingleClientType(clientType);
-                          // validation.setFieldValue(
-                          //   "clientType",
-                          //   clientType.value
-                          // );
+                          insuranceValidation.setFieldValue(
+                            "employeeType",
+                            clientType.value
+                          );
                         }}
                         options={clientTypeOptions}
                         placeholder="Employee Type"
@@ -69,21 +56,24 @@ function InsuranceForm({
                   <Col md={6}>
                     <div className="mb-3">
                       <Label
-                        htmlFor="loanType"
+                        htmlFor="insuranceType"
                         className="form-label text-muted"
                       >
-                        Loan Type
+                        Insurance Type
                       </Label>
                       <Select
-                        id="loanType"
-                        name="loanType"
-                        value={selectedSingleLoanType}
-                        onChange={(loanType) => {
-                          handleSelectSingleLoanType(loanType);
-                          // validation.setFieldValue("bankName", bankName.value);
+                        id="insuranceType"
+                        name="insuranceType"
+                        value={selectedSingleInsuranceType}
+                        onChange={(insuranceType) => {
+                          handleSelectSingleInsuranceType(insuranceType);
+                          insuranceValidation.setFieldValue(
+                            "insuranceType",
+                            insuranceType.value
+                          );
                         }}
-                        options={loanTypeOptions}
-                        placeholder="Loan Type"
+                        options={insuranceTypeOptions}
+                        placeholder="Insurance Type"
                       />
                     </div>
                   </Col>
@@ -98,23 +88,53 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Full Name"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.fullName || ""}
-                        // invalid={
-                        //   validation.touched.fullName &&
-                        //   validation.errors.fullName
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.name || ""}
+                        invalid={
+                          insuranceValidation.touched.name &&
+                          insuranceValidation.errors.name
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.fullName &&
-                      validation.errors.fullName ? (
+                      {insuranceValidation.touched.name &&
+                      insuranceValidation.errors.name ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.fullName}
+                          {insuranceValidation.errors.name}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="mb-3">
+                      <Label htmlFor="panNo" className="form-label text-muted">
+                        Pan No
+                      </Label>
+                      <Input
+                        id="panNo"
+                        name="panNo"
+                        className="form-control"
+                        placeholder="Enter pan no"
+                        type="text"
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.panNo || ""}
+                        invalid={
+                          insuranceValidation.touched.panNo &&
+                          insuranceValidation.errors.panNo
+                            ? true
+                            : false
+                        }
+                      />
+
+                      {insuranceValidation.touched.panNo &&
+                      insuranceValidation.errors.panNo ? (
+                        <FormFeedback type="invalid">
+                          {insuranceValidation.errors.panNo}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                   </Col>
 
@@ -132,23 +152,23 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.mobileNo || ""}
-                        // invalid={
-                        //   validation.touched.mobileNo &&
-                        //   validation.errors.mobileNo
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.mobileNo || ""}
+                        invalid={
+                          insuranceValidation.touched.mobileNo &&
+                          insuranceValidation.errors.mobileNo
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.mobileNo &&
-                      validation.errors.mobileNo ? (
+                      {insuranceValidation.touched.mobileNo &&
+                      insuranceValidation.errors.mobileNo ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.mobileNo}
+                          {insuranceValidation.errors.mobileNo}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -165,23 +185,23 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Current Address"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.currentAddress || ""}
-                        // invalid={
-                        //   validation.touched.currentAddress &&
-                        //   validation.errors.currentAddress
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.currentAddress || ""}
+                        invalid={
+                          insuranceValidation.touched.currentAddress &&
+                          insuranceValidation.errors.currentAddress
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.currentAddress &&
-                      validation.errors.currentAddress ? (
+                      {insuranceValidation.touched.currentAddress &&
+                      insuranceValidation.errors.currentAddress ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.currentAddress}
+                          {insuranceValidation.errors.currentAddress}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 
@@ -196,21 +216,23 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Income"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.income || ""}
-                        // invalid={
-                        //   validation.touched.income && validation.errors.income
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.income || ""}
+                        invalid={
+                          insuranceValidation.touched.income &&
+                          insuranceValidation.errors.income
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.income && validation.errors.income ? (
+                      {insuranceValidation.touched.income &&
+                      insuranceValidation.errors.income ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.income}
+                          {insuranceValidation.errors.income}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -227,23 +249,23 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Pin Code"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.pinCode || ""}
-                        // invalid={
-                        //   validation.touched.pinCode &&
-                        //   validation.errors.pinCode
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={insuranceValidation.handleChange}
+                        onBlur={insuranceValidation.handleBlur}
+                        value={insuranceValidation.values.pinCode || ""}
+                        invalid={
+                          insuranceValidation.touched.pinCode &&
+                          insuranceValidation.errors.pinCode
+                            ? true
+                            : false
+                        }
                       />
-                      {/* 
-                      {validation.touched.pinCode &&
-                      validation.errors.pinCode ? (
+
+                      {insuranceValidation.touched.pinCode &&
+                      insuranceValidation.errors.pinCode ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.pinCode}
+                          {insuranceValidation.errors.pinCode}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 

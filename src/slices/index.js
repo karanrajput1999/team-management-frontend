@@ -15,6 +15,7 @@ import CreditCardFormReducer from "./CreditCardForm/reducer";
 import LoanFormReducer from "./LoanForm/reducer";
 import ApplicationReportReducer from "./ApplicationReport/reducer";
 import PendingFormsReducer from "./PendingForms/reducer";
+import InsuranceFormsReducer from "./InsuranceForm/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   CreditCardForms: CreditCardFormReducer,
   LoanForms: LoanFormReducer,
   PendingForms: PendingFormsReducer,
+  InsuranceForms: InsuranceFormsReducer,
   ApplicationReport: ApplicationReportReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,

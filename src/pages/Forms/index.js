@@ -24,6 +24,7 @@ import {
   bankOptions,
   clientTypeOptions,
   loanTypeOptions,
+  insuranceTypeOptions,
 } from "../../common/data/Forms";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -43,6 +44,7 @@ import LoanForm from "./LoanForm";
 import InsuranceForm from "./InsuranceForm";
 import DematAccountForm from "./DematAccountForm";
 import { createLoanForm } from "../../slices/LoanForm/thunk";
+import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -54,6 +56,9 @@ const Forms = () => {
     useState(null);
 
   const [selectedSingleLoanType, setSelectedSingleLoanType] = useState(null);
+
+  const [selectedSingleInsuranceType, setSelectedSingleInsuranceType] =
+    useState(null);
 
   const [arrowNavTab, setarrowNavTab] = useState("1");
 
@@ -82,6 +87,9 @@ const Forms = () => {
   }
   function handleSelectSingleLoanType(loanType) {
     setSelectedSingleLoanType(loanType);
+  }
+  function handleSelectSingleInsuranceType(insuranceType) {
+    setSelectedSingleInsuranceType(insuranceType);
   }
 
   const employeeUserOptions = allCenterUsers.map((user) => {
@@ -167,8 +175,7 @@ const Forms = () => {
       panNo: Yup.string().required("Please enter pan no"),
       income: Yup.number().required("Please enter income"),
     }),
-    onSubmit: (values, { resetForm, setFieldValue }) => {
-      // dispatch(createForm(values));
+    onSubmit: (values, { resetForm }) => {
       dispatch(createLoanForm({ ...values, formType: "Loan" }));
       setSelectedSingleClientType(null);
       setSelectedSingleLoanType(null);
@@ -180,9 +187,45 @@ const Forms = () => {
   function loanFormHandleSubmit(e) {
     e.preventDefault();
 
-    console.log("SUBMIT LOAN FORM CALLED");
-
     loanValidation.handleSubmit();
+
+    return false;
+  }
+  // Insurance form formik setup
+  const insuranceValidation = useFormik({
+    initialValues: {
+      employeeType: "",
+      insuranceType: "",
+      name: "",
+      mobileNo: "",
+      currentAddress: "",
+      pinCode: "",
+      panNo: "",
+      income: "",
+    },
+    validationSchema: Yup.object({
+      employeeType: Yup.string().required("Please select employee type"),
+      insuranceType: Yup.string().required("Please select insurance Type"),
+      name: Yup.string().required("Please enter name"),
+      mobileNo: Yup.string().required("Please enter mobile number"),
+      currentAddress: Yup.string().required("Please enter current address"),
+      pinCode: Yup.number().required("Please enter pin code"),
+      panNo: Yup.string().required("Please enter pan no"),
+      income: Yup.number().required("Please enter income"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      dispatch(createInsuranceForm({ ...values, formType: "Insurance" }));
+      setSelectedSingleClientType(null);
+      setSelectedSingleInsuranceType(null);
+
+      resetForm();
+    },
+  });
+
+  function insuranceFormHandleSubmit(e) {
+    e.preventDefault();
+
+    insuranceValidation.handleSubmit();
 
     return false;
   }
@@ -291,9 +334,15 @@ const Forms = () => {
                     </TabPane>
                     <TabPane tabId="3">
                       <InsuranceForm
-                        loanTypeOptions={loanTypeOptions}
-                        selectedSingleLoanType={selectedSingleLoanType}
-                        handleSelectSingleLoanType={handleSelectSingleLoanType}
+                        insuranceValidation={insuranceValidation}
+                        insuranceTypeOptions={insuranceTypeOptions}
+                        selectedSingleInsuranceType={
+                          selectedSingleInsuranceType
+                        }
+                        insuranceFormHandleSubmit={insuranceFormHandleSubmit}
+                        handleSelectSingleInsuranceType={
+                          handleSelectSingleInsuranceType
+                        }
                         clientTypeOptions={clientTypeOptions}
                         selectedSingleClientType={selectedSingleClientType}
                         handleSelectSingleClientType={

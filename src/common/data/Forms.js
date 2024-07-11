@@ -61,3 +61,18 @@ export const loanTypeOptions = [
     label: "Education Loan",
   },
 ];
+
+export const insuranceTypeOptions = [
+  {
+    value: "Health Insurance",
+    label: "Health Insurance",
+  },
+  {
+    value: "Life Insurance",
+    label: "Life Insurance",
+  },
+  {
+    value: "Vehicle Insurance",
+    label: "Vehicle Insurance",
+  },
+];

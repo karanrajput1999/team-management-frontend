@@ -612,9 +612,21 @@ export const getLoanForms = () => {
 };
 
 export const createLoanForm = (data) => {
-  console.log("GETTING LOAN FORMS DATA ->", data);
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/loan-form/create`,
+    data
+  );
+};
+// *****************************************************************
+// ************************ INSURANCE FORM *************************
+// *****************************************************************
+export const getInsuranceForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/insurance-forms`);
+};
+
+export const createInsuranceForm = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/insurance-form/create`,
     data
   );
 };
