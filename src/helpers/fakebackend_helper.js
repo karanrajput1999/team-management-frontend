@@ -592,18 +592,35 @@ export const updateCenterUser = ({
 // };
 
 // *****************************************************************
-// *************************** FORM ********************************
+// *********************** CREDIT CARD FORM ************************
 // *****************************************************************
-export const getForms = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/forms`);
+export const getCreditCardForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/credit-card-forms`);
 };
 
-export const createForm = (data) => {
-  return api.create(`${process.env.REACT_APP_SERVER_URL}/form/create`, data);
+export const createCreditCardForm = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/credit-card-form/create`,
+    data
+  );
+};
+// *****************************************************************
+// ************************** LOAN FORM ****************************
+// *****************************************************************
+export const getLoanForms = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/loan-forms`);
+};
+
+export const createLoanForm = (data) => {
+  console.log("GETTING LOAN FORMS DATA ->", data);
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/loan-form/create`,
+    data
+  );
 };
 
 // *****************************************************************
-// ************************* FORM STATUS ***************************
+// ****************** CREDIT CARD FORM STATUS **********************
 // *****************************************************************
 export const updateFormStatus = (data) => {
   return api.update(

@@ -11,7 +11,8 @@ import ReportReducer from "./Report/reducer";
 import CenterReducer from "./Centers/reducer";
 import BankCodeReducer from "./BankCode/reducer";
 import AddUsersReducer from "./AddUsers/reducer";
-import FormReducer from "./Form/reducer";
+import CreditCardFormReducer from "./CreditCardForm/reducer";
+import LoanFormReducer from "./LoanForm/reducer";
 import ApplicationReportReducer from "./ApplicationReport/reducer";
 import PendingFormsReducer from "./PendingForms/reducer";
 
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
   Centers: CenterReducer,
   BankCodes: BankCodeReducer,
   AddUsers: AddUsersReducer,
-  Forms: FormReducer,
+  CreditCardForms: CreditCardFormReducer,
+  LoanForms: LoanFormReducer,
   PendingForms: PendingFormsReducer,
   ApplicationReport: ApplicationReportReducer,
   ForgetPassword: ForgetPasswordReducer,

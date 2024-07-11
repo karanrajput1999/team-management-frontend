@@ -1,18 +1,18 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getForms, createForm } from "./thunk";
+import { getCreditCardForms, createCreditCardForm } from "./thunk";
 
 export const initialState = {
   forms: [],
   error: "",
 };
 
-const centersSlice = createSlice({
-  name: "Forms",
+const creditCardFormSlice = createSlice({
+  name: "credit-card-forms",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getForms.fulfilled, (state, action) => {
+    builder.addCase(getCreditCardForms.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
@@ -21,13 +21,11 @@ const centersSlice = createSlice({
       }
     });
 
-    builder.addCase(createForm.fulfilled, (state, action) => {
+    builder.addCase(createCreditCardForm.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
-        state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
         state.forms = [...state.forms, action.payload.data];
-        state.alreadyRegisteredError = null;
         state.error = "";
         toast.success("Form has been submitted !", {
           position: "bottom-center",
@@ -39,4 +37,4 @@ const centersSlice = createSlice({
   },
 });
 
-export default centersSlice.reducer;
+export default creditCardFormSlice.reducer;

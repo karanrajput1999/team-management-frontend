@@ -49,7 +49,7 @@ const PendingForms = () => {
     dispatch(getPendingForms());
   }, [dispatch]);
 
-  function updateForm(formId, applicationNo, formStatus) {
+  function updateCreditCardForm(formId, applicationNo, formStatus) {
     updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
       dispatch(getPendingForms());
     });
@@ -171,8 +171,9 @@ const PendingForms = () => {
                                   <th data-sort="panNumber">Pan Number</th>
 
                                   <th data-sort="bank">Bank</th>
+                                  <th data-sort="formType">Form Type</th>
 
-                                  <th data-sort="unique_attempts">Tools</th>
+                                  <th data-sort="tools">Tools</th>
                                 </tr>
                               </thead>
                               <tbody className="list form-check-all">
@@ -183,7 +184,7 @@ const PendingForms = () => {
                                   <FormRow
                                     key={form.id}
                                     form={form}
-                                    onUpdate={updateForm}
+                                    onUpdate={updateCreditCardForm}
                                   />
                                 ))}
                               </tbody>
@@ -204,7 +205,7 @@ const PendingForms = () => {
                                   <th data-sort="punch_date">Punch Date</th>
                                   <th data-sort="number">Number</th>
 
-                                  <th data-sort="panNumber">Pan Number</th>
+                                  <th data-sort="panNo">Pan No</th>
 
                                   <th data-sort="bank">Bank</th>
 
@@ -219,7 +220,7 @@ const PendingForms = () => {
                                   <FormRow
                                     key={form.id}
                                     form={form}
-                                    onUpdate={updateForm}
+                                    onUpdate={updateCreditCardForm}
                                   />
                                 ))}
                               </tbody>

@@ -28,17 +28,17 @@ const FormRow = ({ form, onUpdate }) => {
   }
 
   // we do not need time only needed date
-  const [formattedDate, formattedTime] = new Date(form.createdAt)
+  const [formattedDate, formattedTime] = new Date(form?.createdAt)
     .toLocaleString()
     .split(",");
 
   // Split the formatted date to add the leading zero if necessary
-  const [month, day, year] = formattedDate.split("/");
+  const [month, day, year] = formattedDate?.split("/");
 
-  const formattedDateWithZeroPadding = `${day.padStart(
+  const formattedDateWithZeroPadding = `${day?.padStart(
     2,
     "0"
-  )}/${month.padStart(2, "0")}/${year}`;
+  )}/${month?.padStart(2, "0")}/${year}`;
 
   const now = moment();
   const daysDifference = now.diff(form.createdAt, "days");
@@ -53,7 +53,12 @@ const FormRow = ({ form, onUpdate }) => {
       <td className="punch_date">{formattedDateWithZeroPadding}</td>
       <td className="number">{form.mobileNo}</td>
       <td className="panNumber">{form.panNo}</td>
-      <td className="bank">{form.bankName}</td>
+      <td className="bank">{form.bankName ? form.bankName : "-----"}</td>
+      <td className="formType">
+        <span class="badge border border-primary text-primary fs-12">
+          {form.formType}
+        </span>
+      </td>
       <td>
         <form onSubmit={formHandleSubmit}>
           <div className="tools d-flex" style={{ gap: "10px" }}>

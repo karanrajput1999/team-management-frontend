@@ -18,14 +18,15 @@ import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 
 function LoanForm({
-  formHandleSubmit,
-  validation,
-  employeeUserOptions,
-  selectedSingleEmployeeName,
-  handleSelectSingleEmployeeName,
-  bankOptions,
-  selectedSingleBank,
-  handleSelectSingleBankName,
+  // validation,
+  loanValidation,
+  loanFormHandleSubmit,
+  // employeeUserOptions,
+  // selectedSingleEmployeeName,
+  // handleSelectSingleEmployeeName,
+  // bankOptions,
+  // selectedSingleBank,
+  // handleSelectSingleBankName,
   clientTypeOptions,
   selectedSingleClientType,
   handleSelectSingleClientType,
@@ -39,7 +40,7 @@ function LoanForm({
         <Card>
           <CardBody>
             <div className="live-preview">
-              <Form onSubmit={formHandleSubmit}>
+              <Form onSubmit={loanFormHandleSubmit}>
                 <Row>
                   <Col md={6}>
                     <div className="mb-3">
@@ -55,10 +56,10 @@ function LoanForm({
                         value={selectedSingleClientType}
                         onChange={(clientType) => {
                           handleSelectSingleClientType(clientType);
-                          // validation.setFieldValue(
-                          //   "clientType",
-                          //   clientType.value
-                          // );
+                          loanValidation.setFieldValue(
+                            "employeeType",
+                            clientType.value
+                          );
                         }}
                         options={clientTypeOptions}
                         placeholder="Employee Type"
@@ -80,7 +81,10 @@ function LoanForm({
                         value={selectedSingleLoanType}
                         onChange={(loanType) => {
                           handleSelectSingleLoanType(loanType);
-                          // validation.setFieldValue("bankName", bankName.value);
+                          loanValidation.setFieldValue(
+                            "loanType",
+                            loanType.value
+                          );
                         }}
                         options={loanTypeOptions}
                         placeholder="Loan Type"
@@ -98,23 +102,53 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Full Name"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.fullName || ""}
-                        // invalid={
-                        //   validation.touched.fullName &&
-                        //   validation.errors.fullName
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.name || ""}
+                        invalid={
+                          loanValidation.touched.name &&
+                          loanValidation.errors.name
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.fullName &&
-                      validation.errors.fullName ? (
+                      {loanValidation.touched.name &&
+                      loanValidation.errors.name ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.fullName}
+                          {loanValidation.errors.name}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="mb-3">
+                      <Label htmlFor="panNo" className="form-label text-muted">
+                        Pan No
+                      </Label>
+                      <Input
+                        id="panNo"
+                        name="panNo"
+                        className="form-control"
+                        placeholder="Enter pan no"
+                        type="text"
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.panNo || ""}
+                        invalid={
+                          loanValidation.touched.panNo &&
+                          loanValidation.errors.panNo
+                            ? true
+                            : false
+                        }
+                      />
+
+                      {loanValidation.touched.panNo &&
+                      loanValidation.errors.panNo ? (
+                        <FormFeedback type="invalid">
+                          {loanValidation.errors.panNo}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                   </Col>
 
@@ -132,23 +166,23 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.mobileNo || ""}
-                        // invalid={
-                        //   validation.touched.mobileNo &&
-                        //   validation.errors.mobileNo
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.mobileNo || ""}
+                        invalid={
+                          loanValidation.touched.mobileNo &&
+                          loanValidation.errors.mobileNo
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.mobileNo &&
-                      validation.errors.mobileNo ? (
+                      {loanValidation.touched.mobileNo &&
+                      loanValidation.errors.mobileNo ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.mobileNo}
+                          {loanValidation.errors.mobileNo}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -165,23 +199,23 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Current Address"
                         type="text"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.currentAddress || ""}
-                        // invalid={
-                        //   validation.touched.currentAddress &&
-                        //   validation.errors.currentAddress
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.currentAddress || ""}
+                        invalid={
+                          loanValidation.touched.currentAddress &&
+                          loanValidation.errors.currentAddress
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.currentAddress &&
-                      validation.errors.currentAddress ? (
+                      {loanValidation.touched.currentAddress &&
+                      loanValidation.errors.currentAddress ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.currentAddress}
+                          {loanValidation.errors.currentAddress}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 
@@ -196,21 +230,23 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Income"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.income || ""}
-                        // invalid={
-                        //   validation.touched.income && validation.errors.income
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.income || ""}
+                        invalid={
+                          loanValidation.touched.income &&
+                          loanValidation.errors.income
+                            ? true
+                            : false
+                        }
                       />
 
-                      {/* {validation.touched.income && validation.errors.income ? (
+                      {loanValidation.touched.income &&
+                      loanValidation.errors.income ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.income}
+                          {loanValidation.errors.income}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
                   <Col md={6}>
@@ -227,23 +263,23 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Pin Code"
                         type="number"
-                        // onChange={validation.handleChange}
-                        // onBlur={validation.handleBlur}
-                        // value={validation.values.pinCode || ""}
-                        // invalid={
-                        //   validation.touched.pinCode &&
-                        //   validation.errors.pinCode
-                        //     ? true
-                        //     : false
-                        // }
+                        onChange={loanValidation.handleChange}
+                        onBlur={loanValidation.handleBlur}
+                        value={loanValidation.values.pinCode || ""}
+                        invalid={
+                          loanValidation.touched.pinCode &&
+                          loanValidation.errors.pinCode
+                            ? true
+                            : false
+                        }
                       />
-                      {/* 
-                      {validation.touched.pinCode &&
-                      validation.errors.pinCode ? (
+
+                      {loanValidation.touched.pinCode &&
+                      loanValidation.errors.pinCode ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.pinCode}
+                          {loanValidation.errors.pinCode}
                         </FormFeedback>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </Col>
 

@@ -23,4 +23,8 @@ export const StatusOptions = [
     value: "Client Declined",
     label: "Client Declined",
   },
+  {
+    value: "Shared To Bank",
+    label: "Shared To Bank",
+  },
 ];
