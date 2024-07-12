@@ -14,6 +14,8 @@ import {
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import RoleFormModal from "./RoleFormModal";
 import RoleRemoveModal from "./RoleRemoveModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,20 +35,29 @@ import {
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
+
   const [checkedSubmenus, setCheckedSubmenus] = useState([]);
+
   const [editRole, setEditRole] = useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState(0);
+
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
+
   const [modal_delete, setmodal_delete] = useState(false);
 
+  const [checkedFormPermissions, setCheckedFormPermissions] = useState([]);
+
   const { user } = useSelector((state) => state.Login.user);
+
   const { roles, menus, menusByRole, error } = useSelector(
     (state) => state.Mapping
   );
-  const { formPermissions } = useSelector((state) => state.FormPermissions);
-
-  console.log("FORM PERMISSIONS ->", formPermissions);
+  // const { formPermissions } = useSelector((state) => state.FormPermissions);
 
   const dispatch = useDispatch();
+
+  // const allowedForms = formPermissions?.map((formPermission) => {
+  //   return formPermission.formId;
+  // });
 
   useEffect(() => {
     const checkedSubmenuLabels = [];
@@ -126,9 +137,18 @@ const Mapping = () => {
 
   function handleRoleChange(e) {
     roleValidation.setFieldValue("name", e.target.value);
+
     setSelectedRoleId(e.target.value);
+
     dispatch(getMenusByRole(e.target.value));
-    dispatch(getFormPermissions(e.target.value));
+
+    dispatch(getFormPermissions(e.target.value)).then((res) => {
+      setCheckedFormPermissions(
+        res.payload.data.formPermissions.map(
+          (formPermission) => formPermission.formId
+        )
+      );
+    });
   }
 
   function handleEditRole(e) {
@@ -154,7 +174,16 @@ const Mapping = () => {
   }
 
   function handleFormPermission(e, roleId, formId) {
-    console.log("ROLE ID ->", roleId, "FORM ID ->", formId);
+    if (e.target.checked) {
+      setCheckedFormPermissions((prev) => [...prev, formId]);
+    } else {
+      setCheckedFormPermissions(
+        checkedFormPermissions.filter(
+          (checkedFormId) => checkedFormId !== formId
+        )
+      );
+    }
+
     dispatch(updateFormPermissions({ roleId, formId }));
   }
 
@@ -334,6 +363,7 @@ const Mapping = () => {
                                     id="credit-card"
                                     name="credit-card"
                                     type="checkbox"
+                                    checked={checkedFormPermissions.includes(1)}
                                     onChange={(e) =>
                                       handleFormPermission(e, selectedRoleId, 1)
                                     }
@@ -350,6 +380,7 @@ const Mapping = () => {
                                     id="loan"
                                     name="loan"
                                     type="checkbox"
+                                    checked={checkedFormPermissions.includes(2)}
                                     onChange={(e) =>
                                       handleFormPermission(e, selectedRoleId, 2)
                                     }
@@ -363,6 +394,7 @@ const Mapping = () => {
                                     id="insurance"
                                     name="insurance"
                                     type="checkbox"
+                                    checked={checkedFormPermissions.includes(3)}
                                     onChange={(e) =>
                                       handleFormPermission(e, selectedRoleId, 3)
                                     }
@@ -379,6 +411,7 @@ const Mapping = () => {
                                     id="demat-account"
                                     name="demat-account"
                                     type="checkbox"
+                                    checked={checkedFormPermissions.includes(4)}
                                     onChange={(e) =>
                                       handleFormPermission(e, selectedRoleId, 4)
                                     }
@@ -436,6 +469,7 @@ const Mapping = () => {
           setmodal_delete(false);
         }}
       />
+      <ToastContainer />
     </React.Fragment>
   );
 };

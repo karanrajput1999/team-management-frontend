@@ -9,6 +9,7 @@ export const getFormPermissions = createAsyncThunk(
   "form-permissions/getFormPermissions",
   async (roleId) => {
     try {
+      console.log("GET PERMISSION THUNK ROLE ID ->", roleId);
       const response = await getFormPermissionsApi(roleId);
       return response;
     } catch (error) {

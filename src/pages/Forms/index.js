@@ -69,8 +69,6 @@ const Forms = () => {
 
   const { formPermissions } = useSelector((state) => state.FormPermissions);
 
-  console.log("FORM PERMISSIONS IN FORM PAGE ->", formPermissions);
-
   const dispatch = useDispatch();
 
   const arrowNavToggle = (tab) => {
@@ -79,10 +77,8 @@ const Forms = () => {
     }
   };
   const allowedForms = formPermissions?.map((formPermission) => {
-    return formPermission.roleId;
+    return formPermission.formId;
   });
-
-  console.log("ALLOWED FORMS ->", allowedForms);
 
   useEffect(() => {
     const loggedInUser = getLoggedinUser();
@@ -376,7 +372,7 @@ const Forms = () => {
                           }
                         />
                       ) : (
-                        <div class="alert alert-warning" role="alert">
+                        <div className="alert alert-warning" role="alert">
                           You do not have permission to view this form!
                         </div>
                       )}
@@ -398,7 +394,7 @@ const Forms = () => {
                           }
                         />
                       ) : (
-                        <div class="alert alert-warning" role="alert">
+                        <div className="alert alert-warning" role="alert">
                           You do not have permission to view this form!
                         </div>
                       )}
@@ -422,7 +418,7 @@ const Forms = () => {
                           }
                         />
                       ) : (
-                        <div class="alert alert-warning" role="alert">
+                        <div className="alert alert-warning" role="alert">
                           You do not have permission to view this form!
                         </div>
                       )}
@@ -441,7 +437,7 @@ const Forms = () => {
                           }
                         />
                       ) : (
-                        <div class="alert alert-warning" role="alert">
+                        <div className="alert alert-warning" role="alert">
                           You do not have permission to view this form!
                         </div>
                       )}
