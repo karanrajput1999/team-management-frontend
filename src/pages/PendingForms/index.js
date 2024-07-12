@@ -49,10 +49,12 @@ const PendingForms = () => {
     dispatch(getPendingForms());
   }, [dispatch]);
 
-  function updateCreditCardForm(formId, applicationNo, formStatus) {
-    updateFormStatus({ formId, applicationNo, formStatus }).then((res) => {
-      dispatch(getPendingForms());
-    });
+  function updateCreditCardForm(formId, applicationNo, formStatus, formType) {
+    updateFormStatus({ formId, applicationNo, formStatus, formType }).then(
+      (res) => {
+        dispatch(getPendingForms());
+      }
+    );
   }
 
   function handleFilterByDate() {

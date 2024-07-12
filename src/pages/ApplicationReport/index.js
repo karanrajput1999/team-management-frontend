@@ -173,7 +173,7 @@ const ApplicationReport = () => {
                             className="form-control bg-light border-light"
                             autoComplete="off"
                             id="searchList"
-                            placeholder="Search report"
+                            placeholder="Search Name, Mob No, Pan No"
                             onChange={(e) => {
                               dispatch(
                                 filterApplicatinReport({
@@ -181,6 +181,7 @@ const ApplicationReport = () => {
                                 })
                               );
                             }}
+                            style={{ width: "280px" }}
                           />
                           <i className="ri-search-line search-icon"></i>
                         </div>

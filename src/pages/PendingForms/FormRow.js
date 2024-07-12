@@ -25,7 +25,7 @@ const FormRow = ({ form, onUpdate }) => {
 
   function formHandleSubmit(e) {
     e.preventDefault();
-    onUpdate(form.id, applicationNo, formStatus);
+    onUpdate(form.id, applicationNo, formStatus, form.formType);
   }
 
   // we do not need time only needed date
