@@ -47,6 +47,7 @@ import { createLoanForm } from "../../slices/LoanForm/thunk";
 import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
 import { createDematAccountForm } from "../../slices/DematAccountForm/thunk";
 import { getLoggedinUser } from "../../helpers/api_helper";
+import { getFormPermissions } from "../../slices/FormPermissions/thunk";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -66,20 +67,28 @@ const Forms = () => {
 
   const { allCenterUsers } = useSelector((state) => state.AddUsers);
 
+  const { formPermissions } = useSelector((state) => state.FormPermissions);
+
+  console.log("FORM PERMISSIONS IN FORM PAGE ->", formPermissions);
+
   const dispatch = useDispatch();
-
-  const loggedInUser = getLoggedinUser();
-
-  console.log("LOGGED IN USER ->", loggedInUser);
 
   const arrowNavToggle = (tab) => {
     if (arrowNavTab !== tab) {
       setarrowNavTab(tab);
     }
   };
+  const allowedForms = formPermissions?.map((formPermission) => {
+    return formPermission.roleId;
+  });
+
+  console.log("ALLOWED FORMS ->", allowedForms);
 
   useEffect(() => {
+    const loggedInUser = getLoggedinUser();
+
     dispatch(getCenterUsers());
+    dispatch(getFormPermissions(loggedInUser.data.roleId));
   }, [dispatch]);
 
   function handleSelectSingleEmployeeName(employeeName) {
@@ -344,68 +353,98 @@ const Forms = () => {
 
                   <TabContent activeTab={arrowNavTab} className="text-muted">
                     <TabPane tabId="1">
-                      <CreditCardForm
-                        validation={validation}
-                        formHandleSubmit={formHandleSubmit}
-                        employeeUserOptions={employeeUserOptions}
-                        selectedSingleEmployeeName={selectedSingleEmployeeName}
-                        handleSelectSingleEmployeeName={
-                          handleSelectSingleEmployeeName
-                        }
-                        bankOptions={bankOptions}
-                        selectedSingleBank={selectedSingleBank}
-                        handleSelectSingleBankName={handleSelectSingleBankName}
-                        clientTypeOptions={clientTypeOptions}
-                        selectedSingleClientType={selectedSingleClientType}
-                        handleSelectSingleClientType={
-                          handleSelectSingleClientType
-                        }
-                      />
+                      {allowedForms?.includes(1) ? (
+                        <CreditCardForm
+                          validation={validation}
+                          formHandleSubmit={formHandleSubmit}
+                          employeeUserOptions={employeeUserOptions}
+                          selectedSingleEmployeeName={
+                            selectedSingleEmployeeName
+                          }
+                          handleSelectSingleEmployeeName={
+                            handleSelectSingleEmployeeName
+                          }
+                          bankOptions={bankOptions}
+                          selectedSingleBank={selectedSingleBank}
+                          handleSelectSingleBankName={
+                            handleSelectSingleBankName
+                          }
+                          clientTypeOptions={clientTypeOptions}
+                          selectedSingleClientType={selectedSingleClientType}
+                          handleSelectSingleClientType={
+                            handleSelectSingleClientType
+                          }
+                        />
+                      ) : (
+                        <div class="alert alert-warning" role="alert">
+                          You do not have permission to view this form!
+                        </div>
+                      )}
                     </TabPane>
                     <TabPane tabId="2">
-                      <LoanForm
-                        loanValidation={loanValidation}
-                        loanTypeOptions={loanTypeOptions}
-                        loanFormHandleSubmit={loanFormHandleSubmit}
-                        selectedSingleLoanType={selectedSingleLoanType}
-                        handleSelectSingleLoanType={handleSelectSingleLoanType}
-                        clientTypeOptions={clientTypeOptions}
-                        selectedSingleClientType={selectedSingleClientType}
-                        handleSelectSingleClientType={
-                          handleSelectSingleClientType
-                        }
-                      />
+                      {allowedForms?.includes(2) ? (
+                        <LoanForm
+                          loanValidation={loanValidation}
+                          loanTypeOptions={loanTypeOptions}
+                          loanFormHandleSubmit={loanFormHandleSubmit}
+                          selectedSingleLoanType={selectedSingleLoanType}
+                          handleSelectSingleLoanType={
+                            handleSelectSingleLoanType
+                          }
+                          clientTypeOptions={clientTypeOptions}
+                          selectedSingleClientType={selectedSingleClientType}
+                          handleSelectSingleClientType={
+                            handleSelectSingleClientType
+                          }
+                        />
+                      ) : (
+                        <div class="alert alert-warning" role="alert">
+                          You do not have permission to view this form!
+                        </div>
+                      )}
                     </TabPane>
                     <TabPane tabId="3">
-                      <InsuranceForm
-                        insuranceValidation={insuranceValidation}
-                        insuranceTypeOptions={insuranceTypeOptions}
-                        selectedSingleInsuranceType={
-                          selectedSingleInsuranceType
-                        }
-                        insuranceFormHandleSubmit={insuranceFormHandleSubmit}
-                        handleSelectSingleInsuranceType={
-                          handleSelectSingleInsuranceType
-                        }
-                        clientTypeOptions={clientTypeOptions}
-                        selectedSingleClientType={selectedSingleClientType}
-                        handleSelectSingleClientType={
-                          handleSelectSingleClientType
-                        }
-                      />
+                      {allowedForms?.includes(3) ? (
+                        <InsuranceForm
+                          insuranceValidation={insuranceValidation}
+                          insuranceTypeOptions={insuranceTypeOptions}
+                          selectedSingleInsuranceType={
+                            selectedSingleInsuranceType
+                          }
+                          insuranceFormHandleSubmit={insuranceFormHandleSubmit}
+                          handleSelectSingleInsuranceType={
+                            handleSelectSingleInsuranceType
+                          }
+                          clientTypeOptions={clientTypeOptions}
+                          selectedSingleClientType={selectedSingleClientType}
+                          handleSelectSingleClientType={
+                            handleSelectSingleClientType
+                          }
+                        />
+                      ) : (
+                        <div class="alert alert-warning" role="alert">
+                          You do not have permission to view this form!
+                        </div>
+                      )}
                     </TabPane>
                     <TabPane tabId="4">
-                      <DematAccountForm
-                        dematAccountValidation={dematAccountValidation}
-                        dematAccountFormHandleSubmit={
-                          dematAccountFormHandleSubmit
-                        }
-                        clientTypeOptions={clientTypeOptions}
-                        selectedSingleClientType={selectedSingleClientType}
-                        handleSelectSingleClientType={
-                          handleSelectSingleClientType
-                        }
-                      />
+                      {allowedForms?.includes(4) ? (
+                        <DematAccountForm
+                          dematAccountValidation={dematAccountValidation}
+                          dematAccountFormHandleSubmit={
+                            dematAccountFormHandleSubmit
+                          }
+                          clientTypeOptions={clientTypeOptions}
+                          selectedSingleClientType={selectedSingleClientType}
+                          handleSelectSingleClientType={
+                            handleSelectSingleClientType
+                          }
+                        />
+                      ) : (
+                        <div class="alert alert-warning" role="alert">
+                          You do not have permission to view this form!
+                        </div>
+                      )}
                     </TabPane>
                   </TabContent>
                 </CardBody>

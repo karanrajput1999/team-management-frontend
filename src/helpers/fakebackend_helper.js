@@ -681,6 +681,22 @@ export const pendingFormsFilter = (data) => {
     data
   );
 };
+// *****************************************************************
+// ************************ FORM PERMISSIONS ***********************
+// *****************************************************************
+
+export const getFormPermissions = (roleId) => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/form-permissions/${roleId}`
+  );
+};
+
+export const updateFormPermissions = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/form-permissions/update`,
+    data
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>

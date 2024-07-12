@@ -26,7 +26,10 @@ import {
   updateRole,
   removeRole,
 } from "../../slices/Mapping/thunk";
-import { useNavigate } from "react-router-dom";
+import {
+  updateFormPermissions,
+  getFormPermissions,
+} from "../../slices/FormPermissions/thunk";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -39,8 +42,11 @@ const Mapping = () => {
   const { roles, menus, menusByRole, error } = useSelector(
     (state) => state.Mapping
   );
+  const { formPermissions } = useSelector((state) => state.FormPermissions);
+
+  console.log("FORM PERMISSIONS ->", formPermissions);
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkedSubmenuLabels = [];
@@ -122,6 +128,7 @@ const Mapping = () => {
     roleValidation.setFieldValue("name", e.target.value);
     setSelectedRoleId(e.target.value);
     dispatch(getMenusByRole(e.target.value));
+    dispatch(getFormPermissions(e.target.value));
   }
 
   function handleEditRole(e) {
@@ -146,12 +153,17 @@ const Mapping = () => {
     return false;
   }
 
+  function handleFormPermission(e, roleId, formId) {
+    console.log("ROLE ID ->", roleId, "FORM ID ->", formId);
+    dispatch(updateFormPermissions({ roleId, formId }));
+  }
+
   document.title = "Roles";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Mapping" pageTitle="System Configuration" />
+          <BreadCrumb title="Mapping" pageTitle="Settings" />
           <Row>
             <Col lg={12}>
               <Card>
@@ -322,6 +334,9 @@ const Mapping = () => {
                                     id="credit-card"
                                     name="credit-card"
                                     type="checkbox"
+                                    onChange={(e) =>
+                                      handleFormPermission(e, selectedRoleId, 1)
+                                    }
                                   />
                                   <Label
                                     htmlFor="credit-card"
@@ -335,6 +350,9 @@ const Mapping = () => {
                                     id="loan"
                                     name="loan"
                                     type="checkbox"
+                                    onChange={(e) =>
+                                      handleFormPermission(e, selectedRoleId, 2)
+                                    }
                                   />
                                   <Label htmlFor="loan" className="form-label">
                                     Loan
@@ -345,6 +363,9 @@ const Mapping = () => {
                                     id="insurance"
                                     name="insurance"
                                     type="checkbox"
+                                    onChange={(e) =>
+                                      handleFormPermission(e, selectedRoleId, 3)
+                                    }
                                   />
                                   <Label
                                     htmlFor="insurance"
@@ -358,6 +379,9 @@ const Mapping = () => {
                                     id="demat-account"
                                     name="demat-account"
                                     type="checkbox"
+                                    onChange={(e) =>
+                                      handleFormPermission(e, selectedRoleId, 4)
+                                    }
                                   />
                                   <Label
                                     htmlFor="demat-account"

@@ -22,7 +22,6 @@ export const getMenusByRole = createAsyncThunk(
   async (roleId) => {
     try {
       const response = await getMenusByRoleApi(roleId);
-      console.log("get menus by role response ->", response);
       return response;
     } catch (error) {
       console.log("error inside get menus by role thunk", error);
@@ -34,7 +33,6 @@ export const changePermission = createAsyncThunk(
   async ({ menuId, subMenuId, roleId }) => {
     try {
       const response = await changePermissionApi({ menuId, subMenuId, roleId });
-      console.log("change permission response ->", response);
       return response;
     } catch (error) {
       console.log("error inside change permission thunk", error);
@@ -69,8 +67,6 @@ export const updateRole = createAsyncThunk(
   async ({ roleId, values }) => {
     try {
       const response = await updateRoleApi(roleId, values);
-
-      console.log("reponse in thunk after updating role", response);
 
       return response;
     } catch (error) {
