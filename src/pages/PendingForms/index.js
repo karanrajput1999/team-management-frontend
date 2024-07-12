@@ -121,7 +121,7 @@ const PendingForms = () => {
                             onClick={handleFilterByDate}
                           >
                             <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
-                            Apply Filters
+                            Apply Date Filter
                           </button>
                         </div>
                       </Col>

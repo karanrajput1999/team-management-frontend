@@ -19,6 +19,7 @@ import {
   filterApplicatinReport,
 } from "../../slices/ApplicationReport/thunk";
 import moment from "moment-timezone";
+import { filter } from "lodash";
 
 const ApplicationReport = () => {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
@@ -32,12 +33,22 @@ const ApplicationReport = () => {
 
   const [selectedSingleBank, setSelectedSingleBank] = useState(null);
 
+  const [filters, setFilters] = useState({
+    center: "",
+    dateRange: "",
+  });
+
   const dispatch = useDispatch();
 
   const { centers } = useSelector((state) => state.Centers);
   const { applicationReports, filteredApplicationReports } = useSelector(
     (state) => state.ApplicationReport
   );
+
+  useEffect(() => {
+    dispatch(getCenters());
+    dispatch(getApplicatinReport());
+  }, [dispatch]);
 
   function handleSelectSingleCenter(centerName) {
     setSelectedSingleCenterName(centerName);
@@ -122,33 +133,10 @@ const ApplicationReport = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getCenters());
-    dispatch(getApplicatinReport());
-  }, [dispatch]);
-
-  const bankReportData = [
-    {
-      id: 1,
-      applicationId: 73838,
-      customerName: "Lokesh Kumar",
-      phone: "7691090901",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: "PENDING",
-    },
-    {
-      id: 2,
-      applicationId: 638348,
-      customerName: "Surjit singh	",
-      phone: "8590466998",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: "APPROVED",
-    },
-  ];
+  function handleFilters() {
+    console.log("FILTER VALUES ->", filters);
+    dispatch(filterApplicatinReport({ filters }));
+  }
 
   document.title = "Application Report";
   return (
@@ -200,6 +188,9 @@ const ApplicationReport = () => {
                                 mode: "range",
                                 dateFormat: "d M, Y",
                               }}
+                              onChange={(date) => {
+                                setFilters({ ...filters, dateRange: date });
+                              }}
                             />
                           </div>
 
@@ -210,10 +201,6 @@ const ApplicationReport = () => {
                               value={selectedSingleDateType}
                               onChange={(dateType) => {
                                 handleSelectSingleDateType(dateType);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
                               }}
                               options={dateTypeOptions}
                               placeholder="Date Type"
@@ -226,10 +213,11 @@ const ApplicationReport = () => {
                               value={selectedSingleCenterName}
                               onChange={(centerName) => {
                                 handleSelectSingleCenter(centerName);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
+
+                                setFilters({
+                                  ...filters,
+                                  center: centerName.value,
+                                });
                               }}
                               options={CenterOptions}
                               placeholder="Centers"
@@ -242,10 +230,6 @@ const ApplicationReport = () => {
                               value={selectedSingleBank}
                               onChange={(bankName) => {
                                 handleSelectSingleBank(bankName);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
                               }}
                               options={bankOptions}
                               placeholder="Banks"
@@ -258,10 +242,6 @@ const ApplicationReport = () => {
                               value={selectedSingleStatus1}
                               onChange={(status1) => {
                                 handleSelectSingleStatus1(status1);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
                               }}
                               options={status1Options}
                               placeholder="Self Status"
@@ -274,10 +254,6 @@ const ApplicationReport = () => {
                               value={selectedSingleStatus2}
                               onChange={(status2) => {
                                 handleSelectSingleStatus2(status2);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
                               }}
                               options={status2Options}
                               placeholder="Bank Status"
@@ -286,6 +262,7 @@ const ApplicationReport = () => {
                           <button
                             type="button"
                             className="btn btn-primary btn-label waves-effect waves-light"
+                            onClick={handleFilters}
                           >
                             <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
                             Apply Filters
