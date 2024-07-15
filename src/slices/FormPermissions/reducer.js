@@ -1,9 +1,14 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getFormPermissions, updateFormPermissions } from "./thunk";
+import {
+  getAllowedFormPermissions,
+  getFormPermissions,
+  updateFormPermissions,
+} from "./thunk";
 
 export const initialState = {
   formPermissions: [],
+  allowedFormPermissions: [],
   error: "",
 };
 
@@ -17,6 +22,14 @@ const formPermissionsSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.formPermissions = action.payload?.data.formPermissions;
+        state.error = "";
+      }
+    });
+    builder.addCase(getAllowedFormPermissions.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.allowedFormPermissions = action.payload?.data.formPermissions;
         state.error = "";
       }
     });

@@ -19,7 +19,7 @@ import {
   filterApplicatinReport,
 } from "../../slices/ApplicationReport/thunk";
 import moment from "moment-timezone";
-import { filter } from "lodash";
+import { StatusOptions } from "../../common/data/pendingForms";
 
 const ApplicationReport = () => {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
@@ -36,6 +36,7 @@ const ApplicationReport = () => {
   const [filters, setFilters] = useState({
     center: "",
     dateRange: "",
+    selfStatus: "",
   });
 
   const dispatch = useDispatch();
@@ -74,20 +75,6 @@ const ApplicationReport = () => {
     return { value: center.centerName, label: center.centerName };
   });
 
-  const status1Options = [
-    {
-      value: "Already Applied",
-      label: "Already Applied",
-    },
-    {
-      value: "Client Denied",
-      label: "Client Denied",
-    },
-    {
-      value: "Link Sent",
-      label: "Link Sent",
-    },
-  ];
 
   const status2Options = [
     {
@@ -219,7 +206,10 @@ const ApplicationReport = () => {
                                   center: centerName.value,
                                 });
                               }}
-                              options={CenterOptions}
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...CenterOptions,
+                              ]}
                               placeholder="Centers"
                             />
                           </div>
@@ -242,8 +232,12 @@ const ApplicationReport = () => {
                               value={selectedSingleStatus1}
                               onChange={(status1) => {
                                 handleSelectSingleStatus1(status1);
+                                setFilters({
+                                  ...filters,
+                                  selfStatus: status1.value,
+                                });
                               }}
-                              options={status1Options}
+                              options={StatusOptions}
                               placeholder="Self Status"
                             />
                           </div>

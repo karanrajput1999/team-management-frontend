@@ -685,10 +685,14 @@ export const pendingFormsFilter = (data) => {
 // ************************ FORM PERMISSIONS ***********************
 // *****************************************************************
 
-export const getFormPermissions = (roleId) => {
+export const getFormPermissions = (centerId) => {
   return api.get(
-    `${process.env.REACT_APP_SERVER_URL}/form-permissions/${roleId}`
+    `${process.env.REACT_APP_SERVER_URL}/form-permissions/${centerId}`
   );
+};
+
+export const getAllowedFormPermissions = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/form-permissions`);
 };
 
 export const updateFormPermissions = (data) => {

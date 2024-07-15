@@ -28,6 +28,7 @@ import AssignData from "../pages/AssignData";
 import TalktimeUpload from "../pages/TalktimeUpload";
 import CallHistory from "../pages/CallHistory";
 import AppData from "../pages/AppData";
+import FormPermissions from "../pages/FormPermissions";
 
 const authProtectedRoutes = [
   // { path: "/users", component: <Users /> },
@@ -46,6 +47,7 @@ const authProtectedRoutes = [
   { path: "/talktime-upload", component: <TalktimeUpload /> },
   { path: "/call-history", component: <CallHistory /> },
   { path: "/app-data", component: <AppData /> },
+  { path: "/form-permissions", component: <FormPermissions /> },
   // { path: "/calendar", component: <Calendar /> },
 
   //User Profile

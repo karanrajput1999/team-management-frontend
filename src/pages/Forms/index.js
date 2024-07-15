@@ -19,7 +19,6 @@ import classnames from "classnames";
 import { Link } from "react-router-dom";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import Select from "react-select";
-import Flatpickr from "react-flatpickr";
 import {
   bankOptions,
   clientTypeOptions,
@@ -47,7 +46,7 @@ import { createLoanForm } from "../../slices/LoanForm/thunk";
 import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
 import { createDematAccountForm } from "../../slices/DematAccountForm/thunk";
 import { getLoggedinUser } from "../../helpers/api_helper";
-import { getFormPermissions } from "../../slices/FormPermissions/thunk";
+import { getAllowedFormPermissions } from "../../slices/FormPermissions/thunk";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -67,7 +66,9 @@ const Forms = () => {
 
   const { allCenterUsers } = useSelector((state) => state.AddUsers);
 
-  const { formPermissions } = useSelector((state) => state.FormPermissions);
+  const { allowedFormPermissions } = useSelector(
+    (state) => state.FormPermissions
+  );
 
   const dispatch = useDispatch();
 
@@ -76,15 +77,17 @@ const Forms = () => {
       setarrowNavTab(tab);
     }
   };
-  const allowedForms = formPermissions?.map((formPermission) => {
+  const allowedForms = allowedFormPermissions?.map((formPermission) => {
     return formPermission.formId;
   });
+
+  console.log("ALLOWED FORMS ->", allowedForms);
 
   useEffect(() => {
     const loggedInUser = getLoggedinUser();
 
     dispatch(getCenterUsers());
-    dispatch(getFormPermissions(loggedInUser.data.roleId));
+    dispatch(getAllowedFormPermissions());
   }, [dispatch]);
 
   function handleSelectSingleEmployeeName(employeeName) {
