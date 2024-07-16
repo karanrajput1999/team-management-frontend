@@ -28,10 +28,6 @@ import {
   updateRole,
   removeRole,
 } from "../../slices/Mapping/thunk";
-import {
-  updateFormPermissions,
-  getFormPermissions,
-} from "../../slices/FormPermissions/thunk";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -44,20 +40,11 @@ const Mapping = () => {
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  const [checkedFormPermissions, setCheckedFormPermissions] = useState([]);
-
-  const { user } = useSelector((state) => state.Login.user);
-
   const { roles, menus, menusByRole, error } = useSelector(
     (state) => state.Mapping
   );
-  // const { formPermissions } = useSelector((state) => state.FormPermissions);
 
   const dispatch = useDispatch();
-
-  // const allowedForms = formPermissions?.map((formPermission) => {
-  //   return formPermission.formId;
-  // });
 
   useEffect(() => {
     const checkedSubmenuLabels = [];
@@ -141,14 +128,6 @@ const Mapping = () => {
     setSelectedRoleId(e.target.value);
 
     dispatch(getMenusByRole(e.target.value));
-
-    dispatch(getFormPermissions(e.target.value)).then((res) => {
-      setCheckedFormPermissions(
-        res.payload.data.formPermissions.map(
-          (formPermission) => formPermission.formId
-        )
-      );
-    });
   }
 
   function handleEditRole(e) {
@@ -171,20 +150,6 @@ const Mapping = () => {
     roleValidation.handleSubmit();
     setmodal_list(false);
     return false;
-  }
-
-  function handleFormPermission(e, roleId, formId) {
-    if (e.target.checked) {
-      setCheckedFormPermissions((prev) => [...prev, formId]);
-    } else {
-      setCheckedFormPermissions(
-        checkedFormPermissions.filter(
-          (checkedFormId) => checkedFormId !== formId
-        )
-      );
-    }
-
-    dispatch(updateFormPermissions({ roleId, formId }));
   }
 
   document.title = "Roles";
@@ -303,7 +268,6 @@ const Mapping = () => {
                                   {menu.label}
                                 </th>
                               ))}
-                              <th>Form Permissions</th>
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
@@ -352,78 +316,6 @@ const Mapping = () => {
                                   )}
                                 </td>
                               ))}
-                              <td
-                                style={{
-                                  borderLeft: "1px solid #e9ebec",
-                                  verticalAlign: "top",
-                                }}
-                              >
-                                <div style={{ display: "flex", gap: "5px" }}>
-                                  <Input
-                                    id="credit-card"
-                                    name="credit-card"
-                                    type="checkbox"
-                                    checked={checkedFormPermissions.includes(1)}
-                                    onChange={(e) =>
-                                      handleFormPermission(e, selectedRoleId, 1)
-                                    }
-                                  />
-                                  <Label
-                                    htmlFor="credit-card"
-                                    className="form-label"
-                                  >
-                                    Credit Card
-                                  </Label>
-                                </div>
-                                <div style={{ display: "flex", gap: "5px" }}>
-                                  <Input
-                                    id="loan"
-                                    name="loan"
-                                    type="checkbox"
-                                    checked={checkedFormPermissions.includes(2)}
-                                    onChange={(e) =>
-                                      handleFormPermission(e, selectedRoleId, 2)
-                                    }
-                                  />
-                                  <Label htmlFor="loan" className="form-label">
-                                    Loan
-                                  </Label>
-                                </div>
-                                <div style={{ display: "flex", gap: "5px" }}>
-                                  <Input
-                                    id="insurance"
-                                    name="insurance"
-                                    type="checkbox"
-                                    checked={checkedFormPermissions.includes(3)}
-                                    onChange={(e) =>
-                                      handleFormPermission(e, selectedRoleId, 3)
-                                    }
-                                  />
-                                  <Label
-                                    htmlFor="insurance"
-                                    className="form-label"
-                                  >
-                                    Insurance
-                                  </Label>
-                                </div>
-                                <div style={{ display: "flex", gap: "5px" }}>
-                                  <Input
-                                    id="demat-account"
-                                    name="demat-account"
-                                    type="checkbox"
-                                    checked={checkedFormPermissions.includes(4)}
-                                    onChange={(e) =>
-                                      handleFormPermission(e, selectedRoleId, 4)
-                                    }
-                                  />
-                                  <Label
-                                    htmlFor="demat-account"
-                                    className="form-label"
-                                  >
-                                    Demat Account
-                                  </Label>
-                                </div>
-                              </td>
                             </tr>
                           </tbody>
                         </table>
