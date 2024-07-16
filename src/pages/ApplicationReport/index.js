@@ -33,10 +33,13 @@ const ApplicationReport = () => {
 
   const [selectedSingleBank, setSelectedSingleBank] = useState(null);
 
+  const [selectedSingleFormType, setSelectedSingleFormType] = useState(null);
+
   const [filters, setFilters] = useState({
     center: "",
     dateRange: "",
     selfStatus: "",
+    formType: "",
   });
 
   const dispatch = useDispatch();
@@ -71,10 +74,13 @@ const ApplicationReport = () => {
     setSelectedSingleBank(bank);
   }
 
+  function handleSelectSingleFormType(formType) {
+    setSelectedSingleFormType(formType);
+  }
+
   let CenterOptions = centers?.map((center) => {
     return { value: center.centerName, label: center.centerName };
   });
-
 
   const status2Options = [
     {
@@ -119,9 +125,26 @@ const ApplicationReport = () => {
       label: "Axis Bank",
     },
   ];
+  const formTypeOptions = [
+    {
+      value: "Credit Card",
+      label: "Credit Card",
+    },
+    {
+      value: "Loan",
+      label: "Loan",
+    },
+    {
+      value: "Insurance",
+      label: "Insurance",
+    },
+    {
+      value: "Demat Account",
+      label: "Demat Account",
+    },
+  ];
 
   function handleFilters() {
-    console.log("FILTER VALUES ->", filters);
     dispatch(filterApplicatinReport({ filters }));
   }
 
@@ -210,7 +233,27 @@ const ApplicationReport = () => {
                                 { value: "", label: "Choose All" },
                                 ...CenterOptions,
                               ]}
-                              placeholder="Centers"
+                              placeholder="Choose Center"
+                            />
+                          </div>
+                          <div>
+                            <Select
+                              id="formType"
+                              name="formType"
+                              value={selectedSingleFormType}
+                              onChange={(formType) => {
+                                handleSelectSingleFormType(formType);
+
+                                setFilters({
+                                  ...filters,
+                                  formType: formType.value,
+                                });
+                              }}
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...formTypeOptions,
+                              ]}
+                              placeholder="Choose Form Type"
                             />
                           </div>
                           <div>
@@ -221,8 +264,11 @@ const ApplicationReport = () => {
                               onChange={(bankName) => {
                                 handleSelectSingleBank(bankName);
                               }}
-                              options={bankOptions}
-                              placeholder="Banks"
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...bankOptions,
+                              ]}
+                              placeholder="Choose Bank"
                             />
                           </div>
                           <div>
@@ -237,8 +283,11 @@ const ApplicationReport = () => {
                                   selfStatus: status1.value,
                                 });
                               }}
-                              options={StatusOptions}
-                              placeholder="Self Status"
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...StatusOptions,
+                              ]}
+                              placeholder="Choose Self Status"
                             />
                           </div>
                           <div>
@@ -250,7 +299,7 @@ const ApplicationReport = () => {
                                 handleSelectSingleStatus2(status2);
                               }}
                               options={status2Options}
-                              placeholder="Bank Status"
+                              placeholder="Choose Bank Status"
                             />
                           </div>
                           <button
@@ -277,6 +326,7 @@ const ApplicationReport = () => {
                             <th data-sort="pan_card">Pan Card</th>
 
                             <th data-sort="client_of">Form Type</th>
+                            <th data-sort="client_of">Bank Name</th>
                             <th data-sort="client_of">Client of</th>
 
                             <th data-sort="status_1">Status 1</th>
@@ -304,11 +354,27 @@ const ApplicationReport = () => {
                               <td>{bankReport?.mobileNo}</td>
                               <td>{bankReport?.panNo}</td>
                               <td>
-                                <span className="badge border border-primary text-primary fs-12">
+                                <span
+                                  className={`badge border ${
+                                    bankReport?.formType === "Credit Card"
+                                      ? "border-success text-success"
+                                      : bankReport?.formType === "Loan"
+                                      ? "border-primary text-primary"
+                                      : bankReport?.formType === "Insurance"
+                                      ? "border-warning text-warning"
+                                      : bankReport?.formType === "Demat Account"
+                                      ? "border-dark text-dark"
+                                      : ""
+                                  } fs-12`}
+                                >
                                   {bankReport?.formType}
                                 </span>
                               </td>
-
+                              <td>
+                                {bankReport.bankName
+                                  ? bankReport.bankName
+                                  : "-----"}
+                              </td>
                               <td>
                                 {Object.keys(bankReport?.user).length !== 0 && (
                                   <div>
@@ -340,6 +406,7 @@ const ApplicationReport = () => {
                                   </div>
                                 )}
                               </td>
+
                               <td>
                                 <span
                                   className={`badge ${
