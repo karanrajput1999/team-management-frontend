@@ -31,7 +31,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 const UploadRawData = () => {
   const [selectedSingleVendor, setSelectedSingleVendor] = useState(null);
   const [selectedSingleDataType, setSelectedSingleDataType] = useState(null);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -85,17 +85,15 @@ const UploadRawData = () => {
       dataType: Yup.string().required("Please select data type"),
       purchaseDate: Yup.array().required("Please select purchase date"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { setFieldValue }) => {
       dispatch(uploadData({ ...values, data: file.file }));
-
-      console.log("FORM VALUES ->", values, file.file);
 
       setSelectedSingleVendor(null);
       setSelectedSingleDataType(null);
+      setFieldValue("purchaseDate", "");
+      setFile(null);
     },
   });
-
-  console.log("VALUES ->", validation.values);
 
   function formHandleSubmit(e) {
     e.preventDefault();

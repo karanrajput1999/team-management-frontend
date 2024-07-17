@@ -12,6 +12,7 @@ const uploadRawDataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(uploadData.fulfilled, (state, action) => {
+      console.log("PAYLOAD FROM FILE THUNK ->", action.payload);
       toast.success("Data has been uploaded !", {
         position: "bottom-center",
         autoClose: 3000,
