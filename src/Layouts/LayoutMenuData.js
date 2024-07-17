@@ -27,6 +27,8 @@ const Navdata = () => {
 
   const [isUploads, setIsUploads] = useState(false);
 
+  const [isDataManagement, setIsDataManagement] = useState(false);
+
   //
   const [isAuth, setIsAuth] = useState(false);
   const [isPages, setIsPages] = useState(false);
@@ -77,6 +79,9 @@ const Navdata = () => {
     if (iscurrentState !== "Uploads") {
       setIsUploads(false);
     }
+    if (iscurrentState !== "DataManagement") {
+      setIsDataManagement(false);
+    }
 
     if (iscurrentState !== "Auth") {
       setIsAuth(false);
@@ -96,6 +101,7 @@ const Navdata = () => {
     isApplications,
     isCalls,
     isUploads,
+    isDataManagement,
     isAuth,
     isPages,
   ]);
@@ -110,6 +116,7 @@ const Navdata = () => {
     Applications: isApplications,
     Calls: isCalls,
     Uploads: isUploads,
+    DataManagement: isDataManagement,
   };
 
   const handleClick = (menuLabelId) => {
@@ -150,6 +157,10 @@ const Navdata = () => {
           updateIconSidebar(e);
         case "Uploads":
           setIsUploads(!isUploads);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "DataManagement":
+          setIsDataManagement(!isDataManagement);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }

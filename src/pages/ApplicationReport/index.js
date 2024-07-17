@@ -256,13 +256,18 @@ const ApplicationReport = () => {
                               placeholder="Choose Form Type"
                             />
                           </div>
-                          <div>
+                          {/* <div>
                             <Select
                               id="bankName"
                               name="bankName"
                               value={selectedSingleBank}
                               onChange={(bankName) => {
                                 handleSelectSingleBank(bankName);
+
+                                setFilters({
+                                  ...filters,
+                                  bankName: bankName.value,
+                                });
                               }}
                               options={[
                                 { value: "", label: "Choose All" },
@@ -270,7 +275,7 @@ const ApplicationReport = () => {
                               ]}
                               placeholder="Choose Bank"
                             />
-                          </div>
+                          </div> */}
                           <div>
                             <Select
                               id="status1"
@@ -346,7 +351,7 @@ const ApplicationReport = () => {
                                 ) : (
                                   <span className="text-muted">
                                     {" "}
-                                    ---Not Assigned Yet---{" "}
+                                    ---Not Generated---{" "}
                                   </span>
                                 )}
                               </td>
@@ -363,7 +368,7 @@ const ApplicationReport = () => {
                                       : bankReport?.formType === "Insurance"
                                       ? "border-warning text-warning"
                                       : bankReport?.formType === "Demat Account"
-                                      ? "border-dark text-dark"
+                                      ? "border-danger text-danger"
                                       : ""
                                   } fs-12`}
                                 >

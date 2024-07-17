@@ -690,6 +690,19 @@ export const getFormPermissions = (centerId) => {
     `${process.env.REACT_APP_SERVER_URL}/form-permissions/${centerId}`
   );
 };
+// *****************************************************************
+// ************************ UPLOAD RAW DATA ************************
+// *****************************************************************
+
+export const uploadRawData = (values) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/upload-raw-data`,
+    values,
+    {
+      "Content-Type": "multipart/form-data",
+    }
+  );
+};
 
 export const getAllowedFormPermissions = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/form-permissions`);

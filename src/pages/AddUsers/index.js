@@ -133,16 +133,6 @@ const AddUsers = () => {
           })
         );
 
-        const tempLogObject = {
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          roleId: values.userType,
-          userId: listUser.id,
-        };
-
-     
-
         dispatch(
           updateUser({
             values: {
