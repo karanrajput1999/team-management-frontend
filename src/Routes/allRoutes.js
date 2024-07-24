@@ -30,6 +30,7 @@ import CallHistory from "../pages/CallHistory";
 import AppData from "../pages/AppData";
 import FormPermissions from "../pages/FormPermissions";
 import UploadRawData from "../pages/UploadRawData";
+import DataCorrection from "../pages/DataCorrection";
 
 const authProtectedRoutes = [
   // { path: "/users", component: <Users /> },
@@ -50,6 +51,7 @@ const authProtectedRoutes = [
   { path: "/app-data", component: <AppData /> },
   { path: "/form-permissions", component: <FormPermissions /> },
   { path: "/upload-raw-data", component: <UploadRawData /> },
+  { path: "/data-correction", component: <DataCorrection /> },
   // { path: "/calendar", component: <Calendar /> },
 
   //User Profile

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -6,6 +6,7 @@ import {
   Col,
   Container,
   Form,
+  Input,
   Label,
   Row,
 } from "reactstrap";
@@ -25,13 +26,17 @@ import { uploadData } from "../../slices/UploadRawData/thunk";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { getDataCorrection } from "../../slices/DataCorrection/thunk";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const UploadRawData = () => {
+const DataCorrection = () => {
   const [selectedSingleVendor, setSelectedSingleVendor] = useState(null);
   const [selectedSingleDataType, setSelectedSingleDataType] = useState(null);
   const [file, setFile] = useState(null);
+
+  const { city } = useSelector((state) => state.DataCorrection);
 
   const dispatch = useDispatch();
 
@@ -74,6 +79,12 @@ const UploadRawData = () => {
     },
   ];
 
+  console.log("CURRENT CITY AND COUNT ->", city);
+
+  useEffect(() => {
+    dispatch(getDataCorrection());
+  }, []);
+
   const validation = useFormik({
     initialValues: {
       vendorName: "",
@@ -103,18 +114,18 @@ const UploadRawData = () => {
     return false;
   }
 
-  document.title = "Upload Raw Data";
+  document.title = "Data Correction";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Upload Raw Data" pageTitle="Data Management" />
+          <BreadCrumb title="Data Correction" pageTitle="Data Management" />
 
           <Row>
             <Col lg={6}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Upload Raw Data</h4>
+                  <h4 className="card-title mb-0">Data Correction</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -122,66 +133,85 @@ const UploadRawData = () => {
                     <Col>
                       <Form onSubmit={formHandleSubmit}>
                         <div className="mb-2">
-                          <Label className="form-label">Choose Vendor</Label>
+                          <Label htmlFor="current-city" className="form-label">
+                            Current City -{" "}
+                            {city?.length > 0 && city[0]._count.id}
+                          </Label>
+
+                          <Input
+                            id="current-city"
+                            name="current-city"
+                            className="form-control"
+                            placeholder="Enter Location"
+                            type="text"
+                            // value="New Delhi"
+                            value={city?.length > 0 && city[0].city}
+                            disabled
+                            // onChange={validation.handleChange}
+                            // onBlur={validation.handleBlur}
+                            // value={validation.values.location || ""}
+                            // invalid={
+                            //   validation.touched.location &&
+                            //   validation.errors.location
+                            //     ? true
+                            //     : false
+                            // }
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <Label className="form-label">State</Label>
                           <Select
-                            id="vendor"
-                            name="vendor"
+                            id="state"
+                            name="state"
                             value={selectedSingleVendor}
                             onChange={(vendor) => {
-                              handleSelectSingleVendor(vendor);
-                              validation.setFieldValue(
-                                "vendorName",
-                                vendor.value
-                              );
+                              // handleSelectSingleVendor(vendor);
+                              // validation.setFieldValue(
+                              //   "vendorName",
+                              //   vendor.value
+                              // );
                             }}
                             options={vendorOptions}
-                            placeholder="Choose Vendor"
+                            placeholder="Select State"
                           />
                         </div>
                         <div className="mb-2">
-                          <Label className="form-label">Choose Data Type</Label>
+                          <Label className="form-label">City</Label>
                           <Select
-                            id="data-type"
-                            name="data-type"
+                            id="city"
+                            name="city"
                             value={selectedSingleDataType}
                             onChange={(dataType) => {
-                              handleSelectSingleDataType(dataType);
-                              validation.setFieldValue(
-                                "dataType",
-                                dataType.value
-                              );
+                              // handleSelectSingleDataType(dataType);
+                              // validation.setFieldValue(
+                              //   "dataType",
+                              //   dataType.value
+                              // );
                             }}
                             options={dataTypeOptions}
-                            placeholder="Choose Data Type"
+                            placeholder="Select City"
                           />
                         </div>
                         <div className="mb-2">
-                          <Label className="form-label">Purchase Date</Label>
-                          <Flatpickr
-                            className="form-control border dash-filter-picker"
-                            placeholder="Choose Date"
-                            value={validation.values.purchaseDate || ""}
-                            options={{
-                              mode: "single",
-                              dateFormat: "d M, Y",
-                              defaultDate: validation.values.purchaseDate || "",
+                          <Label className="form-label">
+                            Pin Code GPO/BO/SO
+                          </Label>
+                          <Select
+                            id="pin-code"
+                            name="pin-code"
+                            value={selectedSingleDataType}
+                            onChange={(dataType) => {
+                              // handleSelectSingleDataType(dataType);
+                              // validation.setFieldValue(
+                              //   "dataType",
+                              //   dataType.value
+                              // );
                             }}
-                            onChange={(date) => {
-                              validation.setFieldValue("purchaseDate", date);
-                            }}
+                            options={dataTypeOptions}
+                            placeholder="Select Pin Code"
                           />
                         </div>
-                        <div className="mb-2">
-                          <Label className="form-label">Choose File</Label>
-                          <FilePond
-                            files={file}
-                            onupdatefiles={(file) => setFile(file[0])}
-                            maxFiles={1}
-                            name="data"
-                            className="filepond"
-                            required={true}
-                          />
-                        </div>
+
                         <div
                           className="d-flex justify-content-end"
                           style={{ gap: "5px" }}
@@ -193,13 +223,6 @@ const UploadRawData = () => {
                               style={{ marginRight: "5px" }}
                             ></i>
                             Upload
-                          </button>
-                          <button className="btn btn-success">
-                            <i
-                              className="ri-file-download-line"
-                              style={{ marginRight: "5px" }}
-                            ></i>
-                            Download Sample File
                           </button>
                         </div>
                       </Form>
@@ -286,4 +309,4 @@ const UploadRawData = () => {
   );
 };
 
-export default UploadRawData;
+export default DataCorrection;

@@ -690,6 +690,18 @@ export const getFormPermissions = (centerId) => {
     `${process.env.REACT_APP_SERVER_URL}/form-permissions/${centerId}`
   );
 };
+
+export const getAllowedFormPermissions = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/form-permissions`);
+};
+
+export const updateFormPermissions = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/form-permissions/update`,
+    data
+  );
+};
+
 // *****************************************************************
 // ************************ UPLOAD RAW DATA ************************
 // *****************************************************************
@@ -703,16 +715,12 @@ export const uploadRawData = (values) => {
     }
   );
 };
+// *****************************************************************
+// ************************ DATA CORRECTION ************************
+// *****************************************************************
 
-export const getAllowedFormPermissions = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/form-permissions`);
-};
-
-export const updateFormPermissions = (data) => {
-  return api.create(
-    `${process.env.REACT_APP_SERVER_URL}/form-permissions/update`,
-    data
-  );
+export const getDataCorrection = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/data-correction`);
 };
 
 // postForgetPwd

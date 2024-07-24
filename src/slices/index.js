@@ -19,6 +19,7 @@ import InsuranceFormsReducer from "./InsuranceForm/reducer";
 import DematAccountFormsReducer from "./DematAccountForm/reducer";
 import FormPermissionsReducer from "./FormPermissions/reducer";
 import UploadRawDataReducer from "./UploadRawData/reducer";
+import DataCorrectionReducer from "./DataCorrection/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   ApplicationReport: ApplicationReportReducer,
   FormPermissions: FormPermissionsReducer,
   UploadRawData: UploadRawDataReducer,
+  DataCorrection: DataCorrectionReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
