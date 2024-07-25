@@ -722,6 +722,12 @@ export const uploadRawData = (values) => {
 export const getDataCorrection = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/data-correction`);
 };
+export const updateDataCorrection = (values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction`,
+    values
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>

@@ -13,73 +13,92 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
-import Flatpickr from "react-flatpickr";
 import Select from "react-select";
-// Import React FilePond
-import { FilePond, registerPlugin } from "react-filepond";
-// Import FilePond styles
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { uploadData } from "../../slices/UploadRawData/thunk";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { getDataCorrection } from "../../slices/DataCorrection/thunk";
-
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+import {
+  getDataCorrection,
+  updateDataCorrection,
+} from "../../slices/DataCorrection/thunk";
 
 const DataCorrection = () => {
-  const [selectedSingleVendor, setSelectedSingleVendor] = useState(null);
-  const [selectedSingleDataType, setSelectedSingleDataType] = useState(null);
-  const [file, setFile] = useState(null);
+  const [selectedSingleState, setSelectedSingleState] = useState(null);
+
+  const [selectedSingleCity, setSelectedSingleCity] = useState(null);
+
+  const [selectedSinglePinCode, setSelectedSinglePinCode] = useState(null);
 
   const { city } = useSelector((state) => state.DataCorrection);
 
   const dispatch = useDispatch();
 
-  function handleSelectSingleVendor(vendor) {
-    setSelectedSingleVendor(vendor);
+  function handleSelectSingleState(state) {
+    setSelectedSingleState(state);
   }
-  function handleSelectSingleDataType(dataType) {
-    setSelectedSingleDataType(dataType);
+  function handleSelectSingleCity(city) {
+    setSelectedSingleCity(city);
   }
-  const vendorOptions = [
-    {
-      value: "Ramesh",
-      label: "Ramesh",
-    },
-    {
-      value: "Suresh",
-      label: "Suresh",
-    },
-  ];
-  const dataTypeOptions = [
-    {
-      value: "Mixed",
-      label: "Mixed",
-    },
-    {
-      value: "Medical",
-      label: "Medical",
-    },
-    {
-      value: "B2B",
-      label: "B2B",
-    },
-    {
-      value: "IT Professional",
-      label: "IT Professional",
-    },
-    {
-      value: "Students",
-      label: "Students",
-    },
-  ];
+  function handleSelectSinglePinCode(pinCode) {
+    setSelectedSinglePinCode(pinCode);
+  }
 
-  console.log("CURRENT CITY AND COUNT ->", city);
+  const stateOptions = [
+    {
+      value: 1,
+      label: "Delhi",
+    },
+    {
+      value: 2,
+      label: "Uttar Pradesh",
+    },
+    {
+      value: 3,
+      label: "Punjab",
+    },
+    {
+      value: 4,
+      label: "Bihar",
+    },
+    {
+      value: 5,
+      label: "Uttarakhand",
+    },
+  ];
+  const cityOptions = [
+    {
+      value: 1,
+      label: "Delhi",
+    },
+    {
+      value: 2,
+      label: "Kanpur",
+    },
+    {
+      value: 3,
+      label: "Lucknow",
+    },
+  ];
+  const pinCodeOptions = [
+    {
+      value: "111111",
+      label: "111111",
+    },
+    {
+      value: "222222",
+      label: "222222",
+    },
+    {
+      value: "333333",
+      label: "333333",
+    },
+    {
+      value: "555555",
+      label: "555555",
+    },
+  ];
 
   useEffect(() => {
     dispatch(getDataCorrection());
@@ -87,27 +106,30 @@ const DataCorrection = () => {
 
   const validation = useFormik({
     initialValues: {
-      vendorName: "",
-      dataType: "",
-      purchaseDate: "",
+      stateId: "",
+      cityId: "",
+      pinCode: "",
     },
     validationSchema: Yup.object({
-      vendorName: Yup.string().required("Please select vendor name"),
-      dataType: Yup.string().required("Please select data type"),
-      purchaseDate: Yup.array().required("Please select purchase date"),
+      stateId: Yup.number().required("Please select state id"),
+      cityId: Yup.number().required("Please select city id"),
+      pinCode: Yup.string().required("Please select pin code"),
     }),
-    onSubmit: (values, { setFieldValue }) => {
-      dispatch(uploadData({ ...values, data: file.file }));
+    onSubmit: (values) => {
+      const dataCityName = city?.length > 0 && city[0].city;
 
-      setSelectedSingleVendor(null);
-      setSelectedSingleDataType(null);
-      setFieldValue("purchaseDate", "");
-      setFile(null);
+      dispatch(updateDataCorrection({ ...values, dataCityName }));
+
+      setSelectedSingleState(null);
+      setSelectedSingleCity(null);
+      setSelectedSinglePinCode(null);
     },
   });
 
   function formHandleSubmit(e) {
     e.preventDefault();
+
+    console.log("FORM SUBMITTED ->");
 
     validation.handleSubmit();
 
@@ -134,8 +156,8 @@ const DataCorrection = () => {
                       <Form onSubmit={formHandleSubmit}>
                         <div className="mb-2">
                           <Label htmlFor="current-city" className="form-label">
-                            Current City -{" "}
-                            {city?.length > 0 && city[0]._count.id}
+                            Current City
+                            {city?.length > 0 && " - " + city[0]._count.id}
                           </Label>
 
                           <Input
@@ -145,51 +167,40 @@ const DataCorrection = () => {
                             placeholder="Enter Location"
                             type="text"
                             // value="New Delhi"
-                            value={city?.length > 0 && city[0].city}
+                            value={
+                              city?.length > 0 ? city[0].city : "No City Found"
+                            }
                             disabled
-                            // onChange={validation.handleChange}
-                            // onBlur={validation.handleBlur}
-                            // value={validation.values.location || ""}
-                            // invalid={
-                            //   validation.touched.location &&
-                            //   validation.errors.location
-                            //     ? true
-                            //     : false
-                            // }
                           />
                         </div>
                         <div className="mb-2">
                           <Label className="form-label">State</Label>
                           <Select
-                            id="state"
-                            name="state"
-                            value={selectedSingleVendor}
-                            onChange={(vendor) => {
-                              // handleSelectSingleVendor(vendor);
-                              // validation.setFieldValue(
-                              //   "vendorName",
-                              //   vendor.value
-                              // );
+                            id="stateId"
+                            name="stateId"
+                            value={selectedSingleState}
+                            onChange={(state) => {
+                              handleSelectSingleState(state);
+                              validation.setFieldValue("stateId", state.value);
                             }}
-                            options={vendorOptions}
+                            options={stateOptions}
                             placeholder="Select State"
+                            isDisabled={!Boolean(city?.length)}
                           />
                         </div>
                         <div className="mb-2">
                           <Label className="form-label">City</Label>
                           <Select
-                            id="city"
-                            name="city"
-                            value={selectedSingleDataType}
-                            onChange={(dataType) => {
-                              // handleSelectSingleDataType(dataType);
-                              // validation.setFieldValue(
-                              //   "dataType",
-                              //   dataType.value
-                              // );
+                            id="cityId"
+                            name="cityId"
+                            value={selectedSingleCity}
+                            onChange={(city) => {
+                              handleSelectSingleCity(city);
+                              validation.setFieldValue("cityId", city.value);
                             }}
-                            options={dataTypeOptions}
+                            options={cityOptions}
                             placeholder="Select City"
+                            isDisabled={!Boolean(city?.length)}
                           />
                         </div>
                         <div className="mb-2">
@@ -197,18 +208,19 @@ const DataCorrection = () => {
                             Pin Code GPO/BO/SO
                           </Label>
                           <Select
-                            id="pin-code"
-                            name="pin-code"
-                            value={selectedSingleDataType}
-                            onChange={(dataType) => {
-                              // handleSelectSingleDataType(dataType);
-                              // validation.setFieldValue(
-                              //   "dataType",
-                              //   dataType.value
-                              // );
+                            id="pinCode"
+                            name="pinCode"
+                            value={selectedSinglePinCode}
+                            onChange={(pinCode) => {
+                              handleSelectSinglePinCode(pinCode);
+                              validation.setFieldValue(
+                                "pinCode",
+                                pinCode.value
+                              );
                             }}
-                            options={dataTypeOptions}
+                            options={pinCodeOptions}
                             placeholder="Select Pin Code"
+                            isDisabled={!Boolean(city?.length)}
                           />
                         </div>
 
@@ -234,65 +246,29 @@ const DataCorrection = () => {
             {/* <Col lg={6}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Download Data</h4>
+                  <h4 className="card-title mb-0">Data Information</h4>
                 </CardHeader>
 
                 <CardBody>
                   <Row>
                     <Col>
-                      <div className="mb-2">
-                        <Label className="form-label">Select Employee</Label>
-                        <Select
-                          id="employee"
-                          name="employee"
-                          value={selectedSingleEmployee}
-                          onChange={(employee) => {
-                            handleSelectSingleEmployee(employee);
-                            // validation.setFieldValue(
-                            //   "centerName",
-                            //   centerName.value
-                            // );
-                          }}
-                          options={employeeOptions}
-                          placeholder="Choose Employee"
-                        />
-                      </div>
-
                       <div className="table-responsive table-card mt-3 mb-1">
                         <table className="table align-middle table-nowrap">
                           <thead className="table-light">
                             <tr>
-                              <th className="sort" data-sort="id">
-                                Id
-                              </th>
-                              <th className="sort" data-sort="given_date">
-                                Given Date
-                              </th>
-                              <th className="sort" data-sort="customer_name">
-                                Data
-                              </th>
-                              <th className="sort" data-sort="phone">
-                                Download
-                              </th>
+                              <th>Id</th>
+                              <th>States</th>
+                              <th>Total Cities</th>
+                              <th>Total Data</th>
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
-                            {downloadData?.map((data) => (
-                              <tr key={data.id}>
-                                <td className="id">{data.id}</td>
-                                <td className="given_date">{data.givenDate}</td>
-                                <td className="data">{data.data}</td>
-                                <td className="download_btn">
-                                  <button className="btn btn-success btn-sm">
-                                    <i
-                                      className="ri-download-2-line"
-                                      style={{ marginRight: "5px" }}
-                                    ></i>
-                                    Download data
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
+                            <tr>
+                              <td className="id">1</td>
+                              <td className="states">Delhi NCR</td>
+                              <td className="total_cities">10</td>
+                              <td className="total_data">23434</td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
