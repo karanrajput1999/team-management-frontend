@@ -31,6 +31,7 @@ import AppData from "../pages/AppData";
 import FormPermissions from "../pages/FormPermissions";
 import UploadRawData from "../pages/UploadRawData";
 import DataCorrection from "../pages/DataCorrection";
+import OBDData from "../pages/OBDData";
 
 const authProtectedRoutes = [
   // { path: "/users", component: <Users /> },
@@ -52,6 +53,7 @@ const authProtectedRoutes = [
   { path: "/form-permissions", component: <FormPermissions /> },
   { path: "/upload-raw-data", component: <UploadRawData /> },
   { path: "/data-correction", component: <DataCorrection /> },
+  { path: "/obd-data", component: <OBDData /> },
   // { path: "/calendar", component: <Calendar /> },
 
   //User Profile
