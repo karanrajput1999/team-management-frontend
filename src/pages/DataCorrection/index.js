@@ -22,6 +22,9 @@ import { useSelector } from "react-redux";
 import {
   getDataCorrection,
   updateDataCorrection,
+  getStates,
+  getCities,
+  getPinCodes,
 } from "../../slices/DataCorrection/thunk";
 
 const DataCorrection = () => {
@@ -31,7 +34,9 @@ const DataCorrection = () => {
 
   const [selectedSinglePinCode, setSelectedSinglePinCode] = useState(null);
 
-  const { city } = useSelector((state) => state.DataCorrection);
+  const { city, states, cities, pinCodes } = useSelector(
+    (state) => state.DataCorrection
+  );
 
   const dispatch = useDispatch();
 
@@ -45,63 +50,24 @@ const DataCorrection = () => {
     setSelectedSinglePinCode(pinCode);
   }
 
-  const stateOptions = [
-    {
-      value: 1,
-      label: "Delhi",
-    },
-    {
-      value: 2,
-      label: "Uttar Pradesh",
-    },
-    {
-      value: 3,
-      label: "Punjab",
-    },
-    {
-      value: 4,
-      label: "Bihar",
-    },
-    {
-      value: 5,
-      label: "Uttarakhand",
-    },
-  ];
-  const cityOptions = [
-    {
-      value: 1,
-      label: "Delhi",
-    },
-    {
-      value: 2,
-      label: "Kanpur",
-    },
-    {
-      value: 3,
-      label: "Lucknow",
-    },
-  ];
-  const pinCodeOptions = [
-    {
-      value: "111111",
-      label: "111111",
-    },
-    {
-      value: "222222",
-      label: "222222",
-    },
-    {
-      value: "333333",
-      label: "333333",
-    },
-    {
-      value: "555555",
-      label: "555555",
-    },
-  ];
+  const stateOptions = states?.map((state) => {
+    return { value: state.id, label: state.name };
+  });
+
+  const cityOptions = cities?.map((city) => {
+    return { value: city.id, label: city.name };
+  });
+
+  const pinCodeOptions = pinCodes?.map((pinCode) => {
+    return {
+      value: pinCode.pinCode,
+      label: pinCode.name + " - " + pinCode.pinCode,
+    };
+  });
 
   useEffect(() => {
     dispatch(getDataCorrection());
+    dispatch(getStates());
   }, []);
 
   const validation = useFormik({
@@ -115,11 +81,14 @@ const DataCorrection = () => {
       cityId: Yup.number().required("Please select city id"),
       pinCode: Yup.string().required("Please select pin code"),
     }),
-    onSubmit: (values) => {
-      const dataCityName = city?.length > 0 && city[0].city;
+    onSubmit: (values, { resetForm }) => {
+      const cityName = city?.length > 0 && city[0].city;
 
-      dispatch(updateDataCorrection({ ...values, dataCityName }));
+      dispatch(updateDataCorrection({ ...values, cityName })).then((res) => {
+        dispatch(getDataCorrection()); // updating the new city immediately
+      });
 
+      resetForm();
       setSelectedSingleState(null);
       setSelectedSingleCity(null);
       setSelectedSinglePinCode(null);
@@ -128,8 +97,6 @@ const DataCorrection = () => {
 
   function formHandleSubmit(e) {
     e.preventDefault();
-
-    console.log("FORM SUBMITTED ->");
 
     validation.handleSubmit();
 
@@ -181,6 +148,7 @@ const DataCorrection = () => {
                             value={selectedSingleState}
                             onChange={(state) => {
                               handleSelectSingleState(state);
+                              dispatch(getCities(state.value));
                               validation.setFieldValue("stateId", state.value);
                             }}
                             options={stateOptions}
@@ -196,11 +164,14 @@ const DataCorrection = () => {
                             value={selectedSingleCity}
                             onChange={(city) => {
                               handleSelectSingleCity(city);
+                              dispatch(getPinCodes(city.value));
                               validation.setFieldValue("cityId", city.value);
                             }}
                             options={cityOptions}
                             placeholder="Select City"
-                            isDisabled={!Boolean(city?.length)}
+                            isDisabled={
+                              !Boolean(city?.length) || !Boolean(cities)
+                            }
                           />
                         </div>
                         <div className="mb-2">
@@ -220,7 +191,9 @@ const DataCorrection = () => {
                             }}
                             options={pinCodeOptions}
                             placeholder="Select Pin Code"
-                            isDisabled={!Boolean(city?.length)}
+                            isDisabled={
+                              !Boolean(city?.length) || !Boolean(pinCodes)
+                            }
                           />
                         </div>
 

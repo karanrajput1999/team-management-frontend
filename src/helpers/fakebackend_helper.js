@@ -728,6 +728,19 @@ export const updateDataCorrection = (values) => {
     values
   );
 };
+export const getStates = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/data-correction/states`);
+};
+export const getCities = (stateId) => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/states/${stateId}/cities`
+  );
+};
+export const getPinCodes = (cityId) => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/cities/${cityId}/pin-codes`
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
