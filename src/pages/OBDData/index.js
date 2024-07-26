@@ -28,7 +28,7 @@ const OBDData = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  function handleDownloadDataForOBD() {
     dispatch(downloadDataForOBD()).then((res) => {
       const url = window.URL.createObjectURL(
         new Blob([res.payload], {
@@ -43,7 +43,7 @@ const OBDData = () => {
       link.click();
       document.body.removeChild(link);
     });
-  }, []);
+  }
 
   document.title = "OBD Data";
   return (
@@ -102,7 +102,10 @@ const OBDData = () => {
                 <CardBody>
                   <Row>
                     <Col>
-                      <button className="btn btn-success">
+                      <button
+                        className="btn btn-success"
+                        onClick={handleDownloadDataForOBD}
+                      >
                         <i
                           className="ri-download-2-line"
                           style={{ marginRight: "5px" }}
