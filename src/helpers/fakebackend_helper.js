@@ -742,6 +742,14 @@ export const getPinCodes = (cityId) => {
   );
 };
 
+// *****************************************************************
+// *************************** OBD DATA ****************************
+// *****************************************************************
+
+export const downloadDataForOBD = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/obd-data/download`);
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

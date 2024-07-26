@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
-  Form,
   Label,
   Row,
 } from "reactstrap";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
-import Flatpickr from "react-flatpickr";
-import Select from "react-select";
+import { downloadDataForOBD } from "../../slices/OBDData/thunk";
 // Import React FilePond
 import { FilePond, registerPlugin } from "react-filepond";
 // Import FilePond styles
@@ -21,87 +19,31 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { uploadData } from "../../slices/UploadRawData/thunk";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const OBDData = () => {
-  const [selectedSingleVendor, setSelectedSingleVendor] = useState(null);
-  const [selectedSingleDataType, setSelectedSingleDataType] = useState(null);
   const [file, setFile] = useState(null);
 
   const dispatch = useDispatch();
 
-  function handleSelectSingleVendor(vendor) {
-    setSelectedSingleVendor(vendor);
-  }
-  function handleSelectSingleDataType(dataType) {
-    setSelectedSingleDataType(dataType);
-  }
-  const vendorOptions = [
-    {
-      value: "Ramesh",
-      label: "Ramesh",
-    },
-    {
-      value: "Suresh",
-      label: "Suresh",
-    },
-  ];
-  const dataTypeOptions = [
-    {
-      value: "Mixed",
-      label: "Mixed",
-    },
-    {
-      value: "Medical",
-      label: "Medical",
-    },
-    {
-      value: "B2B",
-      label: "B2B",
-    },
-    {
-      value: "IT Professional",
-      label: "IT Professional",
-    },
-    {
-      value: "Students",
-      label: "Students",
-    },
-  ];
+  useEffect(() => {
+    dispatch(downloadDataForOBD()).then((res) => {
+      const url = window.URL.createObjectURL(
+        new Blob([res.payload], {
+          type: "text/csv",
+        })
+      );
 
-  const validation = useFormik({
-    initialValues: {
-      vendorName: "",
-      dataType: "",
-      purchaseDate: "",
-    },
-    validationSchema: Yup.object({
-      vendorName: Yup.string().required("Please select vendor name"),
-      dataType: Yup.string().required("Please select data type"),
-      purchaseDate: Yup.array().required("Please select purchase date"),
-    }),
-    onSubmit: (values, { setFieldValue }) => {
-      dispatch(uploadData({ ...values, data: file.file }));
-
-      setSelectedSingleVendor(null);
-      setSelectedSingleDataType(null);
-      setFieldValue("purchaseDate", "");
-      setFile(null);
-    },
-  });
-
-  function formHandleSubmit(e) {
-    e.preventDefault();
-
-    validation.handleSubmit();
-
-    return false;
-  }
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "data-for-obd.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }, []);
 
   document.title = "OBD Data";
   return (
@@ -120,32 +62,32 @@ const OBDData = () => {
                 <CardBody>
                   <Row>
                     <Col>
-                      <Form onSubmit={formHandleSubmit}>
-                        <div className="mb-2">
-                          <Label className="form-label">Choose File</Label>
-                          <FilePond
-                            files={file}
-                            onupdatefiles={(file) => setFile(file[0])}
-                            maxFiles={1}
-                            name="data"
-                            className="filepond"
-                            required={true}
-                          />
-                        </div>
-                        <div
-                          className="d-flex justify-content-end"
-                          style={{ gap: "5px" }}
-                        >
-                          <button type="submit" className="btn btn-primary">
-                            {" "}
-                            <i
-                              className="ri-file-upload-line"
-                              style={{ marginRight: "5px" }}
-                            ></i>
-                            Upload
-                          </button>
-                        </div>
-                      </Form>
+                      {/* <Form onSubmit={formHandleSubmit}> */}
+                      <div className="mb-2">
+                        <Label className="form-label">Choose File</Label>
+                        <FilePond
+                          files={file}
+                          onupdatefiles={(file) => setFile(file[0])}
+                          maxFiles={1}
+                          name="data"
+                          className="filepond"
+                          required={true}
+                        />
+                      </div>
+                      <div
+                        className="d-flex justify-content-end"
+                        style={{ gap: "5px" }}
+                      >
+                        <button type="submit" className="btn btn-primary">
+                          {" "}
+                          <i
+                            className="ri-file-upload-line"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Upload
+                        </button>
+                      </div>
+                      {/* </Form> */}
                     </Col>
                   </Row>
                 </CardBody>
