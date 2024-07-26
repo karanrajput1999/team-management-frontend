@@ -20,6 +20,7 @@ import DematAccountFormsReducer from "./DematAccountForm/reducer";
 import FormPermissionsReducer from "./FormPermissions/reducer";
 import UploadRawDataReducer from "./UploadRawData/reducer";
 import DataCorrectionReducer from "./DataCorrection/reducer";
+import DownloadDataReducer from "./DownloadData/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   FormPermissions: FormPermissionsReducer,
   UploadRawData: UploadRawDataReducer,
   DataCorrection: DataCorrectionReducer,
+  DownloadData: DownloadDataReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
