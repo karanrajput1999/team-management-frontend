@@ -3,6 +3,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getDataCorrection as getDataCorrectionApi,
   updateDataCorrection as updateDataCorrectionApi,
+  getSalaryInLacs as getSalaryInLacsApi,
+  getSalaryInThousands as getSalaryInThousandsApi,
   getStates as getStatesApi,
   getCities as getCitiesApi,
   getPinCodes as getPinCodesApi,
@@ -33,11 +35,43 @@ export const updateDataCorrection = createAsyncThunk(
     }
   }
 );
+
+export const getSalaryInLacs = createAsyncThunk(
+  "dataCorrection/getSalaryInLacs",
+  async () => {
+    try {
+      const response = await getSalaryInLacsApi();
+
+      return response;
+    } catch (error) {
+      console.log(
+        "error inside get salary in lacs data correction thunk",
+        error
+      );
+    }
+  }
+);
+
+export const getSalaryInThousands = createAsyncThunk(
+  "dataCorrection/getSalaryInThousands",
+  async () => {
+    try {
+      const response = await getSalaryInThousandsApi();
+
+      return response;
+    } catch (error) {
+      console.log(
+        "error inside get  salary in thousands data correction thunk",
+        error
+      );
+    }
+  }
+);
+
 export const getStates = createAsyncThunk(
   "dataCorrection/getStates",
   async () => {
     try {
-      console.log("GET STATES THUNK CALLED");
       const response = await getStatesApi();
 
       return response;

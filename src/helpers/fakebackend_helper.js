@@ -728,6 +728,16 @@ export const updateDataCorrection = (values) => {
     values
   );
 };
+export const getSalaryInLacs = () => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/salary-lacs`
+  );
+};
+export const getSalaryInThousands = () => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/salary-thousands`
+  );
+};
 export const getStates = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/data-correction/states`);
 };
@@ -755,7 +765,6 @@ export const downloadDataForOBD = () => {
 // *****************************************************************
 
 export const filterDownloadData = (data) => {
-  console.log("DOWNLOAD DATA BACKEND HELPER ->", data);
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/download-data/filter`,
     data

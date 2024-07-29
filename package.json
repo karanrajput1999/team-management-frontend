@@ -33,6 +33,7 @@
     "echarts-for-react": "^3.0.2",
     "emoji-picker-react": "^4.5.16",
     "eslint": "^8.56.0",
+    "export-from-json": "^1.7.4",
     "feather-icons-react": "^0.6.2",
     "filepond": "^4.30.6",
     "filepond-plugin-image-exif-orientation": "^1.0.11",

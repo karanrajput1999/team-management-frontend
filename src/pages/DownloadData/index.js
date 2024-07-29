@@ -14,7 +14,7 @@ import Flatpickr from "react-flatpickr";
 import { getCenters } from "../../slices/Centers/thunk";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
-
+import exportFromJSON from "export-from-json";
 import {
   filterDownloadData,
   getCities,
@@ -55,9 +55,11 @@ const DownloadData = () => {
 
   const dispatch = useDispatch();
 
-  const { data, states, cities, pinCodes } = useSelector(
+  const { filteredDownloadData, states, cities, pinCodes } = useSelector(
     (state) => state.DownloadData
   );
+
+  console.log("FILTERED DOWNLOAD DATA ->", filteredDownloadData);
 
   useEffect(() => {
     dispatch(getStates());
@@ -187,7 +189,16 @@ const DownloadData = () => {
     // console.log("FILTERS ->", filters);
   }
 
-  document.title = "Data Management";
+  function handleDownloadData() {
+    const fileName = "data";
+    const exportType = exportFromJSON.types.csv;
+
+    console.log("FILTERED DATA in EXPORT FUNCTION ->", filteredDownloadData);
+
+    exportFromJSON({ data: filteredDownloadData, fileName, exportType });
+  }
+
+  document.title = "Download Data";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -391,139 +402,93 @@ const DownloadData = () => {
                             <i className="ri-list-check label-icon align-middle fs-16 me-2"></i>
                             Show All
                           </button>
-                          <button
-                            type="button"
-                            className="btn btn-success btn-label waves-effect waves-light"
-                          >
-                            <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>
-                            Download Data
-                          </button>
+                          {filteredDownloadData &&
+                            filteredDownloadData.length !== 0 && (
+                              <button
+                                type="button"
+                                className="btn btn-success btn-label waves-effect waves-light"
+                                onClick={handleDownloadData}
+                              >
+                                <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>
+                                Download Data
+                              </button>
+                            )}
                         </div>
                       </Col>
                     </Row>
-                    {/* 
+
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th data-sort="id">S.NO</th>
-                            <th data-sort="application_no">Application No</th>
-                            <th data-sort="customer_name">Customer Name</th>
-                            <th data-sort="phone">Phone</th>
-
-                            <th data-sort="pan_card">Pan Card</th>
-
-                            <th data-sort="client_of">Form Type</th>
-                            <th data-sort="client_of">Bank Name</th>
-                            <th data-sort="client_of">Client of</th>
-
-                            <th data-sort="status_1">Status 1</th>
-                            <th data-sort="status_2">Status 2</th>
+                            <th data-sort="name">Name</th>
+                            <th data-sort="mobile_number">Mobile Number</th>
+                            <th data-sort="city">City</th>
+                            <th data-sort="state">State</th>
+                            <th data-sort="pin_code">Pin Code</th>
+                            <th data-sort="email">Email</th>
+                            <th data-sort="salary">Salary</th>
+                            <th data-sort="pan_no">Pan No</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {(filteredApplicationReports.length !== 0
-                            ? filteredApplicationReports
-                            : applicationReports
-                          )?.map((bankReport, idx) => (
-                            <tr key={idx}>
-                              <td>{bankReport?.id}</td>
-                              <td>
-                                {bankReport?.applicationNo ? (
-                                  bankReport?.applicationNo
-                                ) : (
-                                  <span className="text-muted">
-                                    {" "}
-                                    ---Not Generated---{" "}
-                                  </span>
-                                )}
-                              </td>
-                              <td>{bankReport?.fullName}</td>
-                              <td>{bankReport?.mobileNo}</td>
-                              <td>{bankReport?.panNo}</td>
-                              <td>
-                                <span
-                                  className={`badge border ${
-                                    bankReport?.formType === "Credit Card"
-                                      ? "border-success text-success"
-                                      : bankReport?.formType === "Loan"
-                                      ? "border-primary text-primary"
-                                      : bankReport?.formType === "Insurance"
-                                      ? "border-warning text-warning"
-                                      : bankReport?.formType === "Demat Account"
-                                      ? "border-danger text-danger"
-                                      : ""
-                                  } fs-12`}
-                                >
-                                  {bankReport?.formType}
-                                </span>
-                              </td>
-                              <td>
-                                {bankReport.bankName
-                                  ? bankReport.bankName
-                                  : "-----"}
-                              </td>
-                              <td>
-                                {Object.keys(bankReport?.user).length !== 0 && (
-                                  <div>
-                                    <div>
-                                      <span
-                                        className="fs-13"
-                                        style={{ textTransform: "uppercase" }}
-                                      >
-                                        {bankReport?.user?.centerName}
-                                      </span>
-                                      <span> By </span>
-                                      <span
-                                        className="fs-13"
-                                        style={{ textTransform: "uppercase" }}
-                                      >
-                                        {bankReport?.user?.name}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <span className="fs-13">
-                                        {" "}
-                                        On{" "}
-                                        {moment
-                                          .utc(bankReport?.createdAt)
-                                          .tz("Asia/Kolkata")
-                                          .format("DD MMM, YY")}
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </td>
+                          {filteredDownloadData &&
+                            filteredDownloadData?.map((data) => (
+                              <tr key={data.id}>
+                                <td>{data?.name}</td>
+                                <td>{data?.mobile1}</td>
+                                <td>
+                                  {data?.city ? (
+                                    <span>{data.city}</span>
+                                  ) : (
+                                    <span className="text-muted">No City</span>
+                                  )}
+                                </td>
+                                <td>
+                                  {data?.state ? (
+                                    <span>{data.state}</span>
+                                  ) : (
+                                    <span className="text-muted">No State</span>
+                                  )}
+                                </td>
+                                <td>
+                                  {data?.pinCode ? (
+                                    <span>{data.pinCode}</span>
+                                  ) : (
+                                    <span className="text-muted">
+                                      No Pin Code
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  {data?.email ? (
+                                    <span>{data.email}</span>
+                                  ) : (
+                                    <span className="text-muted">No Email</span>
+                                  )}
+                                </td>
 
-                              <td>
-                                <span
-                                  className={`badge ${
-                                    bankReport?.formStatus &&
-                                    bankReport?.formStatus === "VKYC Done"
-                                      ? "bg-success-subtle"
-                                      : "bg-primary-subtle"
-                                  }  ${
-                                    bankReport?.formStatus &&
-                                    bankReport?.formStatus === "VKYC Done"
-                                      ? "text-success"
-                                      : "text-primary"
-                                  } `}
-                                >
-                                  {bankReport?.formStatus
-                                    ? bankReport?.formStatus
-                                    : "Pending"}
-                                </span>
-                              </td>
-                              <td>
-                                <span className="badge bg-primary-subtle text-primary">
-                                  Pending
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
+                                <td>
+                                  {data?.salary ? (
+                                    <span>{data.salary}</span>
+                                  ) : (
+                                    <span className="text-muted">
+                                      No Salary
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  {data?.panNo ? (
+                                    <span>{data.panNo}</span>
+                                  ) : (
+                                    <span className="text-muted">No Pan</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
-                    </div> */}
+                    </div>
 
                     <div className="d-flex justify-content-end">
                       <div className="pagination-wrap hstack gap-2">

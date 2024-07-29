@@ -25,6 +25,8 @@ import {
   getStates,
   getCities,
   getPinCodes,
+  getSalaryInLacs,
+  getSalaryInThousands,
 } from "../../slices/DataCorrection/thunk";
 
 const DataCorrection = () => {
@@ -34,15 +36,28 @@ const DataCorrection = () => {
 
   const [selectedSinglePinCode, setSelectedSinglePinCode] = useState(null);
 
-  const { city, states, cities, pinCodes } = useSelector(
-    (state) => state.DataCorrection
-  );
+  const [selectedSingleSalaryInLacs, setSelectedSingleSalaryInLacs] =
+    useState(null);
+
+  const [selectedSingleSalaryInThousands, setSelectedSingleSalaryInThousands] =
+    useState(null);
+
+  const {
+    salary,
+    city,
+    states,
+    cities,
+    pinCodes,
+    salaryInLacs,
+    salaryInThousands,
+  } = useSelector((state) => state.DataCorrection);
 
   const dispatch = useDispatch();
 
   function handleSelectSingleState(state) {
     setSelectedSingleState(state);
   }
+
   function handleSelectSingleCity(city) {
     setSelectedSingleCity(city);
   }
@@ -50,6 +65,19 @@ const DataCorrection = () => {
     setSelectedSinglePinCode(pinCode);
   }
 
+  function handleSelectSingleSalaryInLacs(salaryInLacs) {
+    setSelectedSingleSalaryInLacs(salaryInLacs);
+  }
+  function handleSelectSingleSalaryInThousands(salaryInThousands) {
+    setSelectedSingleSalaryInThousands(salaryInThousands);
+  }
+
+  const salaryInLacsOptions = salaryInLacs?.map((salary) => {
+    return { value: salary.id, label: salary.value };
+  });
+  const salaryInThousandsOptions = salaryInThousands?.map((salary) => {
+    return { value: salary.id, label: salary.value };
+  });
   const stateOptions = states?.map((state) => {
     return { value: state.id, label: state.name };
   });
@@ -68,6 +96,8 @@ const DataCorrection = () => {
   useEffect(() => {
     dispatch(getDataCorrection());
     dispatch(getStates());
+    dispatch(getSalaryInLacs());
+    dispatch(getSalaryInThousands());
   }, []);
 
   const validation = useFormik({
@@ -103,6 +133,33 @@ const DataCorrection = () => {
     return false;
   }
 
+  // const salaryInLacsOptions = [];
+  // const salaryInThousandOptions = [];
+
+  // for (let i = 1; i <= 100; i++) {
+  //   let value;
+  //   if (i === 100) {
+  //     value = "1 Crore";
+  //   } else {
+  //     value = `${i} Lac${i > 1 ? "s" : ""}`;
+  //   }
+
+  //   salaryInLacsOptions.push({
+  //     label: value,
+  //     value: value,
+  //   });
+  // }
+  // for (let i = 1; i <= 99; i++) {
+  //   const value = `${i} Thousand${i > 1 ? "s" : ""}`;
+
+  //   salaryInThousandOptions.push({
+  //     label: value,
+  //     value: value,
+  //   });
+  // }
+
+  console.log("SALARY IN LACS ->", salaryInLacsOptions);
+
   document.title = "Data Correction";
   return (
     <React.Fragment>
@@ -114,7 +171,7 @@ const DataCorrection = () => {
             <Col lg={6}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Data Correction</h4>
+                  <h4 className="card-title mb-0">City Correction</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -196,6 +253,118 @@ const DataCorrection = () => {
                             }
                           />
                         </div>
+
+                        <div
+                          className="d-flex justify-content-end"
+                          style={{ gap: "5px" }}
+                        >
+                          <button type="submit" className="btn btn-primary">
+                            {" "}
+                            <i
+                              className="ri-file-upload-line"
+                              style={{ marginRight: "5px" }}
+                            ></i>
+                            Upload
+                          </button>
+                        </div>
+                      </Form>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg={6}>
+              <Card>
+                <CardHeader>
+                  <h4 className="card-title mb-0">Salary Correction</h4>
+                </CardHeader>
+
+                <CardBody>
+                  <Row>
+                    <Col>
+                      <Form onSubmit={formHandleSubmit}>
+                        <div className="mb-2">
+                          <Label htmlFor="current-city" className="form-label">
+                            Current Salary
+                            {salary?.length > 0 && " - " + salary[0]._count.id}
+                          </Label>
+
+                          <Input
+                            id="current-city"
+                            name="current-city"
+                            className="form-control"
+                            placeholder="Enter Location"
+                            type="text"
+                            // value="New Delhi"
+                            value={
+                              salary?.length > 0
+                                ? salary[0].salary
+                                : "No Salary Found"
+                            }
+                            disabled
+                          />
+                        </div>
+                        <div className="mb-2 d-flex justify-content-between gap-3">
+                          <div style={{ flex: 1 }}>
+                            <Label className="form-label">Salary In Lacs</Label>
+                            <Select
+                              id="salaryInLacs"
+                              name="salaryInLacs"
+                              value={selectedSingleSalaryInLacs}
+                              onChange={(salaryInLacs) => {
+                                handleSelectSingleSalaryInLacs(salaryInLacs);
+                                // dispatch(getCities(salaryInLacs.value));
+                                // validation.setFieldValue(
+                                //   "stateId",
+                                //   salaryInLacs.value
+                                // );
+                              }}
+                              options={salaryInLacsOptions}
+                              placeholder="Select Salary In Lacs"
+                              isDisabled={!Boolean(city?.length)}
+                            />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <Label className="form-label">
+                              Salary In Thousands
+                            </Label>
+                            <Select
+                              id="salaryInThousands"
+                              name="salaryInThousands"
+                              value={selectedSingleSalaryInThousands}
+                              onChange={(salaryInThousands) => {
+                                handleSelectSingleSalaryInThousands(
+                                  salaryInThousands
+                                );
+                                // dispatch(getPinCodes(salaryInThousands.value));
+                                // validation.setFieldValue("cityId", salaryInThousands.value);
+                              }}
+                              options={salaryInThousandsOptions}
+                              placeholder="Select Salary In Thousands"
+                            />
+                          </div>
+                        </div>
+                        {/* <div className="mb-2">
+                          <div>
+                            <Label className="form-label">
+                              Salary In Thousands
+                            </Label>
+                            <Select
+                              id="salaryInThousands"
+                              name="salaryInThousands"
+                              value={selectedSingleSalaryInThousands}
+                              onChange={(salaryInThousands) => {
+                                handleSelectSingleSalaryInThousands(
+                                  salaryInThousands
+                                );
+                                // dispatch(getPinCodes(salaryInThousands.value));
+                                // validation.setFieldValue("cityId", salaryInThousands.value);
+                              }}
+                              options={salaryInThousandOptions}
+                              placeholder="Select Salary In Thousands"
+                            />
+                          </div>
+                        </div> */}
 
                         <div
                           className="d-flex justify-content-end"

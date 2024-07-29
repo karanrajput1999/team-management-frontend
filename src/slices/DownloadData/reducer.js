@@ -24,10 +24,11 @@ const downloadDataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(filterDownloadData.fulfilled, (state, action) => {
+      console.log("PAYLOAD RECEIVED FOR DOWNLOAD DATA ->", action?.payload);
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.filteredDownloadData = action.payload?.data.downloadData;
+        state.filteredDownloadData = action.payload?.data;
         state.error = "";
       }
     });
