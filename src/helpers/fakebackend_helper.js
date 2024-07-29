@@ -722,9 +722,15 @@ export const uploadRawData = (values) => {
 export const getDataCorrection = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/data-correction`);
 };
-export const updateDataCorrection = (values) => {
+export const cityDataCorrection = (values) => {
   return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/data-correction`,
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/city`,
+    values
+  );
+};
+export const salaryDataCorrection = (values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/data-correction/salary`,
     values
   );
 };

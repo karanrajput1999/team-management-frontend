@@ -21,7 +21,8 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   getDataCorrection,
-  updateDataCorrection,
+  cityDataCorrection,
+  salaryDataCorrection,
   getStates,
   getCities,
   getPinCodes,
@@ -73,10 +74,13 @@ const DataCorrection = () => {
   }
 
   const salaryInLacsOptions = salaryInLacs?.map((salary) => {
-    return { value: salary.id, label: salary.value };
+    const salaryWithoutComma = salary.value.replace(/,/g, "");
+    return { value: salaryWithoutComma, label: salary.value };
   });
   const salaryInThousandsOptions = salaryInThousands?.map((salary) => {
-    return { value: salary.id, label: salary.value };
+    const salaryWithoutComma = salary.value.replace(/,/g, "");
+
+    return { value: salaryWithoutComma, label: salary.value };
   });
   const stateOptions = states?.map((state) => {
     return { value: state.id, label: state.name };
@@ -114,7 +118,7 @@ const DataCorrection = () => {
     onSubmit: (values, { resetForm }) => {
       const cityName = city?.length > 0 && city[0].city;
 
-      dispatch(updateDataCorrection({ ...values, cityName })).then((res) => {
+      dispatch(cityDataCorrection({ ...values, cityName })).then((res) => {
         dispatch(getDataCorrection()); // updating the new city immediately
       });
 
@@ -125,6 +129,38 @@ const DataCorrection = () => {
     },
   });
 
+  const salaryCorrectionValidation = useFormik({
+    initialValues: {
+      salaryInLacs: "",
+      salaryInThousands: "",
+    },
+    validationSchema: Yup.object({
+      salaryInLacs: Yup.string().required("Please select salary"),
+      salaryInThousands: Yup.string(),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      const currentSalary = salary?.length > 0 && salary[0].salary;
+      let salaryInNumbers;
+
+      if (values.salaryInThousands) {
+        salaryInNumbers =
+          parseInt(values.salaryInLacs) + parseInt(values.salaryInThousands);
+      } else {
+        salaryInNumbers = values.salaryInLacs;
+      }
+
+      dispatch(salaryDataCorrection({ salaryInNumbers, currentSalary })).then(
+        (res) => {
+          dispatch(getDataCorrection());
+        }
+      );
+
+      resetForm();
+      setSelectedSingleSalaryInLacs(null);
+      setSelectedSingleSalaryInThousands(null);
+    },
+  });
+
   function formHandleSubmit(e) {
     e.preventDefault();
 
@@ -132,33 +168,13 @@ const DataCorrection = () => {
 
     return false;
   }
+  function salaryCorrectionFormHandleSubmit(e) {
+    e.preventDefault();
 
-  // const salaryInLacsOptions = [];
-  // const salaryInThousandOptions = [];
+    salaryCorrectionValidation.handleSubmit();
 
-  // for (let i = 1; i <= 100; i++) {
-  //   let value;
-  //   if (i === 100) {
-  //     value = "1 Crore";
-  //   } else {
-  //     value = `${i} Lac${i > 1 ? "s" : ""}`;
-  //   }
-
-  //   salaryInLacsOptions.push({
-  //     label: value,
-  //     value: value,
-  //   });
-  // }
-  // for (let i = 1; i <= 99; i++) {
-  //   const value = `${i} Thousand${i > 1 ? "s" : ""}`;
-
-  //   salaryInThousandOptions.push({
-  //     label: value,
-  //     value: value,
-  //   });
-  // }
-
-  console.log("SALARY IN LACS ->", salaryInLacsOptions);
+    return false;
+  }
 
   document.title = "Data Correction";
   return (
@@ -188,7 +204,6 @@ const DataCorrection = () => {
                             id="current-city"
                             name="current-city"
                             className="form-control"
-                            placeholder="Enter Location"
                             type="text"
                             // value="New Delhi"
                             value={
@@ -282,7 +297,7 @@ const DataCorrection = () => {
                 <CardBody>
                   <Row>
                     <Col>
-                      <Form onSubmit={formHandleSubmit}>
+                      <Form onSubmit={salaryCorrectionFormHandleSubmit}>
                         <div className="mb-2">
                           <Label htmlFor="current-city" className="form-label">
                             Current Salary
@@ -290,10 +305,9 @@ const DataCorrection = () => {
                           </Label>
 
                           <Input
-                            id="current-city"
-                            name="current-city"
+                            id="current-salary"
+                            name="current-salary"
                             className="form-control"
-                            placeholder="Enter Location"
                             type="text"
                             // value="New Delhi"
                             value={
@@ -313,11 +327,11 @@ const DataCorrection = () => {
                               value={selectedSingleSalaryInLacs}
                               onChange={(salaryInLacs) => {
                                 handleSelectSingleSalaryInLacs(salaryInLacs);
-                                // dispatch(getCities(salaryInLacs.value));
-                                // validation.setFieldValue(
-                                //   "stateId",
-                                //   salaryInLacs.value
-                                // );
+
+                                salaryCorrectionValidation.setFieldValue(
+                                  "salaryInLacs",
+                                  salaryInLacs.value
+                                );
                               }}
                               options={salaryInLacsOptions}
                               placeholder="Select Salary In Lacs"
@@ -336,35 +350,16 @@ const DataCorrection = () => {
                                 handleSelectSingleSalaryInThousands(
                                   salaryInThousands
                                 );
-                                // dispatch(getPinCodes(salaryInThousands.value));
-                                // validation.setFieldValue("cityId", salaryInThousands.value);
+                                salaryCorrectionValidation.setFieldValue(
+                                  "salaryInThousands",
+                                  salaryInThousands.value
+                                );
                               }}
                               options={salaryInThousandsOptions}
                               placeholder="Select Salary In Thousands"
                             />
                           </div>
                         </div>
-                        {/* <div className="mb-2">
-                          <div>
-                            <Label className="form-label">
-                              Salary In Thousands
-                            </Label>
-                            <Select
-                              id="salaryInThousands"
-                              name="salaryInThousands"
-                              value={selectedSingleSalaryInThousands}
-                              onChange={(salaryInThousands) => {
-                                handleSelectSingleSalaryInThousands(
-                                  salaryInThousands
-                                );
-                                // dispatch(getPinCodes(salaryInThousands.value));
-                                // validation.setFieldValue("cityId", salaryInThousands.value);
-                              }}
-                              options={salaryInThousandOptions}
-                              placeholder="Select Salary In Thousands"
-                            />
-                          </div>
-                        </div> */}
 
                         <div
                           className="d-flex justify-content-end"

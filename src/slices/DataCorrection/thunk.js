@@ -2,7 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import {
   getDataCorrection as getDataCorrectionApi,
-  updateDataCorrection as updateDataCorrectionApi,
+  cityDataCorrection as cityDataCorrectionApi,
+  salaryDataCorrection as salaryDataCorrectionApi,
   getSalaryInLacs as getSalaryInLacsApi,
   getSalaryInThousands as getSalaryInThousandsApi,
   getStates as getStatesApi,
@@ -23,15 +24,27 @@ export const getDataCorrection = createAsyncThunk(
   }
 );
 
-export const updateDataCorrection = createAsyncThunk(
-  "dataCorrection/updateDataCorrection",
+export const cityDataCorrection = createAsyncThunk(
+  "dataCorrection/cityDataCorrectionApi",
   async (values) => {
     try {
-      const response = await updateDataCorrectionApi(values);
+      const response = await cityDataCorrectionApi(values);
 
       return response;
     } catch (error) {
       console.log("error inside update data correction thunk", error);
+    }
+  }
+);
+export const salaryDataCorrection = createAsyncThunk(
+  "dataCorrection/salaryDataCorrection",
+  async (values) => {
+    try {
+      const response = await salaryDataCorrectionApi(values);
+
+      return response;
+    } catch (error) {
+      console.log("error inside salary data correction thunk", error);
     }
   }
 );

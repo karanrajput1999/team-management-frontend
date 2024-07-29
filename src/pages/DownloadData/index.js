@@ -193,8 +193,6 @@ const DownloadData = () => {
     const fileName = "data";
     const exportType = exportFromJSON.types.csv;
 
-    console.log("FILTERED DATA in EXPORT FUNCTION ->", filteredDownloadData);
-
     exportFromJSON({ data: filteredDownloadData, fileName, exportType });
   }
 

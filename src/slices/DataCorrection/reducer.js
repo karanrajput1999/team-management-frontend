@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import {
   getDataCorrection,
-  updateDataCorrection,
+  cityDataCorrection,
+  salaryDataCorrection,
   getStates,
   getCities,
   getPinCodes,
@@ -30,7 +31,14 @@ const dataCorrectionSlice = createSlice({
       state.city = action.payload?.data.currentCity;
       state.salary = action.payload?.data.currentSalary;
     });
-    builder.addCase(updateDataCorrection.fulfilled, (state, action) => {
+    builder.addCase(cityDataCorrection.fulfilled, (state, action) => {
+      toast.success("Data has been corrected !", {
+        position: "bottom-center",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    });
+    builder.addCase(salaryDataCorrection.fulfilled, (state, action) => {
       toast.success("Data has been corrected !", {
         position: "bottom-center",
         autoClose: 3000,
