@@ -776,6 +776,9 @@ export const filterDownloadData = (data) => {
     data
   );
 };
+export const downloadAllData = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/download-data/all-data`);
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>

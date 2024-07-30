@@ -17,6 +17,7 @@ import Select from "react-select";
 import exportFromJSON from "export-from-json";
 import {
   filterDownloadData,
+  downloadAllData,
   getCities,
   getPinCodes,
   getStates,
@@ -55,11 +56,8 @@ const DownloadData = () => {
 
   const dispatch = useDispatch();
 
-  const { filteredDownloadData, states, cities, pinCodes } = useSelector(
-    (state) => state.DownloadData
-  );
-
-  console.log("FILTERED DOWNLOAD DATA ->", filteredDownloadData);
+  const { allData, filteredDownloadData, states, cities, pinCodes } =
+    useSelector((state) => state.DownloadData);
 
   useEffect(() => {
     dispatch(getStates());
@@ -194,6 +192,17 @@ const DownloadData = () => {
     const exportType = exportFromJSON.types.csv;
 
     exportFromJSON({ data: filteredDownloadData, fileName, exportType });
+  }
+
+  function handleDownloadAllData(allDataIndex) {
+    const fileName = "data";
+    const exportType = exportFromJSON.types.csv;
+
+    exportFromJSON({
+      data: allData[allDataIndex].formData,
+      fileName,
+      exportType,
+    });
   }
 
   document.title = "Download Data";
@@ -396,6 +405,7 @@ const DownloadData = () => {
                           <button
                             type="button"
                             className="btn btn-primary btn-label waves-effect waves-light"
+                            onClick={() => dispatch(downloadAllData())}
                           >
                             <i className="ri-list-check label-icon align-middle fs-16 me-2"></i>
                             Show All
@@ -416,7 +426,7 @@ const DownloadData = () => {
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">
-                      <table className="table align-middle table-nowrap">
+                      {/* <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
                             <th data-sort="name">Name</th>
@@ -481,6 +491,54 @@ const DownloadData = () => {
                                   ) : (
                                     <span className="text-muted">No Pan</span>
                                   )}
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table> */}
+                      <table className="table align-middle table-nowrap">
+                        <thead className="table-light">
+                          <tr>
+                            <th data-sort="s-no">S.No</th>
+                            <th data-sort="state">State</th>
+                            <th data-sort="city-count">City Count</th>
+                            <th data-sort="total-data">Total Data</th>
+                            <th data-sort="action">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="list form-check-all">
+                          {allData &&
+                            allData?.map((data, idx) => (
+                              <tr key={data.stateId}>
+                                <td>{idx + 1}</td>
+                                <td>
+                                  {data.state ? (
+                                    <span>{data.state}</span>
+                                  ) : (
+                                    <span className="text-muted">
+                                      State Not Assigned
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  {data.cityCount === 0 ? (
+                                    <span className="text-muted">
+                                      City Not Assigned
+                                    </span>
+                                  ) : (
+                                    <span>{data.cityCount}</span>
+                                  )}
+                                </td>
+                                <td>{data?.totalDataCount}</td>
+                                <td>
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-success btn-label waves-effect waves-light"
+                                    onClick={() => handleDownloadAllData(idx)}
+                                  >
+                                    <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>
+                                    Download Data
+                                  </button>
                                 </td>
                               </tr>
                             ))}
