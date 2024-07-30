@@ -42,6 +42,9 @@ const DownloadData = () => {
 
   const [selectedSingleKeyPress, setSelectedSingleKeyPress] = useState(null);
 
+  // created this state to show only one (show all data, and filter data) component at a time
+  const [showAllDataVisible, setShowAllDataVisible] = useState(null);
+
   const [filters, setFilters] = useState({
     vendor: "",
     cityId: "",
@@ -183,7 +186,9 @@ const DownloadData = () => {
   ];
 
   function handleFilters() {
-    dispatch(filterDownloadData(filters));
+    dispatch(filterDownloadData(filters)).then(() =>
+      setShowAllDataVisible("FilterData")
+    );
     // console.log("FILTERS ->", filters);
   }
 
@@ -405,7 +410,11 @@ const DownloadData = () => {
                           <button
                             type="button"
                             className="btn btn-primary btn-label waves-effect waves-light"
-                            onClick={() => dispatch(downloadAllData())}
+                            onClick={() =>
+                              dispatch(downloadAllData()).then(() =>
+                                setShowAllDataVisible("ShowAllData")
+                              )
+                            }
                           >
                             <i className="ri-list-check label-icon align-middle fs-16 me-2"></i>
                             Show All
@@ -426,124 +435,134 @@ const DownloadData = () => {
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">
-                      {/* <table className="table align-middle table-nowrap">
-                        <thead className="table-light">
-                          <tr>
-                            <th data-sort="name">Name</th>
-                            <th data-sort="mobile_number">Mobile Number</th>
-                            <th data-sort="city">City</th>
-                            <th data-sort="state">State</th>
-                            <th data-sort="pin_code">Pin Code</th>
-                            <th data-sort="email">Email</th>
-                            <th data-sort="salary">Salary</th>
-                            <th data-sort="pan_no">Pan No</th>
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          {filteredDownloadData &&
-                            filteredDownloadData?.map((data) => (
-                              <tr key={data.id}>
-                                <td>{data?.name}</td>
-                                <td>{data?.mobile1}</td>
-                                <td>
-                                  {data?.city ? (
-                                    <span>{data.city}</span>
-                                  ) : (
-                                    <span className="text-muted">No City</span>
-                                  )}
-                                </td>
-                                <td>
-                                  {data?.state ? (
-                                    <span>{data.state}</span>
-                                  ) : (
-                                    <span className="text-muted">No State</span>
-                                  )}
-                                </td>
-                                <td>
-                                  {data?.pinCode ? (
-                                    <span>{data.pinCode}</span>
-                                  ) : (
-                                    <span className="text-muted">
-                                      No Pin Code
-                                    </span>
-                                  )}
-                                </td>
-                                <td>
-                                  {data?.email ? (
-                                    <span>{data.email}</span>
-                                  ) : (
-                                    <span className="text-muted">No Email</span>
-                                  )}
-                                </td>
+                      {showAllDataVisible === "ShowAllData" && (
+                        <table className="table align-middle table-nowrap">
+                          <thead className="table-light">
+                            <tr>
+                              <th data-sort="s-no">S.No</th>
+                              <th data-sort="state">State</th>
+                              <th data-sort="city-count">City Count</th>
+                              <th data-sort="total-data">Total Data</th>
+                              <th data-sort="action">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody className="list form-check-all">
+                            {allData &&
+                              allData?.map((data, idx) => (
+                                <tr key={data.stateId}>
+                                  <td>{idx + 1}</td>
+                                  <td>
+                                    {data.state ? (
+                                      <span>{data.state}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        State Not Assigned
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.cityCount === 0 ? (
+                                      <span className="text-muted">
+                                        City Not Assigned
+                                      </span>
+                                    ) : (
+                                      <span>{data.cityCount}</span>
+                                    )}
+                                  </td>
+                                  <td>{data?.totalDataCount}</td>
+                                  <td>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-success btn-label waves-effect waves-light"
+                                      onClick={() => handleDownloadAllData(idx)}
+                                    >
+                                      <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>
+                                      Download Data
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      )}
+                      {showAllDataVisible === "FilterData" && (
+                        <table className="table align-middle table-nowrap">
+                          <thead className="table-light">
+                            <tr>
+                              <th data-sort="name">Name</th>
+                              <th data-sort="mobile_number">Mobile Number</th>
+                              <th data-sort="city">City</th>
+                              <th data-sort="state">State</th>
+                              <th data-sort="pin_code">Pin Code</th>
+                              <th data-sort="email">Email</th>
+                              <th data-sort="salary">Salary</th>
+                              <th data-sort="pan_no">Pan No</th>
+                            </tr>
+                          </thead>
+                          <tbody className="list form-check-all">
+                            {filteredDownloadData &&
+                              filteredDownloadData?.map((data) => (
+                                <tr key={data.id}>
+                                  <td>{data?.name}</td>
+                                  <td>{data?.mobile1}</td>
+                                  <td>
+                                    {data?.city ? (
+                                      <span>{data.city}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        No City
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data?.state ? (
+                                      <span>{data.state}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        No State
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data?.pinCode ? (
+                                      <span>{data.pinCode}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        No Pin Code
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data?.email ? (
+                                      <span>{data.email}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        No Email
+                                      </span>
+                                    )}
+                                  </td>
 
-                                <td>
-                                  {data?.salary ? (
-                                    <span>{data.salary}</span>
-                                  ) : (
-                                    <span className="text-muted">
-                                      No Salary
-                                    </span>
-                                  )}
-                                </td>
-                                <td>
-                                  {data?.panNo ? (
-                                    <span>{data.panNo}</span>
-                                  ) : (
-                                    <span className="text-muted">No Pan</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table> */}
-                      <table className="table align-middle table-nowrap">
-                        <thead className="table-light">
-                          <tr>
-                            <th data-sort="s-no">S.No</th>
-                            <th data-sort="state">State</th>
-                            <th data-sort="city-count">City Count</th>
-                            <th data-sort="total-data">Total Data</th>
-                            <th data-sort="action">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          {allData &&
-                            allData?.map((data, idx) => (
-                              <tr key={data.stateId}>
-                                <td>{idx + 1}</td>
-                                <td>
-                                  {data.state ? (
-                                    <span>{data.state}</span>
-                                  ) : (
-                                    <span className="text-muted">
-                                      State Not Assigned
-                                    </span>
-                                  )}
-                                </td>
-                                <td>
-                                  {data.cityCount === 0 ? (
-                                    <span className="text-muted">
-                                      City Not Assigned
-                                    </span>
-                                  ) : (
-                                    <span>{data.cityCount}</span>
-                                  )}
-                                </td>
-                                <td>{data?.totalDataCount}</td>
-                                <td>
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-success btn-label waves-effect waves-light"
-                                    onClick={() => handleDownloadAllData(idx)}
-                                  >
-                                    <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>
-                                    Download Data
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
+                                  <td>
+                                    {data?.salary ? (
+                                      <span>{data.salary}</span>
+                                    ) : (
+                                      <span className="text-muted">
+                                        No Salary
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data?.panNo ? (
+                                      <span>{data.panNo}</span>
+                                    ) : (
+                                      <span className="text-muted">No Pan</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      )}
                     </div>
 
                     <div className="d-flex justify-content-end">
