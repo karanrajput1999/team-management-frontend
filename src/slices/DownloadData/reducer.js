@@ -5,6 +5,7 @@ import {
   // updateDataCorrection,
   filterDownloadData,
   downloadAllData,
+  downloadStateData,
   getStates,
   getCities,
   getPinCodes,
@@ -12,6 +13,7 @@ import {
 
 export const initialState = {
   allData: null,
+  stateData: null,
   filteredDownloadData: null,
   city: null,
   states: null,
@@ -34,14 +36,19 @@ const downloadDataSlice = createSlice({
       }
     });
     builder.addCase(downloadAllData.fulfilled, (state, action) => {
-      console.log(
-        "DOWNLOAD ALL DATA PAYLOAD IN REDUCER ->",
-        action.payload?.data.allData
-      );
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.allData = action.payload?.data.allData;
+        state.error = "";
+      }
+    });
+    builder.addCase(downloadStateData.fulfilled, (state, action) => {
+      // console.log("ACTION PAYLOAD IN THUNK ->", action.payload?.data);
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.stateData = action.payload?.data.stateData;
         state.error = "";
       }
     });

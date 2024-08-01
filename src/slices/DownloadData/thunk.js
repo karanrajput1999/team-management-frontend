@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   filterDownloadData as filterDownloadDataApi,
   downloadAllData as downloadAllDataApi,
+  downloadStateData as downloadStateDataApi,
   getStates as getStatesApi,
   getCities as getCitiesApi,
   getPinCodes as getPinCodesApi,
@@ -26,7 +27,18 @@ export const downloadAllData = createAsyncThunk(
       const response = await downloadAllDataApi();
       return response;
     } catch (error) {
-      console.log("error inside get forms thunk", error);
+      console.log("error inside get download data thunk", error);
+    }
+  }
+);
+export const downloadStateData = createAsyncThunk(
+  "downloadData/downloadStateData",
+  async (stateId) => {
+    try {
+      const response = await downloadStateDataApi(stateId);
+      return response;
+    } catch (error) {
+      console.log("error inside get state data thunk", error);
     }
   }
 );

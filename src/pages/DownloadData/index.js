@@ -18,6 +18,7 @@ import exportFromJSON from "export-from-json";
 import {
   filterDownloadData,
   downloadAllData,
+  downloadStateData,
   getCities,
   getPinCodes,
   getStates,
@@ -204,14 +205,18 @@ const DownloadData = () => {
     exportFromJSON({ data: filteredDownloadData, fileName, exportType });
   }
 
-  function handleDownloadAllData(allDataIndex) {
+  function handleDownloadStateData(stateId) {
     const fileName = "data";
     const exportType = exportFromJSON.types.csv;
 
-    exportFromJSON({
-      data: allData[allDataIndex].formData,
-      fileName,
-      exportType,
+    dispatch(downloadStateData(stateId)).then((res) => {
+      // console.log("THIS IS RESPONSE AFTER DOWNLOAD STATE DATA API ->", res);
+      // console.log("THIS IS RESPONSE STATE DATA FROM REDUX ->", stateData);
+      exportFromJSON({
+        data: res.payload.data.stateData,
+        fileName,
+        exportType,
+      });
     });
   }
 
@@ -442,7 +447,7 @@ const DownloadData = () => {
                       </Col>
                     </Row>
                     {loading && (
-                      <div className="text-center mb-3">
+                      <div className="text-center mt-5">
                         <Loader />{" "}
                         {/* Replace with your actual loader component */}
                       </div>
@@ -490,7 +495,7 @@ const DownloadData = () => {
                                         type="button"
                                         className="btn btn-sm btn-success btn-label waves-effect waves-light"
                                         onClick={() =>
-                                          handleDownloadAllData(idx)
+                                          handleDownloadStateData(data.stateId)
                                         }
                                       >
                                         <i className="ri-download-fill label-icon align-middle fs-16 me-2"></i>

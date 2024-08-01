@@ -52,6 +52,7 @@ const DataCorrection = () => {
     salaryInLacs,
     salaryInThousands,
   } = useSelector((state) => state.DataCorrection);
+  console.log("CITY RECEIVED ->", city);
 
   const dispatch = useDispatch();
 
@@ -116,7 +117,8 @@ const DataCorrection = () => {
       pinCode: Yup.string().required("Please select pin code"),
     }),
     onSubmit: (values, { resetForm }) => {
-      const cityName = city?.length > 0 && city[0].city;
+      // const cityName = city?.length > 0 && city[0].city;
+      const cityName = city && Object.keys(city)?.length > 0 && city.city;
 
       dispatch(cityDataCorrection({ ...values, cityName })).then((res) => {
         dispatch(getDataCorrection()); // updating the new city immediately
@@ -197,7 +199,10 @@ const DataCorrection = () => {
                         <div className="mb-2">
                           <Label htmlFor="current-city" className="form-label">
                             Current City
-                            {city?.length > 0 && " - " + city[0]._count.id}
+                            {/* {city?.length > 0 && " - " + city[0]._count.id} */}
+                            {city &&
+                              Object.keys(city)?.length > 0 &&
+                              " - " + city.count}
                           </Label>
 
                           <Input
@@ -206,8 +211,13 @@ const DataCorrection = () => {
                             className="form-control"
                             type="text"
                             // value="New Delhi"
+                            // value={
+                            //   city?.length > 0 ? city[0].city : "No City Found"
+                            // }
                             value={
-                              city?.length > 0 ? city[0].city : "No City Found"
+                              city && Object.keys(city)?.length > 0
+                                ? city.city
+                                : "No City Found"
                             }
                             disabled
                           />
@@ -225,7 +235,10 @@ const DataCorrection = () => {
                             }}
                             options={stateOptions}
                             placeholder="Select State"
-                            isDisabled={!Boolean(city?.length)}
+                            // isDisabled={!Boolean(city?.length)}
+                            isDisabled={
+                              !Boolean(city && Object.keys(city)?.length)
+                            }
                           />
                         </div>
                         <div className="mb-2">
@@ -242,7 +255,9 @@ const DataCorrection = () => {
                             options={cityOptions}
                             placeholder="Select City"
                             isDisabled={
-                              !Boolean(city?.length) || !Boolean(cities)
+                              // !Boolean(city?.length) || !Boolean(cities)
+                              !Boolean(city && Object.keys(city)?.length) ||
+                              !Boolean(cities)
                             }
                           />
                         </div>
@@ -264,7 +279,9 @@ const DataCorrection = () => {
                             options={pinCodeOptions}
                             placeholder="Select Pin Code"
                             isDisabled={
-                              !Boolean(city?.length) || !Boolean(pinCodes)
+                              // !Boolean(city?.length) || !Boolean(pinCodes)
+                              !Boolean(city && Object.keys(city)?.length) ||
+                              !Boolean(pinCodes)
                             }
                           />
                         </div>
@@ -301,7 +318,10 @@ const DataCorrection = () => {
                         <div className="mb-2">
                           <Label htmlFor="current-city" className="form-label">
                             Current Salary
-                            {salary?.length > 0 && " - " + salary[0]._count.id}
+                            {/* {salary?.length > 0 && " - " + salary[0]._count.id} */}
+                            {salary &&
+                              Object.keys(salary)?.length > 0 &&
+                              " - " + salary.salary}
                           </Label>
 
                           <Input
@@ -310,9 +330,14 @@ const DataCorrection = () => {
                             className="form-control"
                             type="text"
                             // value="New Delhi"
+                            // value={
+                            //   salary?.length > 0
+                            //     ? salary[0].salary
+                            //     : "No Salary Found"
+                            // }
                             value={
-                              salary?.length > 0
-                                ? salary[0].salary
+                              salary && Object.keys(salary)?.length
+                                ? salary.salary
                                 : "No Salary Found"
                             }
                             disabled
@@ -335,7 +360,7 @@ const DataCorrection = () => {
                               }}
                               options={salaryInLacsOptions}
                               placeholder="Select Salary In Lacs"
-                              isDisabled={!Boolean(city?.length)}
+                              // isDisabled={!Boolean(city?.length)}
                             />
                           </div>
                           <div style={{ flex: 1 }}>

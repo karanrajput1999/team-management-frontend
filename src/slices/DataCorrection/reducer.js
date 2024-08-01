@@ -28,6 +28,8 @@ const dataCorrectionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getDataCorrection.fulfilled, (state, action) => {
+      console.log("PAYLOAD CITY ->", action.payload?.data);
+
       state.city = action.payload?.data.currentCity;
       state.salary = action.payload?.data.currentSalary;
     });
