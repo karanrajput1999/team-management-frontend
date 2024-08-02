@@ -1,32 +1,113 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
-  Label,
   Row,
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
-import Flatpickr from "react-flatpickr";
-import Select from "react-select";
 import { Link } from "react-router-dom";
-// Import React FilePond
-import { FilePond, registerPlugin } from "react-filepond";
-// Import FilePond styles
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import Flatpickr from "react-flatpickr";
+import { getCenters } from "../../slices/Centers/thunk";
+import { useSelector, useDispatch } from "react-redux";
+import Select from "react-select";
+import {
+  getApplicatinReport,
+  filterApplicatinReport,
+} from "../../slices/ApplicationReport/thunk";
+import moment from "moment-timezone";
+import { StatusOptions } from "../../common/data/pendingForms";
+import ReportFormModal from "./ReportUploadModal";
+import BankStatusUpdateModal from "./BankStatusUpdateModal";
 
 const ReportUpload = () => {
+  const [modal_list, setmodal_list] = useState(false);
+
+  const [status_modal_list, setstatus_modal_list] = useState(false);
+
+  const [selectedSingleBankStatus, setSelectedSingleBankStatus] =
+    useState(null);
+
+  const [selectedSingleCenterName, setSelectedSingleCenterName] =
+    useState(null);
+
+  const [selectedSingleDateType, setSelectedSingleDateType] = useState(null);
+
   const [selectedSingleBank, setSelectedSingleBank] = useState(null);
+
+  const [selectedSingleFormType, setSelectedSingleFormType] = useState(null);
+
   const [files, setFiles] = useState([]);
+
+  const [filters, setFilters] = useState({
+    center: "",
+    dateRange: "",
+    selfStatus: "",
+    formType: "",
+  });
+
+  const dispatch = useDispatch();
+
+  const { centers } = useSelector((state) => state.Centers);
+  const { applicationReports, filteredApplicationReports } = useSelector(
+    (state) => state.ApplicationReport
+  );
+
+  useEffect(() => {
+    dispatch(getCenters());
+    dispatch(getApplicatinReport());
+  }, [dispatch]);
+
+  function tog_list() {
+    setmodal_list(!modal_list);
+  }
+
+  function status_tog_list() {
+    setstatus_modal_list(!status_modal_list);
+  }
+
+  function handleSelectSingleBankStatus(bankStatus) {
+    setSelectedSingleBankStatus(bankStatus);
+  }
+
+  function handleSelectSingleCenter(centerName) {
+    setSelectedSingleCenterName(centerName);
+  }
+
+  function handleSelectSingleDateType(dateType) {
+    setSelectedSingleDateType(dateType);
+  }
 
   function handleSelectSingleBank(bank) {
     setSelectedSingleBank(bank);
   }
+
+  function handleSelectSingleFormType(formType) {
+    setSelectedSingleFormType(formType);
+  }
+
+  function handleFilters() {
+    dispatch(filterApplicatinReport({ filters }));
+  }
+
+  let CenterOptions = centers?.map((center) => {
+    return { value: center.centerName, label: center.centerName };
+  });
+
+  const dateTypeOptions = [
+    {
+      value: "By Decision Date",
+      label: "By Decision Date",
+    },
+    {
+      value: "By Punching Date",
+      label: "By Punching Date",
+    },
+  ];
+
   const bankOptions = [
     {
       value: "AU Bank",
@@ -45,13 +126,47 @@ const ReportUpload = () => {
       label: "Axis Bank",
     },
   ];
+
+  const formTypeOptions = [
+    {
+      value: "Credit Card",
+      label: "Credit Card",
+    },
+    {
+      value: "Loan",
+      label: "Loan",
+    },
+    {
+      value: "Insurance",
+      label: "Insurance",
+    },
+    {
+      value: "Demat Account",
+      label: "Demat Account",
+    },
+  ];
+
+  const bankStatusOptions = [
+    {
+      value: "Approved",
+      label: "Approved",
+    },
+    {
+      value: "Declined",
+      label: "Declined",
+    },
+    {
+      value: "Add Comment",
+      label: "Add Comment",
+    },
+  ];
+
   document.title = "Report Upload";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
           <BreadCrumb title="Report Upload" pageTitle="Uploads" />
-
           <Row>
             <Col lg={12}>
               <Card>
@@ -61,53 +176,242 @@ const ReportUpload = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="userList">
-                    <div className="mb-2">
-                      <Label className="form-label">Choose Bank</Label>
-                      <Select
-                        id="bankName"
-                        name="bankName"
-                        value={selectedSingleBank}
-                        onChange={(bankName) => {
-                          handleSelectSingleBank(bankName);
-                          // validation.setFieldValue(
-                          //   "centerName",
-                          //   centerName.value
-                          // );
-                        }}
-                        options={bankOptions}
-                        placeholder="Choose Bank"
-                      />
+                    <Row className="g-4 mb-3">
+                      <Col className="col-sm-auto">
+                        <div className="search-box">
+                          <input
+                            type="text"
+                            className="form-control bg-light border-light"
+                            autoComplete="off"
+                            id="searchList"
+                            placeholder="Search Name, Mob No, Pan No"
+                            onChange={(e) => {
+                              dispatch(
+                                filterApplicatinReport({
+                                  searchQuery: e.target.value,
+                                })
+                              );
+                            }}
+                            style={{ width: "280px" }}
+                          />
+                          <i className="ri-search-line search-icon"></i>
+                        </div>
+                      </Col>
+
+                      <Col>
+                        <div
+                          className="d-flex"
+                          style={{ gap: "10px", flexWrap: "wrap" }}
+                        >
+                          <div className="d-flex">
+                            <Flatpickr
+                              className="form-control border dash-filter-picker"
+                              placeholder="Date Range"
+                              options={{
+                                mode: "range",
+                                dateFormat: "d M, Y",
+                              }}
+                              onChange={(date) => {
+                                setFilters({ ...filters, dateRange: date });
+                              }}
+                            />
+                          </div>
+
+                          <div>
+                            <Select
+                              id="dateType"
+                              name="dateType"
+                              value={selectedSingleDateType}
+                              onChange={(dateType) => {
+                                handleSelectSingleDateType(dateType);
+                              }}
+                              options={dateTypeOptions}
+                              placeholder="Date Type"
+                            />
+                          </div>
+                          <div>
+                            <Select
+                              id="centerName"
+                              name="centerName"
+                              value={selectedSingleCenterName}
+                              onChange={(centerName) => {
+                                handleSelectSingleCenter(centerName);
+
+                                setFilters({
+                                  ...filters,
+                                  center: centerName.value,
+                                });
+                              }}
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...CenterOptions,
+                              ]}
+                              placeholder="Choose Center"
+                            />
+                          </div>
+                          <div>
+                            <Select
+                              id="formType"
+                              name="formType"
+                              value={selectedSingleFormType}
+                              onChange={(formType) => {
+                                handleSelectSingleFormType(formType);
+
+                                setFilters({
+                                  ...filters,
+                                  formType: formType.value,
+                                });
+                              }}
+                              options={[
+                                { value: "", label: "Choose All" },
+                                ...formTypeOptions,
+                              ]}
+                              placeholder="Choose Form Type"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-label waves-effect waves-light"
+                            onClick={handleFilters}
+                          >
+                            <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
+                            Apply Filters
+                          </button>
+                        </div>
+                      </Col>
+                      <Col className="col-sm-auto">
+                        <button
+                          type="button"
+                          className="btn btn-success waves-effect waves-light"
+                          onClick={tog_list}
+                        >
+                          <i
+                            className="ri-file-upload-line"
+                            style={{ marginRight: "5px" }}
+                          ></i>
+                          Upload Report
+                        </button>
+                      </Col>
+                    </Row>
+
+                    <div className="table-responsive table-card mt-3 mb-1">
+                      <table className="table align-middle table-nowrap">
+                        <thead className="table-light">
+                          <tr>
+                            <th data-sort="id">S.No</th>
+                            <th data-sort="application_no">Application No</th>
+                            <th data-sort="customer_name">Customer Name</th>
+                            <th data-sort="phone">Phone</th>
+                            <th data-sort="pan_card">Pan Card</th>
+                            <th data-sort="client_of">Form Type</th>
+                            <th data-sort="client_of">Bank Name</th>
+                            <th data-sort="client_of">Client of</th>
+                            <th data-sort="status_2">Bank Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="list form-check-all">
+                          {(filteredApplicationReports.length !== 0
+                            ? filteredApplicationReports
+                            : applicationReports
+                          )?.map((bankReport, idx) => (
+                            <tr key={idx}>
+                              <td>{bankReport?.id}</td>
+                              <td>
+                                {bankReport?.applicationNo ? (
+                                  bankReport?.applicationNo
+                                ) : (
+                                  <span className="text-muted">
+                                    {" "}
+                                    ---Not Generated---{" "}
+                                  </span>
+                                )}
+                              </td>
+                              <td>{bankReport?.fullName}</td>
+                              <td>{bankReport?.mobileNo}</td>
+                              <td>{bankReport?.panNo}</td>
+                              <td>
+                                <span
+                                  className={`badge border ${
+                                    bankReport?.formType === "Credit Card"
+                                      ? "border-success text-success"
+                                      : bankReport?.formType === "Loan"
+                                      ? "border-primary text-primary"
+                                      : bankReport?.formType === "Insurance"
+                                      ? "border-warning text-warning"
+                                      : bankReport?.formType === "Demat Account"
+                                      ? "border-danger text-danger"
+                                      : ""
+                                  } fs-12`}
+                                >
+                                  {bankReport?.formType}
+                                </span>
+                              </td>
+                              <td>
+                                {bankReport.bankName
+                                  ? bankReport.bankName
+                                  : "-----"}
+                              </td>
+                              <td>
+                                {Object.keys(bankReport?.user).length !== 0 && (
+                                  <div>
+                                    <div>
+                                      <span
+                                        className="fs-13"
+                                        style={{ textTransform: "uppercase" }}
+                                      >
+                                        {bankReport?.user?.centerName}
+                                      </span>
+                                      <span> By </span>
+                                      <span
+                                        className="fs-13"
+                                        style={{ textTransform: "uppercase" }}
+                                      >
+                                        {bankReport?.user?.name}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="fs-13">
+                                        {" "}
+                                        On{" "}
+                                        {moment
+                                          .utc(bankReport?.createdAt)
+                                          .tz("Asia/Kolkata")
+                                          .format("DD MMM, YY")}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </td>
+
+                              <td>
+                                <button
+                                  type="button"
+                                  className="btn btn-sm btn-primary waves-effect waves-light"
+                                  onClick={status_tog_list}
+                                >
+                                  Add Bank Status
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                    <div className="mb-2">
-                      <Label className="form-label">Choose File</Label>
-                      <FilePond
-                        files={files}
-                        onupdatefiles={setFiles}
-                        maxFiles={1}
-                        name="files"
-                        className="filepond"
-                      />
+
+                    <div className="d-flex justify-content-end">
+                      <div className="pagination-wrap hstack gap-2">
+                        <Link
+                          className="page-item pagination-prev disabled"
+                          to="#"
+                        >
+                          Previous
+                        </Link>
+                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <Link className="page-item pagination-next" to="#">
+                          Next
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    className="d-flex justify-content-end"
-                    style={{ gap: "5px" }}
-                  >
-                    <button className="btn btn-primary ">
-                      {" "}
-                      <i
-                        className="ri-file-upload-line"
-                        style={{ marginRight: "5px" }}
-                      ></i>
-                      Upload
-                    </button>
-                    <button className="btn btn-success">
-                      <i
-                        className="ri-file-download-line"
-                        style={{ marginRight: "5px" }}
-                      ></i>
-                      Download Sample File
-                    </button>
                   </div>
                 </CardBody>
               </Card>
@@ -115,6 +419,22 @@ const ReportUpload = () => {
           </Row>
         </Container>
       </div>
+      <ReportFormModal
+        modal_list={modal_list}
+        tog_list={tog_list}
+        selectedSingleBank={selectedSingleBank}
+        handleSelectSingleBank={handleSelectSingleBank}
+        bankOptions={bankOptions}
+        files={files}
+        setFiles={setFiles}
+      />
+      <BankStatusUpdateModal
+        status_modal_list={status_modal_list}
+        status_tog_list={status_tog_list}
+        selectedSingleBankStatus={selectedSingleBankStatus}
+        handleSelectSingleBankStatus={handleSelectSingleBankStatus}
+        bankStatusOptions={bankStatusOptions}
+      />
     </React.Fragment>
   );
 };

@@ -141,7 +141,9 @@ const DataCorrection = () => {
       salaryInThousands: Yup.string(),
     }),
     onSubmit: (values, { resetForm }) => {
-      const currentSalary = salary?.length > 0 && salary[0].salary;
+      // const currentSalary = salary?.length > 0 && salary[0].salary;
+      const currentSalary =
+        salary && Object.keys(salary)?.length > 0 && salary.salary;
       let salaryInNumbers;
 
       if (values.salaryInThousands) {
@@ -321,7 +323,7 @@ const DataCorrection = () => {
                             {/* {salary?.length > 0 && " - " + salary[0]._count.id} */}
                             {salary &&
                               Object.keys(salary)?.length > 0 &&
-                              " - " + salary.salary}
+                              " - " + salary.count}
                           </Label>
 
                           <Input

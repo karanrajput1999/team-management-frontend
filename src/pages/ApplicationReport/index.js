@@ -31,8 +31,6 @@ const ApplicationReport = () => {
 
   const [selectedSingleDateType, setSelectedSingleDateType] = useState(null);
 
-  const [selectedSingleBank, setSelectedSingleBank] = useState(null);
-
   const [selectedSingleFormType, setSelectedSingleFormType] = useState(null);
 
   const [filters, setFilters] = useState({
@@ -68,10 +66,6 @@ const ApplicationReport = () => {
 
   function handleSelectSingleDateType(dateType) {
     setSelectedSingleDateType(dateType);
-  }
-
-  function handleSelectSingleBank(bank) {
-    setSelectedSingleBank(bank);
   }
 
   function handleSelectSingleFormType(formType) {
@@ -323,7 +317,7 @@ const ApplicationReport = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th data-sort="id">S.NO</th>
+                            <th data-sort="id">S.No</th>
                             <th data-sort="application_no">Application No</th>
                             <th data-sort="customer_name">Customer Name</th>
                             <th data-sort="phone">Phone</th>
