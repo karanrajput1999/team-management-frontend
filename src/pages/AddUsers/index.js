@@ -418,12 +418,6 @@ const AddUsers = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteUser={() => {
-          console.log("WHILE DELETING USER ->", {
-            centerId: listUser.centerId,
-            centerUserId: listUser.id,
-            status: 0,
-          });
-
           dispatch(
             updateCenterUser({
               centerId: listUser.centerId,

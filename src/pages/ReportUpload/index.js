@@ -30,9 +30,12 @@ import ReportFormModal from "./ReportUploadModal";
 import BankStatusUpdateModal from "./BankStatusUpdateModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import BankStatusRemoveModal from "./BankStatusRemoveModal";
 
 const ReportUpload = () => {
   const [modal_list, setmodal_list] = useState(false);
+
+  const [modal_delete, setmodal_delete] = useState(false);
 
   const [selectedForm, setSelectedForm] = useState(null);
 
@@ -69,8 +72,6 @@ const ReportUpload = () => {
     (state) => state.ReportUpload
   );
 
-  console.log("REPORT UPLOADS ->", reportUploads);
-
   useEffect(() => {
     dispatch(getCenters());
     dispatch(getApplicatinReport());
@@ -80,9 +81,16 @@ const ReportUpload = () => {
   function tog_list() {
     setmodal_list(!modal_list);
   }
+  function tog_delete() {
+    setmodal_delete(!modal_delete);
+  }
 
   function status_tog_list() {
     setstatus_modal_list(!status_modal_list);
+  }
+
+  function handleDeleteStatus() {
+    setmodal_delete(false);
   }
 
   function handleSelectSingleBankStatus(bankStatus) {
@@ -187,7 +195,6 @@ const ReportUpload = () => {
       comment: Yup.string().required("Please enter comment"),
     }),
     onSubmit: (values, { resetForm }) => {
-      console.log("BANK STATUS", values);
       dispatch(
         updateReportUploadStatus({
           formId: selectedForm.id,
@@ -208,6 +215,16 @@ const ReportUpload = () => {
 
     setstatus_modal_list(false);
     return false;
+  }
+
+  function handleEditStatus(form) {
+    const bankStatus = bankStatusOptions.find(
+      (el) => el.value === form.bankStatus
+    );
+
+    bankStatusUpdateValidation.setFieldValue("comment", form.comment);
+    bankStatusUpdateValidation.setFieldValue("bankStatus", bankStatus.value);
+    handleSelectSingleBankStatus(bankStatus);
   }
 
   document.title = "Report Upload";
@@ -444,6 +461,7 @@ const ReportUpload = () => {
                                       className="btn btn-sm btn-soft-info edit-list"
                                       onClick={() => {
                                         setSelectedForm(reportUpload);
+                                        handleEditStatus(reportUpload);
                                         status_tog_list();
                                       }}
                                     >
@@ -453,6 +471,7 @@ const ReportUpload = () => {
                                       className="btn btn-sm btn-soft-danger remove-list"
                                       onClick={() => {
                                         setSelectedForm(reportUpload);
+                                        tog_delete();
                                       }}
                                     >
                                       <i className="ri-delete-bin-5-fill align-bottom" />
@@ -516,6 +535,12 @@ const ReportUpload = () => {
         bankStatusOptions={bankStatusOptions}
         bankStatusUpdateValidation={bankStatusUpdateValidation}
         bankStatusFormHandleSubmit={bankStatusFormHandleSubmit}
+      />
+
+      <BankStatusRemoveModal
+        modal_delete={modal_delete}
+        setmodal_delete={setmodal_delete}
+        handleDeleteStatus={handleDeleteStatus}
       />
     </React.Fragment>
   );
