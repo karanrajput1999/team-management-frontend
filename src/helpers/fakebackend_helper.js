@@ -781,7 +781,30 @@ export const downloadAllData = () => {
 };
 
 export const downloadStateData = (stateId) => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/download-data/state-data/${stateId}`);
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/download-data/state-data/${stateId}`
+  );
+};
+
+// *****************************************************************
+// ************************* REPORT UPLOAD *************************
+// *****************************************************************
+export const getReportUpload = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/report-upload`);
+};
+
+export const updateReportUploadStatus = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/report-upload/update-status`,
+    data
+  );
+};
+
+export const filterReportUpload = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/report-upload/filter`,
+    data
+  );
 };
 
 // postForgetPwd

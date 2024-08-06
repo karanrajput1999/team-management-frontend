@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import {
   getApplicatinReport,
-  filterApplicatinReport,
+  filterApplicationReport,
 } from "../../slices/ApplicationReport/thunk";
 import moment from "moment-timezone";
 import { StatusOptions } from "../../common/data/pendingForms";
@@ -139,7 +139,7 @@ const ApplicationReport = () => {
   ];
 
   function handleFilters() {
-    dispatch(filterApplicatinReport({ filters }));
+    dispatch(filterApplicationReport({ filters }));
   }
 
   document.title = "Application Report";
@@ -168,7 +168,7 @@ const ApplicationReport = () => {
                             placeholder="Search Name, Mob No, Pan No"
                             onChange={(e) => {
                               dispatch(
-                                filterApplicatinReport({
+                                filterApplicationReport({
                                   searchQuery: e.target.value,
                                 })
                               );

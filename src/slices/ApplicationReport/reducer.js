@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getApplicatinReport, filterApplicatinReport } from "./thunk";
+import { getApplicatinReport, filterApplicationReport } from "./thunk";
 
 export const initialState = {
   applicationReports: [],
@@ -7,7 +7,7 @@ export const initialState = {
   error: "",
 };
 
-const centersSlice = createSlice({
+const applicationReportSlice = createSlice({
   name: "ApplicationReport",
   initialState,
   reducers: {},
@@ -20,7 +20,7 @@ const centersSlice = createSlice({
         state.error = "";
       }
     });
-    builder.addCase(filterApplicatinReport.fulfilled, (state, action) => {
+    builder.addCase(filterApplicationReport.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
@@ -32,4 +32,4 @@ const centersSlice = createSlice({
   },
 });
 
-export default centersSlice.reducer;
+export default applicationReportSlice.reducer;

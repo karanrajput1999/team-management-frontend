@@ -8,6 +8,8 @@ import {
   Container,
   Row,
 } from "reactstrap";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
@@ -16,15 +18,25 @@ import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import {
   getApplicatinReport,
-  filterApplicatinReport,
+  filterApplicationReport,
 } from "../../slices/ApplicationReport/thunk";
+import {
+  getReportUpload,
+  filterReportUpload,
+  updateReportUploadStatus,
+} from "../../slices/ReportUpload/thunk";
 import moment from "moment-timezone";
-import { StatusOptions } from "../../common/data/pendingForms";
 import ReportFormModal from "./ReportUploadModal";
 import BankStatusUpdateModal from "./BankStatusUpdateModal";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const ReportUpload = () => {
   const [modal_list, setmodal_list] = useState(false);
+
+  const [selectedForm, setSelectedForm] = useState(null);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const [status_modal_list, setstatus_modal_list] = useState(false);
 
@@ -52,13 +64,17 @@ const ReportUpload = () => {
   const dispatch = useDispatch();
 
   const { centers } = useSelector((state) => state.Centers);
-  const { applicationReports, filteredApplicationReports } = useSelector(
-    (state) => state.ApplicationReport
+
+  const { reportUploads, filteredReportUploads } = useSelector(
+    (state) => state.ReportUpload
   );
+
+  console.log("REPORT UPLOADS ->", reportUploads);
 
   useEffect(() => {
     dispatch(getCenters());
     dispatch(getApplicatinReport());
+    dispatch(getReportUpload());
   }, [dispatch]);
 
   function tog_list() {
@@ -90,7 +106,7 @@ const ReportUpload = () => {
   }
 
   function handleFilters() {
-    dispatch(filterApplicatinReport({ filters }));
+    dispatch(filterApplicationReport({ filters }));
   }
 
   let CenterOptions = centers?.map((center) => {
@@ -161,6 +177,39 @@ const ReportUpload = () => {
     },
   ];
 
+  const bankStatusUpdateValidation = useFormik({
+    initialValues: {
+      bankStatus: "",
+      comment: "",
+    },
+    validationSchema: Yup.object({
+      bankStatus: Yup.string().required("Please select bank status"),
+      comment: Yup.string().required("Please enter comment"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      console.log("BANK STATUS", values);
+      dispatch(
+        updateReportUploadStatus({
+          formId: selectedForm.id,
+          formType: selectedForm.formType,
+          ...values,
+        })
+      );
+
+      setSelectedSingleBankStatus(null);
+      resetForm();
+    },
+  });
+
+  function bankStatusFormHandleSubmit(e) {
+    e.preventDefault();
+
+    bankStatusUpdateValidation.handleSubmit();
+
+    setstatus_modal_list(false);
+    return false;
+  }
+
   document.title = "Report Upload";
   return (
     <React.Fragment>
@@ -187,7 +236,7 @@ const ReportUpload = () => {
                             placeholder="Search Name, Mob No, Pan No"
                             onChange={(e) => {
                               dispatch(
-                                filterApplicatinReport({
+                                filterApplicationReport({
                                   searchQuery: e.target.value,
                                 })
                               );
@@ -298,7 +347,7 @@ const ReportUpload = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th data-sort="id">S.No</th>
+                            <th data-sort="id">Id</th>
                             <th data-sort="application_no">Application No</th>
                             <th data-sort="customer_name">Customer Name</th>
                             <th data-sort="phone">Phone</th>
@@ -310,15 +359,15 @@ const ReportUpload = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {(filteredApplicationReports.length !== 0
-                            ? filteredApplicationReports
-                            : applicationReports
-                          )?.map((bankReport, idx) => (
+                          {(filteredReportUploads.length !== 0
+                            ? filteredReportUploads
+                            : reportUploads
+                          )?.map((reportUpload, idx) => (
                             <tr key={idx}>
-                              <td>{bankReport?.id}</td>
+                              <td>{reportUpload?.id}</td>
                               <td>
-                                {bankReport?.applicationNo ? (
-                                  bankReport?.applicationNo
+                                {reportUpload?.applicationNo ? (
+                                  reportUpload?.applicationNo
                                 ) : (
                                   <span className="text-muted">
                                     {" "}
@@ -326,47 +375,49 @@ const ReportUpload = () => {
                                   </span>
                                 )}
                               </td>
-                              <td>{bankReport?.fullName}</td>
-                              <td>{bankReport?.mobileNo}</td>
-                              <td>{bankReport?.panNo}</td>
+                              <td>{reportUpload?.fullName}</td>
+                              <td>{reportUpload?.mobileNo}</td>
+                              <td>{reportUpload?.panNo}</td>
                               <td>
                                 <span
                                   className={`badge border ${
-                                    bankReport?.formType === "Credit Card"
+                                    reportUpload?.formType === "Credit Card"
                                       ? "border-success text-success"
-                                      : bankReport?.formType === "Loan"
+                                      : reportUpload?.formType === "Loan"
                                       ? "border-primary text-primary"
-                                      : bankReport?.formType === "Insurance"
+                                      : reportUpload?.formType === "Insurance"
                                       ? "border-warning text-warning"
-                                      : bankReport?.formType === "Demat Account"
+                                      : reportUpload?.formType ===
+                                        "Demat Account"
                                       ? "border-danger text-danger"
                                       : ""
                                   } fs-12`}
                                 >
-                                  {bankReport?.formType}
+                                  {reportUpload?.formType}
                                 </span>
                               </td>
                               <td>
-                                {bankReport.bankName
-                                  ? bankReport.bankName
+                                {reportUpload.bankName
+                                  ? reportUpload.bankName
                                   : "-----"}
                               </td>
                               <td>
-                                {Object.keys(bankReport?.user).length !== 0 && (
+                                {Object.keys(reportUpload?.user).length !==
+                                  0 && (
                                   <div>
                                     <div>
                                       <span
                                         className="fs-13"
                                         style={{ textTransform: "uppercase" }}
                                       >
-                                        {bankReport?.user?.centerName}
+                                        {reportUpload?.user?.centerName}
                                       </span>
                                       <span> By </span>
                                       <span
                                         className="fs-13"
                                         style={{ textTransform: "uppercase" }}
                                       >
-                                        {bankReport?.user?.name}
+                                        {reportUpload?.user?.name}
                                       </span>
                                     </div>
                                     <div>
@@ -374,7 +425,7 @@ const ReportUpload = () => {
                                         {" "}
                                         On{" "}
                                         {moment
-                                          .utc(bankReport?.createdAt)
+                                          .utc(reportUpload?.createdAt)
                                           .tz("Asia/Kolkata")
                                           .format("DD MMM, YY")}
                                       </span>
@@ -384,13 +435,41 @@ const ReportUpload = () => {
                               </td>
 
                               <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-primary waves-effect waves-light"
-                                  onClick={status_tog_list}
-                                >
-                                  Add Bank Status
-                                </button>
+                                {reportUpload.bankStatus ? (
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="badge bg-success-subtle text-success">
+                                      Approved
+                                    </span>
+                                    <button
+                                      className="btn btn-sm btn-soft-info edit-list"
+                                      onClick={() => {
+                                        setSelectedForm(reportUpload);
+                                        status_tog_list();
+                                      }}
+                                    >
+                                      <i className="ri-pencil-fill align-bottom" />
+                                    </button>
+                                    <button
+                                      className="btn btn-sm btn-soft-danger remove-list"
+                                      onClick={() => {
+                                        setSelectedForm(reportUpload);
+                                      }}
+                                    >
+                                      <i className="ri-delete-bin-5-fill align-bottom" />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-primary waves-effect waves-light"
+                                    onClick={() => {
+                                      status_tog_list();
+                                      setSelectedForm(reportUpload);
+                                    }}
+                                  >
+                                    Add Bank Status
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -418,6 +497,7 @@ const ReportUpload = () => {
             </Col>
           </Row>
         </Container>
+        <ToastContainer />
       </div>
       <ReportFormModal
         modal_list={modal_list}
@@ -434,6 +514,8 @@ const ReportUpload = () => {
         selectedSingleBankStatus={selectedSingleBankStatus}
         handleSelectSingleBankStatus={handleSelectSingleBankStatus}
         bankStatusOptions={bankStatusOptions}
+        bankStatusUpdateValidation={bankStatusUpdateValidation}
+        bankStatusFormHandleSubmit={bankStatusFormHandleSubmit}
       />
     </React.Fragment>
   );

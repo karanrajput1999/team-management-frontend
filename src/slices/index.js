@@ -21,6 +21,7 @@ import FormPermissionsReducer from "./FormPermissions/reducer";
 import UploadRawDataReducer from "./UploadRawData/reducer";
 import DataCorrectionReducer from "./DataCorrection/reducer";
 import DownloadDataReducer from "./DownloadData/reducer";
+import ReportUploadReducer from "./ReportUpload/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -47,6 +48,7 @@ const rootReducer = combineReducers({
   UploadRawData: UploadRawDataReducer,
   DataCorrection: DataCorrectionReducer,
   DownloadData: DownloadDataReducer,
+  ReportUpload: ReportUploadReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
