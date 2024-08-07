@@ -24,6 +24,7 @@ import {
   getReportUpload,
   filterReportUpload,
   updateReportUploadStatus,
+  deleteReportUpload,
 } from "../../slices/ReportUpload/thunk";
 import moment from "moment-timezone";
 import ReportFormModal from "./ReportUploadModal";
@@ -31,15 +32,16 @@ import BankStatusUpdateModal from "./BankStatusUpdateModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import BankStatusRemoveModal from "./BankStatusRemoveModal";
+import BankStatusCommentModal from "./BankStatusCommentModal";
 
 const ReportUpload = () => {
   const [modal_list, setmodal_list] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  const [selectedForm, setSelectedForm] = useState(null);
+  const [modal_comment, setmodal_comment] = useState(false);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [selectedForm, setSelectedForm] = useState(null);
 
   const [status_modal_list, setstatus_modal_list] = useState(false);
 
@@ -72,6 +74,8 @@ const ReportUpload = () => {
     (state) => state.ReportUpload
   );
 
+  console.log("REPORT UPLOAD ->", reportUploads);
+
   useEffect(() => {
     dispatch(getCenters());
     dispatch(getApplicatinReport());
@@ -89,7 +93,12 @@ const ReportUpload = () => {
     setstatus_modal_list(!status_modal_list);
   }
 
+  function tog_comment() {
+    setmodal_comment(!modal_comment);
+  }
+
   function handleDeleteStatus() {
+    dispatch(deleteReportUpload(selectedForm?.id));
     setmodal_delete(false);
   }
 
@@ -197,7 +206,7 @@ const ReportUpload = () => {
     onSubmit: (values, { resetForm }) => {
       dispatch(
         updateReportUploadStatus({
-          formId: selectedForm.id,
+          formId: selectedForm.formId,
           formType: selectedForm.formType,
           ...values,
         })
@@ -364,7 +373,7 @@ const ReportUpload = () => {
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th data-sort="id">Id</th>
+                            <th data-sort="s-no">S.No</th>
                             <th data-sort="application_no">Application No</th>
                             <th data-sort="customer_name">Customer Name</th>
                             <th data-sort="phone">Phone</th>
@@ -381,7 +390,7 @@ const ReportUpload = () => {
                             : reportUploads
                           )?.map((reportUpload, idx) => (
                             <tr key={idx}>
-                              <td>{reportUpload?.id}</td>
+                              <td>{idx + 1}</td>
                               <td>
                                 {reportUpload?.applicationNo ? (
                                   reportUpload?.applicationNo
@@ -454,8 +463,25 @@ const ReportUpload = () => {
                               <td>
                                 {reportUpload.bankStatus ? (
                                   <div className="d-flex align-items-center gap-2">
-                                    <span className="badge bg-success-subtle text-success">
-                                      Approved
+                                    <span
+                                      className={`badge ${
+                                        reportUpload.bankStatus ===
+                                          "Approved" &&
+                                        "bg-success-subtle text-success"
+                                      }
+                                      ${
+                                        reportUpload.bankStatus ===
+                                          "Declined" &&
+                                        "bg-danger-subtle text-danger"
+                                      }
+                                      ${
+                                        reportUpload.bankStatus ===
+                                          "Add Comment" &&
+                                        "bg-primary-subtle text-primary"
+                                      }
+                                      `}
+                                    >
+                                      {reportUpload.bankStatus}
                                     </span>
                                     <button
                                       className="btn btn-sm btn-soft-info edit-list"
@@ -471,10 +497,20 @@ const ReportUpload = () => {
                                       className="btn btn-sm btn-soft-danger remove-list"
                                       onClick={() => {
                                         setSelectedForm(reportUpload);
+
                                         tog_delete();
                                       }}
                                     >
                                       <i className="ri-delete-bin-5-fill align-bottom" />
+                                    </button>
+                                    <button
+                                      className="btn btn-sm btn-soft-secondary"
+                                      onClick={() => {
+                                        tog_comment();
+                                        setSelectedForm(reportUpload);
+                                      }}
+                                    >
+                                      <i className="ri-eye-fill align-bottom"></i>
                                     </button>
                                   </div>
                                 ) : (
@@ -541,6 +577,11 @@ const ReportUpload = () => {
         modal_delete={modal_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteStatus={handleDeleteStatus}
+      />
+      <BankStatusCommentModal
+        modal_comment={modal_comment}
+        setmodal_comment={setmodal_comment}
+        comment={selectedForm?.comment}
       />
     </React.Fragment>
   );

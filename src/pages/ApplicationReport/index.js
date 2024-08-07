@@ -407,28 +407,45 @@ const ApplicationReport = () => {
                               </td>
 
                               <td>
-                                <span
-                                  className={`badge ${
-                                    bankReport?.formStatus &&
-                                    bankReport?.formStatus === "VKYC Done"
-                                      ? "bg-success-subtle"
-                                      : "bg-primary-subtle"
-                                  }  ${
-                                    bankReport?.formStatus &&
-                                    bankReport?.formStatus === "VKYC Done"
-                                      ? "text-success"
-                                      : "text-primary"
-                                  } `}
-                                >
-                                  {bankReport?.formStatus
-                                    ? bankReport?.formStatus
-                                    : "Pending"}
-                                </span>
+                                {bankReport?.formStatus ? (
+                                  <span
+                                    className={`badge ${
+                                      bankReport?.formStatus &&
+                                      bankReport?.formStatus === "VKYC Done"
+                                        ? "bg-success-subtle text-success"
+                                        : "bg-primary-subtle text-primary"
+                                    }  `}
+                                  >
+                                    {bankReport?.formStatus}
+                                  </span>
+                                ) : (
+                                  <span className="badge bg-secondary-subtle text-secondary">
+                                    Pending
+                                  </span>
+                                )}
                               </td>
                               <td>
-                                <span className="badge bg-primary-subtle text-primary">
-                                  Pending
-                                </span>
+                                {bankReport?.bankStatus ? (
+                                  <span
+                                    className={`badge ${
+                                      bankReport?.bankStatus === "Approved" &&
+                                      "bg-success-subtle text-success"
+                                    } ${
+                                      bankReport?.bankStatus ===
+                                        "Add Comment" &&
+                                      "bg-primary-subtle text-primary"
+                                    } ${
+                                      bankReport?.bankStatus === "Declined" &&
+                                      "bg-danger-subtle text-danger"
+                                    }   `}
+                                  >
+                                    {bankReport.bankStatus}
+                                  </span>
+                                ) : (
+                                  <span className="badge bg-secondary-subtle text-secondary">
+                                    Pending
+                                  </span>
+                                )}
                               </td>
                             </tr>
                           ))}

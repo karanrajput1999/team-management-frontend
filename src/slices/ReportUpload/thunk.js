@@ -4,6 +4,7 @@ import {
   getReportUpload as getReportUploadApi,
   filterReportUpload as filterReportUploadApi,
   updateReportUploadStatus as updateReportUploadStatusApi,
+  deleteReportUpload as deleteReportUploadApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getReportUpload = createAsyncThunk(
@@ -36,6 +37,17 @@ export const filterReportUpload = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside filter report upload thunk", error);
+    }
+  }
+);
+export const deleteReportUpload = createAsyncThunk(
+  "ReportUpload/deleteReportUpload",
+  async (bankStatusId) => {
+    try {
+      const response = await deleteReportUploadApi(bankStatusId);
+      return response;
+    } catch (error) {
+      console.log("error inside delete report upload thunk", error);
     }
   }
 );

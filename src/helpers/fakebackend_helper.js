@@ -806,6 +806,11 @@ export const filterReportUpload = (data) => {
     data
   );
 };
+export const deleteReportUpload = (bankStatusId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/report-upload/bank-status/${bankStatusId}/delete`
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
