@@ -74,8 +74,6 @@ const ReportUpload = () => {
     (state) => state.ReportUpload
   );
 
-  console.log("REPORT UPLOAD ->", reportUploads);
-
   useEffect(() => {
     dispatch(getCenters());
     dispatch(getApplicatinReport());
@@ -204,6 +202,8 @@ const ReportUpload = () => {
       comment: Yup.string().required("Please enter comment"),
     }),
     onSubmit: (values, { resetForm }) => {
+      console.log("SELECTED FORM ->", selectedForm);
+
       dispatch(
         updateReportUploadStatus({
           formId: selectedForm.formId,

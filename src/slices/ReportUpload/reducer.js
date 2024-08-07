@@ -6,7 +6,6 @@ import {
   deleteReportUpload,
 } from "./thunk";
 import { toast } from "react-toastify";
-import { upload } from "@testing-library/user-event/dist/cjs/utility/upload.js";
 
 export const initialState = {
   reportUploads: [],
@@ -64,14 +63,13 @@ const reportUploadSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
+        const deletedBankStatus = action.payload?.data.deletedBankStatus;
+
         state.reportUploads = state.reportUploads.map((report) => {
-          if (report.id === action.payload?.data.deletedBankStatus.id) {
-            return Object.keys(report).reduce((acc, key) => {
-              if (!action.payload?.data.deletedBankStatus.hasOwnProperty(key)) {
-                acc[key] = report[key];
-              }
-              return acc;
-            }, {});
+          if (report.id === deletedBankStatus.id) {
+            const { bankStatus, comment, ...otherPropertiesOfReport } = report;
+
+            return otherPropertiesOfReport;
           } else {
             return report;
           }
