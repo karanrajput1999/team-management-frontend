@@ -799,6 +799,15 @@ export const updateReportUploadStatus = (data) => {
     data
   );
 };
+export const updateReportUploadStatusWithFile = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/report-upload/update-status/file`,
+    data,
+    {
+      "Content-Type": "multipart/form-data",
+    }
+  );
+};
 
 export const filterReportUpload = (data) => {
   return api.create(

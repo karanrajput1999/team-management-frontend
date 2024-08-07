@@ -24,6 +24,7 @@ import {
   getReportUpload,
   filterReportUpload,
   updateReportUploadStatus,
+  updateReportUploadStatusWithFile,
   deleteReportUpload,
 } from "../../slices/ReportUpload/thunk";
 import moment from "moment-timezone";
@@ -57,7 +58,7 @@ const ReportUpload = () => {
 
   const [selectedSingleFormType, setSelectedSingleFormType] = useState(null);
 
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState([]);
 
   const [filters, setFilters] = useState({
     center: "",
@@ -221,6 +222,32 @@ const ReportUpload = () => {
     bankStatusUpdateValidation.handleSubmit();
 
     setstatus_modal_list(false);
+    return false;
+  }
+
+  const bankStatusUpdateWitFileValidation = useFormik({
+    initialValues: {
+      bankName: "",
+    },
+    validationSchema: Yup.object({
+      bankName: Yup.string().required("Please select bank name"),
+    }),
+    onSubmit: (values) => {
+
+      dispatch(
+        updateReportUploadStatusWithFile({ ...values, data: file.file })
+      );
+    },
+  });
+
+  function bankStatusUpdateWitFileHandleSubmit(e) {
+    e.preventDefault();
+
+    if (file?.file) {
+      bankStatusUpdateWitFileValidation.handleSubmit();
+    }
+
+    setmodal_list(false);
     return false;
   }
 
@@ -558,8 +585,12 @@ const ReportUpload = () => {
         selectedSingleBank={selectedSingleBank}
         handleSelectSingleBank={handleSelectSingleBank}
         bankOptions={bankOptions}
-        files={files}
-        setFiles={setFiles}
+        file={file}
+        setFile={setFile}
+        bankStatusUpdateWitFileHandleSubmit={
+          bankStatusUpdateWitFileHandleSubmit
+        }
+        bankStatusUpdateWitFileValidation={bankStatusUpdateWitFileValidation}
       />
       <BankStatusUpdateModal
         status_modal_list={status_modal_list}

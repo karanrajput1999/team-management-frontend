@@ -77,7 +77,7 @@ function BankStatusCommentModal({ modal_comment, setmodal_comment, form }) {
         <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
           <button
             type="button"
-            className="btn w-sm btn-light"
+            className="btn w-sm btn-ghost"
             onClick={() => setmodal_comment(false)}
           >
             Close

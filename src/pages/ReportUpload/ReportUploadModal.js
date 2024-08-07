@@ -29,13 +29,13 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 function ReportFormModal({
   modal_list,
   tog_list,
-  formHandleSubmit,
-  validation,
+  bankStatusUpdateWitFileHandleSubmit,
+  bankStatusUpdateWitFileValidation,
   selectedSingleBank,
   handleSelectSingleBank,
   bankOptions,
-  files,
-  setFiles,
+  file,
+  setFile,
 }) {
   return (
     <Modal
@@ -53,7 +53,10 @@ function ReportFormModal({
       >
         Upload Report
       </ModalHeader>
-      <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
+      <Form
+        className="tablelist-form"
+        onSubmit={(e) => bankStatusUpdateWitFileHandleSubmit(e)}
+      >
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
             <Label className="form-label">Choose Bank</Label>
@@ -63,10 +66,10 @@ function ReportFormModal({
               value={selectedSingleBank}
               onChange={(bankName) => {
                 handleSelectSingleBank(bankName);
-                // validation.setFieldValue(
-                //   "centerName",
-                //   centerName.value
-                // );
+                bankStatusUpdateWitFileValidation.setFieldValue(
+                  "bankName",
+                  bankName.value
+                );
               }}
               options={bankOptions}
               placeholder="Choose Bank"
@@ -75,8 +78,8 @@ function ReportFormModal({
           <div className="mb-2">
             <Label className="form-label">Choose File</Label>
             <FilePond
-              files={files}
-              onupdatefiles={setFiles}
+              files={file}
+              onupdatefiles={(file) => setFile(file[0])}
               maxFiles={1}
               name="files"
               className="filepond"

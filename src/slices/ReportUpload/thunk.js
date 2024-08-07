@@ -4,6 +4,7 @@ import {
   getReportUpload as getReportUploadApi,
   filterReportUpload as filterReportUploadApi,
   updateReportUploadStatus as updateReportUploadStatusApi,
+  updateReportUploadStatusWithFile as updateReportUploadStatusWithFileApi,
   deleteReportUpload as deleteReportUploadApi,
 } from "../../helpers/fakebackend_helper";
 
@@ -26,6 +27,20 @@ export const updateReportUploadStatus = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside update report upload status thunk", error);
+    }
+  }
+);
+export const updateReportUploadStatusWithFile = createAsyncThunk(
+  "ReportUpload/updateReportUploadStatusWithFile",
+  async (data) => {
+    try {
+      const response = await updateReportUploadStatusWithFileApi(data);
+      return response;
+    } catch (error) {
+      console.log(
+        "error inside update report upload status with file thunk",
+        error
+      );
     }
   }
 );

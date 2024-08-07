@@ -3,6 +3,7 @@ import {
   getReportUpload,
   filterReportUpload,
   updateReportUploadStatus,
+  updateReportUploadStatusWithFile,
   deleteReportUpload,
 } from "./thunk";
 import { toast } from "react-toastify";
@@ -51,6 +52,36 @@ const reportUploadSlice = createSlice({
         state.error = "";
       }
     });
+    builder.addCase(
+      updateReportUploadStatusWithFile.fulfilled,
+      (state, action) => {
+        console.log("UPDATED STATUS THROUGH FILE ->", action.payload?.data);
+
+        if (action.payload.status === "failure") {
+          state.error = action.payload.message;
+        } else {
+          // const updatedBankStatus = action.payload?.data.updatedBankStatus;
+
+          // state.reportUploads = state.reportUploads.map((report) => {
+          //   if (
+          //     report.formId === updatedBankStatus.formId &&
+          //     report.formType === updatedBankStatus.formType
+          //   ) {
+          //     return { ...report, ...updatedBankStatus };
+          //   } else {
+          //     return report;
+          //   }
+          // });
+
+          // toast.success("Status has been updated !", {
+          //   position: "bottom-center",
+          //   autoClose: 3000,
+          //   theme: "colored",
+          // });
+          state.error = "";
+        }
+      }
+    );
     builder.addCase(filterReportUpload.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
