@@ -202,8 +202,6 @@ const ReportUpload = () => {
       comment: Yup.string().required("Please enter comment"),
     }),
     onSubmit: (values, { resetForm }) => {
-      console.log("SELECTED FORM ->", selectedForm);
-
       dispatch(
         updateReportUploadStatus({
           formId: selectedForm.formId,
@@ -581,7 +579,7 @@ const ReportUpload = () => {
       <BankStatusCommentModal
         modal_comment={modal_comment}
         setmodal_comment={setmodal_comment}
-        comment={selectedForm?.comment}
+        form={selectedForm}
       />
     </React.Fragment>
   );

@@ -20,10 +20,15 @@ import {
 } from "../../slices/ApplicationReport/thunk";
 import moment from "moment-timezone";
 import { StatusOptions } from "../../common/data/pendingForms";
+import BankStatusCommentModal from "./BankStatusCommentModal";
 
 const ApplicationReport = () => {
+  const [modal_comment, setmodal_comment] = useState(false);
+
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
     useState(null);
+
+  const [selectedForm, setSelectedForm] = useState(null);
 
   const [selectedSingleStatus1, setSelectedSingleStatus1] = useState(null);
 
@@ -51,6 +56,10 @@ const ApplicationReport = () => {
     dispatch(getCenters());
     dispatch(getApplicatinReport());
   }, [dispatch]);
+
+  function tog_comment() {
+    setmodal_comment(!modal_comment);
+  }
 
   function handleSelectSingleCenter(centerName) {
     setSelectedSingleCenterName(centerName);
@@ -425,27 +434,40 @@ const ApplicationReport = () => {
                                 )}
                               </td>
                               <td>
-                                {bankReport?.bankStatus ? (
-                                  <span
-                                    className={`badge ${
-                                      bankReport?.bankStatus === "Approved" &&
-                                      "bg-success-subtle text-success"
-                                    } ${
-                                      bankReport?.bankStatus ===
-                                        "Add Comment" &&
-                                      "bg-primary-subtle text-primary"
-                                    } ${
-                                      bankReport?.bankStatus === "Declined" &&
-                                      "bg-danger-subtle text-danger"
-                                    }   `}
-                                  >
-                                    {bankReport.bankStatus}
-                                  </span>
-                                ) : (
-                                  <span className="badge bg-secondary-subtle text-secondary">
-                                    Pending
-                                  </span>
-                                )}
+                                <div className="d-flex align-items-center gap-2">
+                                  {bankReport?.bankStatus ? (
+                                    <span
+                                      className={`badge ${
+                                        bankReport?.bankStatus === "Approved" &&
+                                        "bg-success-subtle text-success"
+                                      } ${
+                                        bankReport?.bankStatus ===
+                                          "Add Comment" &&
+                                        "bg-primary-subtle text-primary"
+                                      } ${
+                                        bankReport?.bankStatus === "Declined" &&
+                                        "bg-danger-subtle text-danger"
+                                      }   `}
+                                    >
+                                      {bankReport.bankStatus}
+                                    </span>
+                                  ) : (
+                                    <span className="badge bg-secondary-subtle text-secondary">
+                                      Pending
+                                    </span>
+                                  )}
+                                  {bankReport.bankStatus && (
+                                    <button
+                                      className="btn btn-sm btn-soft-secondary"
+                                      onClick={() => {
+                                        tog_comment();
+                                        setSelectedForm(bankReport);
+                                      }}
+                                    >
+                                      <i className="ri-eye-fill align-bottom"></i>
+                                    </button>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -473,6 +495,12 @@ const ApplicationReport = () => {
             </Col>
           </Row>
         </Container>
+        <BankStatusCommentModal
+          modal_comment={modal_comment}
+          setmodal_comment={setmodal_comment}
+          tog_comment={tog_comment}
+          form={selectedForm}
+        />
       </div>
     </React.Fragment>
   );
