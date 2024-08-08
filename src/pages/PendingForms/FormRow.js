@@ -25,7 +25,16 @@ const FormRow = ({ form, onUpdate }) => {
 
   function formHandleSubmit(e) {
     e.preventDefault();
+
+    if (selectedSingleStatus?.value === "VKYC Done" && !applicationNo) {
+      return;
+    }
+
     onUpdate(form.id, applicationNo, formStatus, form.formType);
+
+    setApplicationNo("");
+    setSelectedSingleStatus(null);
+    setFormStatus("");
   }
 
   // we do not need time only needed date
