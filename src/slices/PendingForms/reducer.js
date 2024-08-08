@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getPendingForms, pendingFormsFilter } from "./thunk";
+import { toast } from "react-toastify";
 
 export const initialState = {
   pendingForms: [],
@@ -30,6 +31,11 @@ const centersSlice = createSlice({
         state.filteredPendingForms = action.payload?.data.pendingForms;
         state.filteredUpdatedForms = action.payload?.data.updatedForms;
         state.error = "";
+        toast.success("Status updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
     });
   },

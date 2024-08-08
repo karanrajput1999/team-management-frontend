@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Card,
   CardBody,
@@ -239,6 +240,7 @@ const PendingForms = () => {
           </Row>
         </Container>
       </div>
+      <ToastContainer />
     </React.Fragment>
   );
 };

@@ -80,8 +80,6 @@ const ReportUpload = () => {
     (state) => state.ReportUpload
   );
 
-  console.log("REPORT UPLOADS ->", reportUploads);
-
   useEffect(() => {
     getBankDropdown().then((res) => {
       setBankDropdowns(res.data.bankDropdowns);
