@@ -34,6 +34,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import BankStatusRemoveModal from "./BankStatusRemoveModal";
 import BankStatusCommentModal from "./BankStatusCommentModal";
+import { getBankDropdown } from "../../helpers/fakebackend_helper";
 
 const ReportUpload = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -60,6 +61,8 @@ const ReportUpload = () => {
 
   const [selectedBankStatus, setSelectedBankStatus] = useState(null);
 
+  const [bankDropdowns, setBankDropdowns] = useState(null);
+
   const [file, setFile] = useState([]);
 
   const [filters, setFilters] = useState({
@@ -78,6 +81,12 @@ const ReportUpload = () => {
   );
 
   console.log("REPORT UPLOADS ->", reportUploads);
+
+  useEffect(() => {
+    getBankDropdown().then((res) => {
+      setBankDropdowns(res.data.bankDropdowns);
+    });
+  }, []);
 
   useEffect(() => {
     dispatch(getCenters());
@@ -144,24 +153,28 @@ const ReportUpload = () => {
     },
   ];
 
-  const bankOptions = [
-    {
-      value: "AU Bank",
-      label: "AU Bank",
-    },
-    {
-      value: "ICICI Bank",
-      label: "ICICI Bank",
-    },
-    {
-      value: "HDFC Bank",
-      label: "HDFC Bank",
-    },
-    {
-      value: "Axis Bank",
-      label: "Axis Bank",
-    },
-  ];
+  // const bankOptions = [
+  //   {
+  //     value: "AU Bank",
+  //     label: "AU Bank",
+  //   },
+  //   {
+  //     value: "ICICI Bank",
+  //     label: "ICICI Bank",
+  //   },
+  //   {
+  //     value: "HDFC Bank",
+  //     label: "HDFC Bank",
+  //   },
+  //   {
+  //     value: "Axis Bank",
+  //     label: "Axis Bank",
+  //   },
+  // ];
+
+  const bankOptions = bankDropdowns?.map((bank) => {
+    return { value: bank.name, label: bank.name, id: bank.id };
+  });
 
   const formTypeOptions = [
     {
@@ -211,6 +224,8 @@ const ReportUpload = () => {
         updateReportUploadStatus({
           formId: selectedForm.formId,
           formType: selectedForm.formType,
+          bankId: selectedForm.bankId,
+          applicationNo: selectedForm.applicationNo,
           ...values,
         })
       );
@@ -232,9 +247,11 @@ const ReportUpload = () => {
   const bankStatusUpdateWitFileValidation = useFormik({
     initialValues: {
       bankName: "",
+      bankId: "",
     },
     validationSchema: Yup.object({
       bankName: Yup.string().required("Please select bank name"),
+      bankId: Yup.string().required("Please select bank"),
     }),
     onSubmit: (values) => {
       dispatch(

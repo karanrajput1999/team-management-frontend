@@ -77,6 +77,7 @@ function CreditCardForm({
                         onChange={(bankName) => {
                           handleSelectSingleBankName(bankName);
                           validation.setFieldValue("bankName", bankName.value);
+                          validation.setFieldValue("bankId", bankName.id);
                         }}
                         options={bankOptions}
                         placeholder="Bank Name"

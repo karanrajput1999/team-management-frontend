@@ -70,6 +70,10 @@ function ReportFormModal({
                   "bankName",
                   bankName.value
                 );
+                bankStatusUpdateWitFileValidation.setFieldValue(
+                  "bankId",
+                  bankName.id
+                );
               }}
               options={bankOptions}
               placeholder="Choose Bank"

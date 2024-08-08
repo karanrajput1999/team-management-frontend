@@ -47,6 +47,7 @@ import { createInsuranceForm } from "../../slices/InsuranceForm/thunk";
 import { createDematAccountForm } from "../../slices/DematAccountForm/thunk";
 import { getLoggedinUser } from "../../helpers/api_helper";
 import { getAllowedFormPermissions } from "../../slices/FormPermissions/thunk";
+import { getBankDropdown } from "../../helpers/fakebackend_helper";
 
 const Forms = () => {
   const [selectedSingleEmployeeName, setSelectedSingleEmployeeName] =
@@ -63,6 +64,8 @@ const Forms = () => {
     useState(null);
 
   const [arrowNavTab, setarrowNavTab] = useState("1");
+
+  const [bankDropdowns, setBankDropdowns] = useState(null);
 
   const { allCenterUsers } = useSelector((state) => state.AddUsers);
 
@@ -81,11 +84,17 @@ const Forms = () => {
     return formPermission.formId;
   });
 
-  console.log("ALLOWED FORMS ->", allowedForms);
+  const bankOptions = bankDropdowns?.map((bank) => {
+    return { value: bank.name, label: bank.name, id: bank.id };
+  });
 
   useEffect(() => {
-    const loggedInUser = getLoggedinUser();
+    getBankDropdown().then((res) => {
+      setBankDropdowns(res.data.bankDropdowns);
+    });
+  }, []);
 
+  useEffect(() => {
     dispatch(getCenterUsers());
     dispatch(getAllowedFormPermissions());
   }, [dispatch]);
@@ -131,6 +140,7 @@ const Forms = () => {
       income: "",
       bankName: "",
       clientType: "",
+      bankId: "",
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Please enter full name"),
@@ -147,6 +157,7 @@ const Forms = () => {
       income: Yup.number().required("Please enter income"),
       bankName: Yup.string().required("Please enter bank name"),
       clientType: Yup.string().required("Please select client type"),
+      bankId: Yup.string().required("Please enter bank id"),
     }),
     onSubmit: (values, { resetForm, setFieldValue }) => {
       dispatch(createCreditCardForm({ ...values, formType: "Credit Card" }));
