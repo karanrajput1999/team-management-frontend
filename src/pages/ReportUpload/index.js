@@ -58,6 +58,8 @@ const ReportUpload = () => {
 
   const [selectedSingleFormType, setSelectedSingleFormType] = useState(null);
 
+  const [selectedBankStatus, setSelectedBankStatus] = useState(null);
+
   const [file, setFile] = useState([]);
 
   const [filters, setFilters] = useState({
@@ -74,6 +76,8 @@ const ReportUpload = () => {
   const { reportUploads, filteredReportUploads } = useSelector(
     (state) => state.ReportUpload
   );
+
+  console.log("REPORT UPLOADS ->", reportUploads);
 
   useEffect(() => {
     dispatch(getCenters());
@@ -97,7 +101,7 @@ const ReportUpload = () => {
   }
 
   function handleDeleteStatus() {
-    dispatch(deleteReportUpload(selectedForm?.id));
+    dispatch(deleteReportUpload(selectedBankStatus));
     setmodal_delete(false);
   }
 
@@ -233,7 +237,6 @@ const ReportUpload = () => {
       bankName: Yup.string().required("Please select bank name"),
     }),
     onSubmit: (values) => {
-
       dispatch(
         updateReportUploadStatusWithFile({ ...values, data: file.file })
       );
@@ -251,14 +254,19 @@ const ReportUpload = () => {
     return false;
   }
 
-  function handleEditStatus(form) {
-    const bankStatus = bankStatusOptions.find(
-      (el) => el.value === form.bankStatus
-    );
+  // function handleEditStatus(form) {
+  //   const bankStatus = bankStatusOptions.find(
+  //     (el) => el.value === form.bankStatus
+  //   );
 
-    bankStatusUpdateValidation.setFieldValue("comment", form.comment);
-    bankStatusUpdateValidation.setFieldValue("bankStatus", bankStatus.value);
-    handleSelectSingleBankStatus(bankStatus);
+  //   bankStatusUpdateValidation.setFieldValue("comment", form.comment);
+  //   bankStatusUpdateValidation.setFieldValue("bankStatus", bankStatus.value);
+  //   handleSelectSingleBankStatus(bankStatus);
+  // }
+
+  function handleDelete(statusId) {
+    setSelectedBankStatus(statusId);
+    tog_delete();
   }
 
   document.title = "Report Upload";
@@ -486,39 +494,50 @@ const ReportUpload = () => {
                               </td>
 
                               <td>
-                                {reportUpload.bankStatus ? (
+                                {reportUpload.previousBankStatuses.length !==
+                                0 ? (
                                   <div className="d-flex align-items-center gap-2">
                                     <span
                                       className={`badge ${
-                                        reportUpload.bankStatus ===
-                                          "Approved" &&
+                                        reportUpload.previousBankStatuses[
+                                          reportUpload.previousBankStatuses
+                                            .length - 1
+                                        ].bankStatus === "Approved" &&
                                         "bg-success-subtle text-success"
                                       }
                                       ${
-                                        reportUpload.bankStatus ===
-                                          "Declined" &&
+                                        reportUpload.previousBankStatuses[
+                                          reportUpload.previousBankStatuses
+                                            .length - 1
+                                        ].bankStatus === "Declined" &&
                                         "bg-danger-subtle text-danger"
                                       }
                                       ${
-                                        reportUpload.bankStatus ===
-                                          "Add Comment" &&
+                                        reportUpload.previousBankStatuses[
+                                          reportUpload.previousBankStatuses
+                                            .length - 1
+                                        ].bankStatus === "Add Comment" &&
                                         "bg-primary-subtle text-primary"
                                       }
                                       `}
                                     >
-                                      {reportUpload.bankStatus}
+                                      {
+                                        reportUpload.previousBankStatuses[
+                                          reportUpload.previousBankStatuses
+                                            .length - 1
+                                        ].bankStatus
+                                      }
                                     </span>
                                     <button
-                                      className="btn btn-sm btn-soft-info edit-list"
+                                      className="btn btn-sm btn-soft-primary edit-list"
                                       onClick={() => {
-                                        setSelectedForm(reportUpload);
-                                        handleEditStatus(reportUpload);
                                         status_tog_list();
+                                        setSelectedForm(reportUpload);
                                       }}
                                     >
-                                      <i className="ri-pencil-fill align-bottom" />
+                                      <i className="ri-add-fill align-bottom"></i>
                                     </button>
-                                    <button
+                                    {/* <button
                                       className="btn btn-sm btn-soft-danger remove-list"
                                       onClick={() => {
                                         setSelectedForm(reportUpload);
@@ -527,7 +546,7 @@ const ReportUpload = () => {
                                       }}
                                     >
                                       <i className="ri-delete-bin-5-fill align-bottom" />
-                                    </button>
+                                    </button> */}
                                     <button
                                       className="btn btn-sm btn-soft-secondary"
                                       onClick={() => {
@@ -611,6 +630,7 @@ const ReportUpload = () => {
         modal_comment={modal_comment}
         setmodal_comment={setmodal_comment}
         form={selectedForm}
+        handleDelete={handleDelete}
       />
     </React.Fragment>
   );

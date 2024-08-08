@@ -38,7 +38,13 @@ const reportUploadSlice = createSlice({
             report.formId === updatedBankStatus.formId &&
             report.formType === updatedBankStatus.formType
           ) {
-            return { ...report, ...updatedBankStatus };
+            return {
+              ...report,
+              previousBankStatuses: [
+                ...report.previousBankStatuses,
+                updatedBankStatus,
+              ],
+            };
           } else {
             return report;
           }
@@ -97,10 +103,12 @@ const reportUploadSlice = createSlice({
         const deletedBankStatus = action.payload?.data.deletedBankStatus;
 
         state.reportUploads = state.reportUploads.map((report) => {
-          if (report.id === deletedBankStatus.id) {
-            const { bankStatus, comment, ...otherPropertiesOfReport } = report;
+          if (report.id === deletedBankStatus.formId) {
+            const filteredStatus = report.previousBankStatuses.filter(
+              (status) => status.id !== deletedBankStatus.id
+            );
 
-            return otherPropertiesOfReport;
+            return { ...report, previousBankStatuses: filteredStatus };
           } else {
             return report;
           }

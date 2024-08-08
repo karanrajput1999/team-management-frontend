@@ -1,6 +1,11 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function BankStatusCommentModal({ modal_comment, setmodal_comment, form }) {
+function BankStatusCommentModal({
+  modal_comment,
+  setmodal_comment,
+  form,
+  handleDelete,
+}) {
   return (
     <Modal
       isOpen={modal_comment}
@@ -39,6 +44,7 @@ function BankStatusCommentModal({ modal_comment, setmodal_comment, form }) {
                     <th scope="col">S.No</th>
                     <th scope="col">Status</th>
                     <th scope="col">Comment</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
 
@@ -66,7 +72,24 @@ function BankStatusCommentModal({ modal_comment, setmodal_comment, form }) {
                             {status?.bankStatus}
                           </span>
                         </td>
-                        <td>{status?.comment}</td>
+                        <td
+                          style={{
+                            whiteSpace: "normal",
+                            wordWrap: "break-word",
+                          }}
+                        >
+                          {status?.comment}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-sm btn-soft-danger remove-list"
+                            onClick={() => {
+                              handleDelete(status.id);
+                            }}
+                          >
+                            <i className="ri-delete-bin-5-fill align-bottom" />
+                          </button>
+                        </td>
                       </tr>
                     ))}
                 </tbody>
