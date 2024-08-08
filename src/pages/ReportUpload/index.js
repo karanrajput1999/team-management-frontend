@@ -430,6 +430,7 @@ const ReportUpload = () => {
                             <th data-sort="client_of">Bank Name</th>
                             <th data-sort="client_of">Client of</th>
                             <th data-sort="status_2">Bank Status</th>
+                            <th data-sort="status_2">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
@@ -507,10 +508,9 @@ const ReportUpload = () => {
                                   </div>
                                 )}
                               </td>
-
                               <td>
                                 {reportUpload.previousBankStatuses.length !==
-                                0 ? (
+                                  0 && (
                                   <div className="d-flex align-items-center gap-2">
                                     <span
                                       className={`badge ${
@@ -543,6 +543,14 @@ const ReportUpload = () => {
                                         ].bankStatus
                                       }
                                     </span>
+                                  </div>
+                                )}
+                              </td>
+
+                              <td>
+                                {reportUpload.previousBankStatuses.length !==
+                                0 ? (
+                                  <div className="d-flex align-items-center gap-2">
                                     <button
                                       className="btn btn-sm btn-soft-primary edit-list"
                                       onClick={() => {
@@ -552,16 +560,7 @@ const ReportUpload = () => {
                                     >
                                       <i className="ri-add-fill align-bottom"></i>
                                     </button>
-                                    {/* <button
-                                      className="btn btn-sm btn-soft-danger remove-list"
-                                      onClick={() => {
-                                        setSelectedForm(reportUpload);
 
-                                        tog_delete();
-                                      }}
-                                    >
-                                      <i className="ri-delete-bin-5-fill align-bottom" />
-                                    </button> */}
                                     <button
                                       className="btn btn-sm btn-soft-secondary"
                                       onClick={() => {
