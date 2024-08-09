@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import {
   Card,
   CardBody,
@@ -54,6 +55,11 @@ const PendingForms = () => {
     updateFormStatus({ formId, applicationNo, formStatus, formType }).then(
       (res) => {
         dispatch(getPendingForms());
+        toast.success("Status updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
     );
   }

@@ -29,7 +29,7 @@ function BankStatusCommentModal({ modal_comment, setmodal_comment, form }) {
           ></lord-icon>
           <div className="fs-15 ">
             <div className="d-flex justify-content-left">
-              <h4>Status History</h4>
+              <h4>Bank Status History</h4>
             </div>
 
             <div className="table-responsive mt-2">

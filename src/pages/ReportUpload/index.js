@@ -108,7 +108,17 @@ const ReportUpload = () => {
   }
 
   function handleDeleteStatus() {
-    dispatch(deleteReportUpload(selectedBankStatus));
+    dispatch(deleteReportUpload(selectedBankStatus)).then((res) => {
+      const deletedBankStatus = res.payload?.data?.deletedBankStatus;
+      const updatedBankStatusList = selectedForm.previousBankStatuses.filter(
+        (bankStatus) => bankStatus.id !== deletedBankStatus.id
+      );
+
+      setSelectedForm({
+        ...selectedForm,
+        previousBankStatuses: updatedBankStatusList,
+      });
+    });
     setmodal_delete(false);
   }
 
