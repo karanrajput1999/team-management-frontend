@@ -10,7 +10,6 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-import { useState } from "react";
 
 function AddCenterModal({
   modal_list,
@@ -20,6 +19,9 @@ function AddCenterModal({
   isEditingCenter,
   alreadyRegisteredError,
   roles,
+  roleOptions,
+  handleSelectSingleRole,
+  selectedSingleRoleType,
 }) {
   return (
     <Modal
@@ -110,6 +112,7 @@ function AddCenterModal({
               className="form-control"
               placeholder="Enter Mobile Number"
               type="text"
+              maxLength="10"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.mobileNumber || ""}
@@ -216,6 +219,23 @@ function AddCenterModal({
             <Label htmlFor="userType" className="form-label">
               User Type
             </Label>
+            <Select
+              id="userType"
+              name="userType"
+              value={selectedSingleRoleType}
+              onChange={(userType) => {
+                handleSelectSingleRole(userType);
+                validation.setFieldValue("userType", userType.value);
+              }}
+              options={roleOptions}
+              placeholder="Select User Type"
+            />
+          </div>
+
+          {/* <div className="mb-2">
+            <Label htmlFor="userType" className="form-label">
+              User Type
+            </Label>
             <Input
               id="userType"
               name="userType"
@@ -249,7 +269,7 @@ function AddCenterModal({
                 {validation.errors.role}
               </FormFeedback>
             ) : null}
-          </div>
+          </div> */}
           <div className="mb-2">
             <Label htmlFor="password" className="form-label">
               Password
@@ -260,7 +280,7 @@ function AddCenterModal({
               name="password"
               className="form-control"
               placeholder="Enter Password"
-              type="password"
+              type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.password || ""}

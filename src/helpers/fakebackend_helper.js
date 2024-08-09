@@ -45,11 +45,10 @@ export const removeUser = (userId) => {
   );
 };
 
-export const updateUser = (userId, data) => {
-  return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/edit`,
-    data
-  );
+export const updateUser = (data) => {
+  console.log("USER BUG FIX BACKEND HELPER ->", data);
+
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/user/edit`, data);
 };
 // *****************************************************************
 // *************************** CAMPAIGNS ***************************

@@ -64,11 +64,6 @@ const reportUploadSlice = createSlice({
         if (action.payload.status === "failure") {
           state.error = action.payload.message;
         } else {
-          console.log(
-            "All Bank Status Updates From File ->",
-            action.payload?.data.allBankStatusUpdate
-          );
-
           const allBankStatusUpdate = action.payload?.data.allBankStatusUpdate;
 
           allBankStatusUpdate.forEach((updatedBankStatus) => {

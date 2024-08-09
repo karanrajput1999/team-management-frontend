@@ -44,10 +44,20 @@ const AllCenters = () => {
 
   const [listCenterId, setListCenterId] = useState(null);
 
+  const [selectedSingleRoleType, setSelectedSingleRoleType] = useState(null);
+
   const dispatch = useDispatch();
 
   const { centers, filteredCenters } = useSelector((state) => state.Centers);
   const { roles } = useSelector((state) => state.Mapping);
+
+  const roleOptions = roles.map((role) => {
+    return { value: role.id, label: role.name };
+  });
+
+  function handleSelectSingleRole(userType) {
+    setSelectedSingleRoleType(userType);
+  }
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -80,8 +90,10 @@ const AllCenters = () => {
     validationSchema: Yup.object({
       centerName: Yup.string().required("Please enter center name"),
       ownerName: Yup.string().required("Please enter owner name"),
-      mobileNumber: Yup.string().required("Please enter mobile number"),
-      emailId: Yup.string().required("Please enter email id"),
+      mobileNumber: Yup.string()
+        .length(10, "Mobile no should be of 10 digit only")
+        .required("Please enter mobile number"),
+      emailId: Yup.string().email().required("Please enter email id"),
       location: Yup.string().required("Please enter location"),
       branchId: Yup.string().required("Please enter branch id"),
       userType: Yup.string(),
@@ -90,6 +102,7 @@ const AllCenters = () => {
     onSubmit: (values) => {
       if (isEditingCenter) {
         dispatch(updateCenter({ values, centerId: listCenterId }));
+
         dispatch(
           updateUser({
             name: values.centerName,
@@ -141,7 +154,12 @@ const AllCenters = () => {
       status: centerData.status,
       emailId: centerData.emailId,
       password: centerData.password,
+      userType: centerData.userType,
     });
+
+    handleSelectSingleRole(
+      roleOptions.find((role) => role.value === centerData.userType)
+    );
   }
 
   document.title = "All Centers";
@@ -311,6 +329,9 @@ const AllCenters = () => {
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
         roles={roles}
+        roleOptions={roleOptions}
+        handleSelectSingleRole={handleSelectSingleRole}
+        selectedSingleRoleType={selectedSingleRoleType}
       />
 
       <CenterRemoveModal

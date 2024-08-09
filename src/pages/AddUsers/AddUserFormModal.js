@@ -22,6 +22,9 @@ function AddUserFormModal({
   handleRoleChange,
   roles,
   centers,
+  roleOptions,
+  selectedSingleRoleType,
+  handleSelectSingleRole,
 }) {
   const [selectedSingleCenterName, setSelectedSingleCenterName] =
     useState(null);
@@ -87,6 +90,23 @@ function AddUserFormModal({
 
           <div className="mb-2">
             <Label htmlFor="userType" className="form-label">
+              User Type
+            </Label>
+            <Select
+              id="userType"
+              name="userType"
+              value={selectedSingleRoleType}
+              onChange={(userType) => {
+                handleSelectSingleRole(userType);
+                validation.setFieldValue("userType", userType.value);
+              }}
+              options={roleOptions}
+              placeholder="Select User Type"
+            />
+          </div>
+
+          {/* <div className="mb-2">
+            <Label htmlFor="userType" className="form-label">
               Select Role
             </Label>
             <Input
@@ -119,7 +139,7 @@ function AddUserFormModal({
                 {validation.errors.role}
               </FormFeedback>
             ) : null}
-          </div>
+          </div> */}
 
           <div className="mb-2">
             <Label htmlFor="name" className="form-label">
@@ -157,6 +177,7 @@ function AddUserFormModal({
               className="form-control"
               placeholder="Enter Mobile Number"
               type="text"
+              maxLength="10"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.mobileNumber || ""}

@@ -35,6 +35,7 @@ import {
 } from "../../slices/AddUsers/thunk";
 import { useNavigate } from "react-router-dom";
 import { getCenters } from "../../slices/Centers/thunk";
+import { RowExpanding } from "@tanstack/react-table";
 
 const AddUsers = () => {
   // register / edit user modal state whether modal is open or not
@@ -45,6 +46,7 @@ const AddUsers = () => {
   const [modal_delete, setmodal_delete] = useState(false);
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   // const [listUserId, setListUserId] = useState(null);
+  const [selectedSingleRoleType, setSelectedSingleRoleType] = useState(null);
   //
   const [listUser, setListUser] = useState(null);
   // fetching all the roles
@@ -55,6 +57,14 @@ const AddUsers = () => {
   const { centers } = useSelector((state) => state.Centers);
 
   const dispatch = useDispatch();
+
+  const roleOptions = roles.map((role) => {
+    return { value: role.id, label: role.name };
+  });
+
+  function handleSelectSingleRole(userType) {
+    setSelectedSingleRoleType(userType);
+  }
 
   // toggles register / edit user modal
   function tog_list() {
@@ -110,8 +120,10 @@ const AddUsers = () => {
       centerName: Yup.string().required("Please center name"),
       userType: Yup.string().required("Please select user role"),
       name: Yup.string().required("Please enter Name"),
-      mobileNumber: Yup.string().required("Please enter mobile number"),
-      email: Yup.string().required("Please enter email"),
+      mobileNumber: Yup.string()
+        .length(10, "Mobile No length should be of 10 digit only")
+        .required("Please enter mobile number"),
+      email: Yup.string().email().required("Please enter email"),
       location: Yup.string().required("Please enter select location"),
       age: Yup.number().required("Please enter age"),
       aadharNumber: Yup.string().required("Please enter aadhar card"),
@@ -133,15 +145,21 @@ const AddUsers = () => {
           })
         );
 
+        console.log("USER UPDATE BUG FIX ->", {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          roleId: values.userType,
+          userId: listUser.id,
+        });
+
         dispatch(
           updateUser({
-            values: {
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              roleId: values.userType,
-              userId: listUser.id,
-            },
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            roleId: values.userType,
+            userId: listUser.id,
           })
         );
       } else {
@@ -200,6 +218,11 @@ const AddUsers = () => {
       panNo: userData.panNo,
       centerName: userData.centerName,
     });
+
+    const selectedRole = roleOptions.find(
+      (role) => role.value === userData.userType
+    );
+    handleSelectSingleRole(selectedRole);
   }
 
   document.title = "All Users";
@@ -410,6 +433,9 @@ const AddUsers = () => {
         handleRoleChange={handleRoleChange}
         roles={roles}
         centers={centers}
+        roleOptions={roleOptions}
+        selectedSingleRoleType={selectedSingleRoleType}
+        handleSelectSingleRole={handleSelectSingleRole}
       />
 
       {/* Remove Modal */}
