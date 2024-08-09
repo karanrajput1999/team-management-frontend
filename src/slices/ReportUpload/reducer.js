@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import {
   getReportUpload,
   filterReportUpload,
@@ -61,30 +61,41 @@ const reportUploadSlice = createSlice({
     builder.addCase(
       updateReportUploadStatusWithFile.fulfilled,
       (state, action) => {
-        console.log("UPDATED STATUS THROUGH FILE ->", action.payload?.data);
-
         if (action.payload.status === "failure") {
           state.error = action.payload.message;
         } else {
-          // const updatedBankStatus = action.payload?.data.updatedBankStatus;
+          console.log(
+            "All Bank Status Updates From File ->",
+            action.payload?.data.allBankStatusUpdate
+          );
 
-          // state.reportUploads = state.reportUploads.map((report) => {
-          //   if (
-          //     report.formId === updatedBankStatus.formId &&
-          //     report.formType === updatedBankStatus.formType
-          //   ) {
-          //     return { ...report, ...updatedBankStatus };
-          //   } else {
-          //     return report;
-          //   }
-          // });
+          const allBankStatusUpdate = action.payload?.data.allBankStatusUpdate;
 
-          // toast.success("Status has been updated !", {
-          //   position: "bottom-center",
-          //   autoClose: 3000,
-          //   theme: "colored",
-          // });
+          allBankStatusUpdate.forEach((updatedBankStatus) => {
+            state.reportUploads = state.reportUploads.map((report) => {
+              if (
+                report.formId === updatedBankStatus.formId &&
+                report.bankId === updatedBankStatus.bankId
+              ) {
+                return {
+                  ...report,
+                  previousBankStatuses: [
+                    ...report.previousBankStatuses,
+                    updatedBankStatus,
+                  ],
+                };
+              } else {
+                return report;
+              }
+            });
+          });
+
           state.error = "";
+          toast.success("Status updated!", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
         }
       }
     );
