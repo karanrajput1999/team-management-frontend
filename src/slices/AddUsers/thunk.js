@@ -39,13 +39,13 @@ export const createCenterUser = createAsyncThunk(
 
 export const updateCenterUser = createAsyncThunk(
   "addUsers/updateCenterUser",
-  async () => {
+  async (data) => {
     try {
       console.log("WHILE DELETING THE USER ->", data);
       const response = await updateCenterUserApi(data);
       return response;
     } catch (error) {
-      console.log("error inside update user thunk", error);
+      console.log("error inside update center user thunk", error);
     }
   }
 );

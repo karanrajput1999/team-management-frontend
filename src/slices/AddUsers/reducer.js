@@ -53,36 +53,38 @@ const usersSlice = createSlice({
       } else {
         const updatedCenterUser = action.payload?.data?.updatedCenterUser;
 
-        if (updatedCenterUser.status === 0) {
-          state.centerUsers = state.centerUsers.filter(
-            (user) => user.id !== updatedCenterUser.id
-          );
-          state.error = "";
-          toast.error("Center user has been removed !", {
-            position: "bottom-center",
-            autoClose: 3000,
-            theme: "colored",
-          });
-        } else {
-          state.centerUsers = state.centerUsers.map((user) => {
-            if (user.id == updatedCenterUser.id) {
-              user = action.payload.data.updatedCenterUser;
-              return user;
-            } else {
-              return user;
-            }
-          });
+        // if (updatedCenterUser.status === 0) {
+        //   state.centerUsers = state.centerUsers.filter(
+        //     (user) => user.id !== updatedCenterUser.id
+        //   );
+        //   state.error = "";
+        //   toast.error("Center user has been removed !", {
+        //     position: "bottom-center",
+        //     autoClose: 3000,
+        //     theme: "colored",
+        //   });
 
-          state.alreadyRegisteredError = null;
-          state.error = "";
+        //   state.alreadyRegisteredError = null;
+        // } else {
+        state.centerUsers = state.centerUsers.map((user) => {
+          if (user.id == updatedCenterUser.id) {
+            user = action.payload.data.updatedCenterUser;
+            return user;
+          } else {
+            return user;
+          }
+        });
 
-          toast.success("Center User details updated !", {
-            position: "bottom-center",
-            autoClose: 3000,
-            theme: "colored",
-          });
-        }
+        state.alreadyRegisteredError = null;
+        state.error = "";
+
+        toast.success("Center User details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
+      // }
     });
 
     // builder.addCase(removeCenterUser.fulfilled, (state, action) => {

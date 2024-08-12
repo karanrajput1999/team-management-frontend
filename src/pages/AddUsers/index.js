@@ -145,25 +145,17 @@ const AddUsers = () => {
           })
         );
 
-        console.log("USER UPDATE BUG FIX ->", {
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          roleId: values.userType,
-          userId: listUser.id,
-        });
-
-        dispatch(
-          updateUser({
-            values: {
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              roleId: values.userType,
-              userId: listUser.id,
-            },
-          })
-        );
+        // dispatch(
+        //   updateUser({
+        //     values: {
+        //       name: values.name,
+        //       email: values.email,
+        //       password: values.password,
+        //       roleId: values.userType,
+        //       userId: listUser.id,
+        //     },
+        //   })
+        // );
       } else {
         dispatch(
           createCenterUser({
@@ -173,17 +165,16 @@ const AddUsers = () => {
           })
         );
 
-        dispatch(
-          createUser({
-            name: values.name,
-            email: values.email,
-            password: values.password,
-            roleId: values.userType,
-          })
-        );
+        // dispatch(
+        //   createUser({
+        //     name: values.name,
+        //     email: values.email,
+        //     password: values.password,
+        //     roleId: values.userType,
+        //   })
+        // );
       }
 
-      setFieldValue("centerName", "");
       resetForm();
     },
   });
@@ -225,6 +216,22 @@ const AddUsers = () => {
       (role) => role.value === userData.userType
     );
     handleSelectSingleRole(selectedRole);
+  }
+
+  function handleActivateDeactivate(status, centerUserId, centerId) {
+    dispatch(
+      updateCenterUser({
+        status,
+        centerUserId,
+        centerId,
+      })
+    );
+    // dispatch(
+    //   updateUser({
+    //     userId,
+    //     status,
+    //   })
+    // );
   }
 
   document.title = "All Users";
@@ -332,10 +339,17 @@ const AddUsers = () => {
                                 }
                               </td>
                               <td className="user_status">
-                                {user?.status === 1 ? (
+                                {user?.status === 0 ? (
                                   <button
                                     type="button"
                                     className="btn btn-ghost-success waves-effect waves-light"
+                                    onClick={() =>
+                                      handleActivateDeactivate(
+                                        1,
+                                        user?.id,
+                                        user?.centerId
+                                      )
+                                    }
                                   >
                                     {" "}
                                     Activate
@@ -344,6 +358,13 @@ const AddUsers = () => {
                                   <button
                                     type="button"
                                     className="btn btn-ghost-danger waves-effect waves-light"
+                                    onClick={() =>
+                                      handleActivateDeactivate(
+                                        0,
+                                        user?.id,
+                                        user?.centerId
+                                      )
+                                    }
                                   >
                                     {" "}
                                     Deactivate
@@ -365,7 +386,7 @@ const AddUsers = () => {
                                       Edit
                                     </button>
                                   </div>
-                                  <div className="remove">
+                                  {/* <div className="remove">
                                     <button
                                       className="btn btn-sm btn-danger remove-item-btn"
                                       data-bs-toggle="modal"
@@ -377,7 +398,7 @@ const AddUsers = () => {
                                     >
                                       Remove
                                     </button>
-                                  </div>
+                                  </div> */}
                                 </div>
                               </td>
                             </tr>

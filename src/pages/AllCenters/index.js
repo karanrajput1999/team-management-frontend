@@ -107,7 +107,7 @@ const AllCenters = () => {
       userType: Yup.string(),
       password: Yup.string().required("Please enter password id"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       if (isEditingCenter) {
         dispatch(updateCenter({ values, centerId: listCenterId }));
 
@@ -134,7 +134,8 @@ const AllCenters = () => {
         //   })
         // );
       }
-
+      resetForm();
+      setSelectedSingleRoleType(null);
       // isEditingCenter
       //   ? dispatch(updateCenter({ values, centerId: listCenterId }))
       //   : dispatch(createCenter(values));
@@ -313,7 +314,7 @@ const AllCenters = () => {
                                       Edit
                                     </button>
                                   </div>
-                                  <div className="remove">
+                                  {/* <div className="remove">
                                     <button
                                       className="btn btn-sm btn-danger remove-item-btn"
                                       data-bs-toggle="modal"
@@ -325,7 +326,7 @@ const AllCenters = () => {
                                     >
                                       Remove
                                     </button>
-                                  </div>
+                                  </div> */}
                                 </div>
                               </td>
                             </tr>
