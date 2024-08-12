@@ -47,6 +47,9 @@ const AddUsers = () => {
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   // const [listUserId, setListUserId] = useState(null);
   const [selectedSingleRoleType, setSelectedSingleRoleType] = useState(null);
+
+  const [selectedSingleCenterName, setSelectedSingleCenterName] =
+    useState(null);
   //
   const [listUser, setListUser] = useState(null);
   // fetching all the roles
@@ -62,8 +65,16 @@ const AddUsers = () => {
     return { value: role.id, label: role.name };
   });
 
+  let centerOptions = centers?.map((center) => {
+    return { value: center.centerName, label: center.centerName };
+  });
+
   function handleSelectSingleRole(userType) {
     setSelectedSingleRoleType(userType);
+  }
+
+  function handleSelectSingleCenter(centerName) {
+    setSelectedSingleCenterName(centerName);
   }
 
   // toggles register / edit user modal
@@ -175,7 +186,11 @@ const AddUsers = () => {
         // );
       }
 
-      resetForm();
+      if (!isEditingUser) {
+        resetForm();
+        setSelectedSingleRoleType(null);
+        setSelectedSingleCenterName(null);
+      }
     },
   });
 
@@ -215,7 +230,12 @@ const AddUsers = () => {
     const selectedRole = roleOptions.find(
       (role) => role.value === userData.userType
     );
+    const selectedCenter = centerOptions.find(
+      (role) => role.value === userData.centerName
+    );
+
     handleSelectSingleRole(selectedRole);
+    handleSelectSingleCenter(selectedCenter);
   }
 
   function handleActivateDeactivate(status, centerUserId, centerId) {
@@ -459,6 +479,9 @@ const AddUsers = () => {
         roleOptions={roleOptions}
         selectedSingleRoleType={selectedSingleRoleType}
         handleSelectSingleRole={handleSelectSingleRole}
+        selectedSingleCenterName={selectedSingleCenterName}
+        handleSelectSingleCenter={handleSelectSingleCenter}
+        centerOptions={centerOptions}
       />
 
       {/* Remove Modal */}

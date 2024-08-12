@@ -25,27 +25,19 @@ function AddUserFormModal({
   roleOptions,
   selectedSingleRoleType,
   handleSelectSingleRole,
+  selectedSingleCenterName,
+  handleSelectSingleCenter,
+  centerOptions,
 }) {
-  const [selectedSingleCenterName, setSelectedSingleCenterName] =
-    useState(null);
+  // useEffect(() => {
+  //   if (isEditingUser) {
+  //     const centerName = CenterOptions.find(
+  //       (option) => option.value === validation.values.centerName
+  //     );
 
-  function handleSelectSingleCenter(centerName) {
-    setSelectedSingleCenterName(centerName);
-  }
-
-  let CenterOptions = centers?.map((center) => {
-    return { value: center.centerName, label: center.centerName };
-  });
-
-  useEffect(() => {
-    if (isEditingUser) {
-      const centerName = CenterOptions.find(
-        (option) => option.value === validation.values.centerName
-      );
-
-      setSelectedSingleCenterName(centerName);
-    }
-  }, [isEditingUser]);
+  //     setSelectedSingleCenterName(centerName);
+  //   }
+  // }, [isEditingUser]);
 
   return (
     <Modal
@@ -83,7 +75,7 @@ function AddUserFormModal({
                 handleSelectSingleCenter(centerName);
                 validation.setFieldValue("centerName", centerName.value);
               }}
-              options={CenterOptions}
+              options={centerOptions}
               placeholder="Select Center Name"
             />
           </div>
@@ -178,6 +170,7 @@ function AddUserFormModal({
               placeholder="Enter Mobile Number"
               type="text"
               maxLength="10"
+              minLength="10"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.mobileNumber || ""}

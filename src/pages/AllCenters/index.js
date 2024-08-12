@@ -134,8 +134,12 @@ const AllCenters = () => {
         //   })
         // );
       }
-      resetForm();
-      setSelectedSingleRoleType(null);
+
+      if (!isEditingCenter) {
+        resetForm();
+        setSelectedSingleRoleType(null);
+      }
+
       // isEditingCenter
       //   ? dispatch(updateCenter({ values, centerId: listCenterId }))
       //   : dispatch(createCenter(values));

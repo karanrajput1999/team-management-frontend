@@ -75,6 +75,8 @@ const Forms = () => {
 
   const dispatch = useDispatch();
 
+  const loggedInUser = getLoggedinUser()?.data;
+
   const arrowNavToggle = (tab) => {
     if (arrowNavTab !== tab) {
       setarrowNavTab(tab);
@@ -144,13 +146,18 @@ const Forms = () => {
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Please enter full name"),
-      mobileNo: Yup.string().required("Please enter mobile no"),
+      mobileNo: Yup.string()
+        .length(10, "Mobile no should be of 10 digit only")
+        .required("Please enter mobile number"),
       email: Yup.string().required("Please enter email"),
       dob: Yup.string().required("Please enter date of birth"),
       panNo: Yup.string().required("Please enter pan no"),
       fatherName: Yup.string().required("Please enter father name"),
       motherName: Yup.string().required("Please enter mother name"),
-      employeeName: Yup.string().required("Please select employee"),
+      employeeName:
+        loggedInUser.roleid === 1
+          ? Yup.string().required("Please select employee")
+          : Yup.string(),
       currentAddress: Yup.string().required("Please enter current address"),
       pinCode: Yup.number().required("Please enter pin code"),
       companyName: Yup.string().required("Please enter company name"),
@@ -194,7 +201,9 @@ const Forms = () => {
       employeeType: Yup.string().required("Please select employee type"),
       loanType: Yup.string().required("Please select loan Type"),
       name: Yup.string().required("Please enter name"),
-      mobileNo: Yup.string().required("Please enter mobile number"),
+      mobileNo: Yup.string()
+        .length(10, "Mobile no should be of 10 digit only")
+        .required("Please enter mobile number"),
       currentAddress: Yup.string().required("Please enter current address"),
       pinCode: Yup.number().required("Please enter pin code"),
       panNo: Yup.string().required("Please enter pan no"),
@@ -232,7 +241,9 @@ const Forms = () => {
       employeeType: Yup.string().required("Please select employee type"),
       insuranceType: Yup.string().required("Please select insurance Type"),
       name: Yup.string().required("Please enter name"),
-      mobileNo: Yup.string().required("Please enter mobile number"),
+      mobileNo: Yup.string()
+        .length(10, "Mobile no should be of 10 digit only")
+        .required("Please enter mobile number"),
       currentAddress: Yup.string().required("Please enter current address"),
       pinCode: Yup.number().required("Please enter pin code"),
       panNo: Yup.string().required("Please enter pan no"),
@@ -267,9 +278,10 @@ const Forms = () => {
     },
     validationSchema: Yup.object({
       employeeType: Yup.string().required("Please select employee type"),
-
       name: Yup.string().required("Please enter name"),
-      mobileNo: Yup.string().required("Please enter mobile number"),
+      mobileNo: Yup.string()
+        .length(10, "Mobile no should be of 10 digit only")
+        .required("Please enter mobile number"),
       currentAddress: Yup.string().required("Please enter current address"),
       pinCode: Yup.number().required("Please enter pin code"),
       panNo: Yup.string().required("Please enter pan no"),

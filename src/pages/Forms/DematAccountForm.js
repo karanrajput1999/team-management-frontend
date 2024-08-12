@@ -125,6 +125,8 @@ function DematAccountForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
+                        maxLength="10"
+                        minLength="10"
                         onChange={dematAccountValidation.handleChange}
                         onBlur={dematAccountValidation.handleBlur}
                         value={dematAccountValidation.values.mobileNo || ""}

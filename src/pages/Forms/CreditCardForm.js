@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 function CreditCardForm({
   formHandleSubmit,
@@ -30,6 +31,10 @@ function CreditCardForm({
   selectedSingleClientType,
   handleSelectSingleClientType,
 }) {
+  const loggedInUser = getLoggedinUser()?.data;
+
+  console.log("LOGGED IN USER ->", loggedInUser);
+
   return (
     <Row>
       <Col xxl={6}>
@@ -38,30 +43,32 @@ function CreditCardForm({
             <div className="live-preview">
               <Form onSubmit={formHandleSubmit}>
                 <Row>
-                  <Col md={4}>
-                    <div className="mb-3">
-                      <Label
-                        htmlFor="employeeName"
-                        className="form-label text-muted"
-                      >
-                        Employee Name
-                      </Label>
-                      <Select
-                        id="employeeName"
-                        name="employeeName"
-                        value={selectedSingleEmployeeName}
-                        onChange={(employeeName) => {
-                          handleSelectSingleEmployeeName(employeeName);
-                          validation.setFieldValue(
-                            "employeeName",
-                            employeeName.value
-                          );
-                        }}
-                        options={employeeUserOptions}
-                        placeholder="Employee Name"
-                      />
-                    </div>
-                  </Col>
+                  {loggedInUser.roleId === 1 && (
+                    <Col md={4}>
+                      <div className="mb-3">
+                        <Label
+                          htmlFor="employeeName"
+                          className="form-label text-muted"
+                        >
+                          Employee Name
+                        </Label>
+                        <Select
+                          id="employeeName"
+                          name="employeeName"
+                          value={selectedSingleEmployeeName}
+                          onChange={(employeeName) => {
+                            handleSelectSingleEmployeeName(employeeName);
+                            validation.setFieldValue(
+                              "employeeName",
+                              employeeName.value
+                            );
+                          }}
+                          options={employeeUserOptions}
+                          placeholder="Employee Name"
+                        />
+                      </div>
+                    </Col>
+                  )}
                   <Col md={4}>
                     <div className="mb-3">
                       <Label
@@ -155,6 +162,8 @@ function CreditCardForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
+                        maxLength="10"
+                        minLength="10"
                         onChange={validation.handleChange}
                         onBlur={validation.handleBlur}
                         value={validation.values.mobileNo || ""}

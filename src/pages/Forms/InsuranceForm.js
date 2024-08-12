@@ -152,6 +152,8 @@ function InsuranceForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
+                        maxLength="10"
+                        minLength="10"
                         onChange={insuranceValidation.handleChange}
                         onBlur={insuranceValidation.handleBlur}
                         value={insuranceValidation.values.mobileNo || ""}

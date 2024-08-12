@@ -113,6 +113,7 @@ function AddCenterModal({
               placeholder="Enter Mobile Number"
               type="text"
               maxLength="10"
+              minLength="10"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.mobileNumber || ""}

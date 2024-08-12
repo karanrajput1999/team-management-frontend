@@ -152,6 +152,8 @@ function LoanForm({
                         className="form-control"
                         placeholder="Enter Mobile No"
                         type="text"
+                        maxLength="10"
+                        minLength="10"
                         onChange={loanValidation.handleChange}
                         onBlur={loanValidation.handleBlur}
                         value={loanValidation.values.mobileNo || ""}
