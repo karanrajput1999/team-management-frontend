@@ -48,7 +48,9 @@ const AllCenters = () => {
 
   const dispatch = useDispatch();
 
-  const { centers, filteredCenters } = useSelector((state) => state.Centers);
+  const { centers, filteredCenters, alreadyRegisteredError } = useSelector(
+    (state) => state.Centers
+  );
   const { roles } = useSelector((state) => state.Mapping);
 
   const roleOptions = roles.map((role) => {
@@ -66,6 +68,12 @@ const AllCenters = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
+
+  useEffect(() => {
+    if (alreadyRegisteredError) {
+      setmodal_list(!modal_list);
+    }
+  }, [alreadyRegisteredError]);
 
   useEffect(() => {
     dispatch(getCenters());
@@ -103,24 +111,28 @@ const AllCenters = () => {
       if (isEditingCenter) {
         dispatch(updateCenter({ values, centerId: listCenterId }));
 
-        dispatch(
-          updateUser({
-            name: values.centerName,
-            email: values.emailId,
-            password: values.password,
-            roleId: values.userType,
-          })
-        );
+        // dispatch(
+        //   updateUser({
+        //     values: {
+        //       name: values.centerName,
+        //       email: values.emailId,
+        //       password: values.password,
+        //       roleId: values.userType,
+        //     },
+        //   })
+        // );
       } else {
         dispatch(createCenter(values));
-        dispatch(
-          createUser({
-            name: values.centerName,
-            email: values.emailId,
-            password: values.password,
-            roleId: values.userType,
-          })
-        );
+        console.log("CREATE CENTER CONDITION CALLED");
+
+        // dispatch(
+        //   createUser({
+        //     name: values.centerName,
+        //     email: values.emailId,
+        //     password: values.password,
+        //     roleId: values.userType,
+        //   })
+        // );
       }
 
       // isEditingCenter
@@ -160,6 +172,23 @@ const AllCenters = () => {
     handleSelectSingleRole(
       roleOptions.find((role) => role.value === centerData.userType)
     );
+  }
+
+  function handleActivateDeactivate(status, centerId) {
+    console.log("STATUS ->", status, "CENTER ID ->", centerId);
+
+    dispatch(
+      updateCenter({
+        status,
+        centerId,
+      })
+    );
+    // dispatch(
+    //   updateUser({
+    //     userId,
+    //     status,
+    //   })
+    // );
   }
 
   document.title = "All Centers";
@@ -245,10 +274,13 @@ const AllCenters = () => {
                               <td className="password">{center?.password}</td>
                               <td className="branchId">{center?.branchId}</td>
                               <td className="status">
-                                {center?.status === 1 ? (
+                                {center?.status === 0 ? (
                                   <button
                                     type="button"
                                     className="btn btn-ghost-success waves-effect waves-light"
+                                    onClick={() =>
+                                      handleActivateDeactivate(1, center?.id)
+                                    }
                                   >
                                     {" "}
                                     Activate
@@ -257,6 +289,9 @@ const AllCenters = () => {
                                   <button
                                     type="button"
                                     className="btn btn-ghost-danger waves-effect waves-light"
+                                    onClick={() =>
+                                      handleActivateDeactivate(0, center?.id)
+                                    }
                                   >
                                     {" "}
                                     Deactivate
@@ -332,6 +367,7 @@ const AllCenters = () => {
         roleOptions={roleOptions}
         handleSelectSingleRole={handleSelectSingleRole}
         selectedSingleRoleType={selectedSingleRoleType}
+        alreadyRegisteredError={alreadyRegisteredError}
       />
 
       <CenterRemoveModal

@@ -31,7 +31,6 @@ export const createUser = createAsyncThunk(
 export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
   try {
     const response = await updateUserApi(data);
-    console.log("response after udpating user ->", response);
     return response;
   } catch (error) {
     console.log("error inside remove user thunk", error);

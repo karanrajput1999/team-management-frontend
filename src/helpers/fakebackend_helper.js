@@ -45,10 +45,13 @@ export const removeUser = (userId) => {
   );
 };
 
-export const updateUser = (data) => {
-  console.log("USER BUG FIX BACKEND HELPER ->", data);
+export const updateUser = ({ userId, values }) => {
+  console.log("USER ID ->", userId, "VALUES ->", values);
 
-  return api.update(`${process.env.REACT_APP_SERVER_URL}/user/edit`, data);
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/edit`,
+    values
+  );
 };
 // *****************************************************************
 // *************************** CAMPAIGNS ***************************
@@ -513,6 +516,8 @@ export const createCenter = (data) => {
 };
 
 export const updateCenter = (centerId, data, status) => {
+  console.log("UPDATE CENTER STATUS ->", centerId, status);
+
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/edit`,
     { ...data, status }

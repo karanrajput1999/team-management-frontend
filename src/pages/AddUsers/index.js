@@ -155,11 +155,13 @@ const AddUsers = () => {
 
         dispatch(
           updateUser({
-            name: values.name,
-            email: values.email,
-            password: values.password,
-            roleId: values.userType,
-            userId: listUser.id,
+            values: {
+              name: values.name,
+              email: values.email,
+              password: values.password,
+              roleId: values.userType,
+              userId: listUser.id,
+            },
           })
         );
       } else {

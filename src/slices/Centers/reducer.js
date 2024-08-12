@@ -60,36 +60,36 @@ const centersSlice = createSlice({
       } else {
         const updatedCenter = action.payload.data.updatedCenter;
 
-        if (updatedCenter.status === 0) {
-          state.centers = state.centers.filter(
-            (center) => center.id !== updatedCenter.id
-          );
-          state.error = "";
-          toast.error("Center has been removed !", {
-            position: "bottom-center",
-            autoClose: 3000,
-            theme: "colored",
-          });
-        } else {
-          state.centers = state.centers.map((center) => {
-            if (center.id == updatedCenter.id) {
-              center = action.payload.data.updatedCenter;
-              return center;
-            } else {
-              return center;
-            }
-          });
+        // if (updatedCenter.status === 0) {
+        //   state.centers = state.centers.filter(
+        //     (center) => center.id !== updatedCenter.id
+        //   );
+        //   state.error = "";
+        //   toast.error("Center has been removed !", {
+        //     position: "bottom-center",
+        //     autoClose: 3000,
+        //     theme: "colored",
+        //   });
+        // } else {
+        state.centers = state.centers.map((center) => {
+          if (center.id == updatedCenter.id) {
+            center = action.payload.data.updatedCenter;
+            return center;
+          } else {
+            return center;
+          }
+        });
 
-          state.alreadyRegisteredError = null;
-          state.error = "";
+        state.alreadyRegisteredError = null;
+        state.error = "";
 
-          toast.success("Centers details updated !", {
-            position: "bottom-center",
-            autoClose: 3000,
-            theme: "colored",
-          });
-        }
+        toast.success("Centers details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
+      // }
     });
 
     // builder.addCase(removeCenter.fulfilled, (state, action) => {

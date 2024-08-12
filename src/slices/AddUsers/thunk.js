@@ -39,7 +39,7 @@ export const createCenterUser = createAsyncThunk(
 
 export const updateCenterUser = createAsyncThunk(
   "addUsers/updateCenterUser",
-  async (data) => {
+  async () => {
     try {
       console.log("WHILE DELETING THE USER ->", data);
       const response = await updateCenterUserApi(data);
