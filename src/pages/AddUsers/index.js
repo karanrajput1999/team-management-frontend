@@ -55,8 +55,10 @@ const AddUsers = () => {
   // fetching all the roles
   const [roles, setRoles] = useState([]);
 
-  const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
-  const { centerUsers } = useSelector((state) => state.AddUsers);
+  // const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+  const { centerUsers, alreadyRegisteredError } = useSelector(
+    (state) => state.AddUsers
+  );
   const { centers } = useSelector((state) => state.Centers);
 
   const dispatch = useDispatch();
