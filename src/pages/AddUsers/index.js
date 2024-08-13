@@ -33,6 +33,7 @@ import {
   removeCenterUser,
   updateCenterUser,
 } from "../../slices/AddUsers/thunk";
+import { clearAlreadyRegisteredError } from "../../slices/AddUsers/reducer";
 import { useNavigate } from "react-router-dom";
 import { getCenters } from "../../slices/Centers/thunk";
 import { RowExpanding } from "@tanstack/react-table";
@@ -83,6 +84,7 @@ const AddUsers = () => {
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingUser(false);
+    dispatch(clearAlreadyRegisteredError());
   }
 
   // toggles delete user confirmation modal
@@ -143,7 +145,7 @@ const AddUsers = () => {
       panNo: Yup.string().required("Please enter pan card"),
       password: Yup.string().required("Please enter Password"),
     }),
-    onSubmit: (values, { resetForm, setFieldValue }) => {
+    onSubmit: (values, { resetForm }) => {
       const selectedCenter = centers?.find(
         (center) => center.centerName == values.centerName
       );
@@ -193,6 +195,8 @@ const AddUsers = () => {
         setSelectedSingleRoleType(null);
         setSelectedSingleCenterName(null);
       }
+
+      setmodal_list(false);
     },
   });
 
@@ -202,7 +206,9 @@ const AddUsers = () => {
 
     validation.handleSubmit();
 
-    setmodal_list(false);
+    if (!validation.errors) {
+      setmodal_list(false);
+    }
     return false;
   }
 

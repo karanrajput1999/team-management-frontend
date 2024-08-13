@@ -27,8 +27,10 @@ import {
   removeUser,
   updateUser,
 } from "../../slices/Users/thunk";
-
-import { searchCenters } from "../../slices/Centers/reducer";
+import {
+  clearAlreadyRegisteredError,
+  searchCenters,
+} from "../../slices/Centers/reducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -63,6 +65,7 @@ const AllCenters = () => {
 
   function tog_list() {
     setmodal_list(!modal_list);
+    dispatch(clearAlreadyRegisteredError());
   }
 
   function tog_delete() {
@@ -123,7 +126,6 @@ const AllCenters = () => {
         // );
       } else {
         dispatch(createCenter(values));
-        console.log("CREATE CENTER CONDITION CALLED");
 
         // dispatch(
         //   createUser({
@@ -143,6 +145,8 @@ const AllCenters = () => {
       // isEditingCenter
       //   ? dispatch(updateCenter({ values, centerId: listCenterId }))
       //   : dispatch(createCenter(values));
+
+      setmodal_list(false);
     },
   });
 
@@ -151,7 +155,9 @@ const AllCenters = () => {
 
     validation.handleSubmit();
 
-    setmodal_list(false);
+    if (!validation.errors) {
+      setmodal_list(false);
+    }
     return false;
   }
 

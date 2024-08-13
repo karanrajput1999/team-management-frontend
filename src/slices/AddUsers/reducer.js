@@ -18,7 +18,11 @@ export const initialState = {
 const usersSlice = createSlice({
   name: "addUsers",
   initialState,
-  reducers: {},
+  reducers: {
+    clearAlreadyRegisteredError: (state) => {
+      state.alreadyRegisteredError = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getCenterUsers.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
@@ -101,5 +105,6 @@ const usersSlice = createSlice({
     // });
   },
 });
+export const { clearAlreadyRegisteredError } = usersSlice.actions;
 
 export default usersSlice.reducer;

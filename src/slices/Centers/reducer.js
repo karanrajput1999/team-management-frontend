@@ -26,6 +26,9 @@ const centersSlice = createSlice({
         });
       }
     },
+    clearAlreadyRegisteredError: (state) => {
+      state.alreadyRegisteredError = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCenters.fulfilled, (state, action) => {
@@ -107,5 +110,6 @@ const centersSlice = createSlice({
   },
 });
 
-export const { searchCenters } = centersSlice.actions;
+export const { searchCenters, clearAlreadyRegisteredError } =
+  centersSlice.actions;
 export default centersSlice.reducer;
