@@ -33,6 +33,7 @@ import UploadRawData from "../pages/UploadRawData";
 import DataCorrection from "../pages/DataCorrection";
 import OBDData from "../pages/OBDData";
 import DownloadData from "../pages/DownloadData";
+import DailyReportUpload from "../pages/DailyReportUpload";
 
 const authProtectedRoutes = [
   // { path: "/users", component: <Users /> },
@@ -56,6 +57,7 @@ const authProtectedRoutes = [
   { path: "/data-correction", component: <DataCorrection /> },
   { path: "/obd-data", component: <OBDData /> },
   { path: "/download-data", component: <DownloadData /> },
+  { path: "/daily-report-upload", component: <DailyReportUpload /> },
   // { path: "/calendar", component: <Calendar /> },
 
   //User Profile

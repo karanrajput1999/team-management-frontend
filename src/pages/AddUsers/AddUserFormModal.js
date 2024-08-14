@@ -159,6 +159,33 @@ function AddUserFormModal({
             ) : null}
           </div>
           <div className="mb-2">
+            <Label htmlFor="agentId" className="form-label">
+              Agent Id
+            </Label>
+
+            <Input
+              id="agentId"
+              name="agentId"
+              className="form-control"
+              placeholder="Enter Agent Id"
+              type="text"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.agentId || ""}
+              invalid={
+                validation.touched.agentId && validation.errors.agentId
+                  ? true
+                  : false
+              }
+            />
+
+            {validation.touched.agentId && validation.errors.agentId ? (
+              <FormFeedback type="invalid">
+                {validation.errors.agentId}
+              </FormFeedback>
+            ) : null}
+          </div>
+          <div className="mb-2">
             <Label htmlFor="mobileNumber" className="form-label">
               Mobile Number
             </Label>

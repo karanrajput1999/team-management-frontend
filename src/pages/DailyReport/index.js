@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -13,9 +13,21 @@ import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { getCenters } from "../../slices/Centers/thunk";
 import Select from "react-select";
+import { useDispatch } from "react-redux";
+import { getDailyReport } from "../../slices/DailyReport/thunk";
+import { useSelector } from "react-redux";
 
 const DailyReport = () => {
   const [selectedSingleEmployee, setSelectedSingleEmployee] = useState(null);
+  const { data, userData } = useSelector((state) => state.DailyReport);
+
+  const dispatch = useDispatch();
+
+  console.log("USER DATA IN DAILY REPORT ->", userData);
+
+  useEffect(() => {
+    dispatch(getDailyReport());
+  }, [dispatch]);
 
   function handleSelectSingleEmployee(employee) {
     setSelectedSingleEmployee(employee);
@@ -129,23 +141,33 @@ const DailyReport = () => {
                             <th data-sort="interested_client">
                               Interested Client
                             </th>
-                            <th data-sort="pending">Pending</th>
+                            {/* <th data-sort="pending">Pending</th> */}
                             <th data-sort="vkyc">VKYC</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          <tr>
-                            <td className="sno">1</td>
-                            <td className="name">Someone</td>
-                            <td className="doj">12/07/2024</td>
-                            <td className="vintage">0</td>
-                            <td className="talktime">0</td>
-                            <td className="attempts">0</td>
-                            <td className="unique_attempts">0</td>
-                            <td className="interested_count">0</td>
-                            <td className="pending">0</td>
-                            <td className="vkyc">0</td>
-                          </tr>
+                          {data?.length > 0 &&
+                            data?.map((report, idx) => (
+                              <tr key={idx}>
+                                <td className="sno">{idx + 1}</td>
+                                <td className="name">{report.agentName}</td>
+                                {/* <td className="doj">12/07/2024</td> */}
+                                <td className="doj">
+                                  {new Date(
+                                    userData.createdAt
+                                  ).toLocaleDateString("en-GB")}
+                                </td>
+                                <td className="vintage">0</td>
+                                <td className="talktime">0</td>
+                                <td className="attempts">{report.attempts}</td>
+                                <td className="unique_attempts">
+                                  {report.uniqueAttempts}
+                                </td>
+                                <td className="interested_count">0</td>
+                                {/* <td className="pending">0</td> */}
+                                <td className="vkyc">0</td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>

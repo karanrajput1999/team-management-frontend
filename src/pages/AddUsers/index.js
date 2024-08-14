@@ -121,6 +121,7 @@ const AddUsers = () => {
   const validation = useFormik({
     initialValues: {
       name: "",
+      agentId: "",
       email: "",
       password: "",
       centerName: "",
@@ -135,6 +136,7 @@ const AddUsers = () => {
       centerName: Yup.string().required("Please center name"),
       userType: Yup.string().required("Please select user role"),
       name: Yup.string().required("Please enter Name"),
+      agentId: Yup.string().required("Please end agent Id"),
       mobileNumber: Yup.string()
         .length(10, "Mobile No length should be of 10 digit only")
         .required("Please enter mobile number"),
