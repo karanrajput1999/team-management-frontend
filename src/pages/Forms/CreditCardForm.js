@@ -33,8 +33,6 @@ function CreditCardForm({
 }) {
   const loggedInUser = getLoggedinUser()?.data;
 
-  console.log("LOGGED IN USER ->", loggedInUser);
-
   return (
     <Row>
       <Col xxl={6}>

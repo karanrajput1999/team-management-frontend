@@ -7,6 +7,8 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
+  Row,
+  Col,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
@@ -63,41 +65,64 @@ function AddUserFormModal({
             </Alert>
           )}
 
-          <div className="mb-2">
-            <Label htmlFor="centerName" className="form-label">
-              Center Name
-            </Label>
-            <Select
-              id="centerName"
-              name="centerName"
-              value={selectedSingleCenterName}
-              onChange={(centerName) => {
-                handleSelectSingleCenter(centerName);
-                validation.setFieldValue("centerName", centerName.value);
-              }}
-              options={centerOptions}
-              placeholder="Select Center Name"
-            />
-          </div>
+          <Row>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="centerName" className="form-label">
+                  Center Name
+                </Label>
+                <Select
+                  id="centerName"
+                  name="centerName"
+                  value={selectedSingleCenterName}
+                  onChange={(centerName) => {
+                    handleSelectSingleCenter(centerName);
+                    validation.setFieldValue("centerName", centerName.value);
+                  }}
+                  options={centerOptions}
+                  placeholder="Select Center Name"
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      borderColor: state.isFocused ? "#a8d9f3" : "#ced4da",
+                      "&:hover": {
+                        borderColor: "#ced4da",
+                      },
+                    }),
+                  }}
+                />
+              </div>
+            </Col>
 
-          <div className="mb-2">
-            <Label htmlFor="userType" className="form-label">
-              User Type
-            </Label>
-            <Select
-              id="userType"
-              name="userType"
-              value={selectedSingleRoleType}
-              onChange={(userType) => {
-                handleSelectSingleRole(userType);
-                validation.setFieldValue("userType", userType.value);
-              }}
-              options={roleOptions}
-              placeholder="Select User Type"
-            />
-          </div>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="userType" className="form-label">
+                  User Type
+                </Label>
+                <Select
+                  id="userType"
+                  name="userType"
+                  value={selectedSingleRoleType}
+                  onChange={(userType) => {
+                    handleSelectSingleRole(userType);
+                    validation.setFieldValue("userType", userType.value);
+                  }}
+                  options={roleOptions}
+                  placeholder="Select User Type"
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      borderColor: state.isFocused ? "#a8d9f3" : "#ced4da",
+                      "&:hover": {
+                        borderColor: "#ced4da",
+                      },
+                    }),
+                  }}
+                />
+              </div>
+            </Col>
 
-          {/* <div className="mb-2">
+            {/* <div className="mb-2">
             <Label htmlFor="userType" className="form-label">
               Select Role
             </Label>
@@ -133,254 +158,282 @@ function AddUserFormModal({
             ) : null}
           </div> */}
 
-          <div className="mb-2">
-            <Label htmlFor="name" className="form-label">
-              Name
-            </Label>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="name" className="form-label">
+                  Name
+                </Label>
 
-            <Input
-              id="name"
-              name="name"
-              className="form-control"
-              placeholder="Enter Name"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.name || ""}
-              invalid={
-                validation.touched.name && validation.errors.name ? true : false
-              }
-            />
+                <Input
+                  id="name"
+                  name="name"
+                  className="form-control"
+                  placeholder="Enter Name"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.name || ""}
+                  invalid={
+                    validation.touched.name && validation.errors.name
+                      ? true
+                      : false
+                  }
+                />
 
-            {validation.touched.name && validation.errors.name ? (
-              <FormFeedback type="invalid">
-                {validation.errors.name}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="agentId" className="form-label">
-              Agent Id
-            </Label>
+                {validation.touched.name && validation.errors.name ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.name}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            <Input
-              id="agentId"
-              name="agentId"
-              className="form-control"
-              placeholder="Enter Agent Id"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.agentId || ""}
-              invalid={
-                validation.touched.agentId && validation.errors.agentId
-                  ? true
-                  : false
-              }
-            />
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="agentId" className="form-label">
+                  Agent Id
+                </Label>
 
-            {validation.touched.agentId && validation.errors.agentId ? (
-              <FormFeedback type="invalid">
-                {validation.errors.agentId}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="mobileNumber" className="form-label">
-              Mobile Number
-            </Label>
+                <Input
+                  id="agentId"
+                  name="agentId"
+                  className="form-control"
+                  placeholder="Enter Agent Id"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.agentId || ""}
+                  invalid={
+                    validation.touched.agentId && validation.errors.agentId
+                      ? true
+                      : false
+                  }
+                />
 
-            <Input
-              id="mobileNumber"
-              name="mobileNumber"
-              className="form-control"
-              placeholder="Enter Mobile Number"
-              type="text"
-              maxLength="10"
-              minLength="10"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.mobileNumber || ""}
-              invalid={
-                validation.touched.mobileNumber &&
-                validation.errors.mobileNumber
-                  ? true
-                  : false
-              }
-            />
+                {validation.touched.agentId && validation.errors.agentId ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.agentId}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            {validation.touched.mobileNumber &&
-            validation.errors.mobileNumber ? (
-              <FormFeedback type="invalid">
-                {validation.errors.mobileNumber}
-              </FormFeedback>
-            ) : null}
-          </div>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="mobileNumber" className="form-label">
+                  Mobile Number
+                </Label>
 
-          <div className="mb-2">
-            <Label htmlFor="email" className="form-label">
-              Email
-            </Label>
+                <Input
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  className="form-control"
+                  placeholder="Enter Mobile Number"
+                  type="text"
+                  maxLength="10"
+                  minLength="10"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.mobileNumber || ""}
+                  invalid={
+                    validation.touched.mobileNumber &&
+                    validation.errors.mobileNumber
+                      ? true
+                      : false
+                  }
+                />
 
-            <Input
-              id="email"
-              name="email"
-              className="form-control"
-              placeholder="Enter Email"
-              type="email"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.email || ""}
-              invalid={
-                validation.touched.email && validation.errors.email
-                  ? true
-                  : false
-              }
-            />
+                {validation.touched.mobileNumber &&
+                validation.errors.mobileNumber ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.mobileNumber}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            {validation.touched.email && validation.errors.email ? (
-              <FormFeedback type="invalid">
-                {validation.errors.email}
-              </FormFeedback>
-            ) : null}
-          </div>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="email" className="form-label">
+                  Email
+                </Label>
 
-          <div className="mb-2">
-            <Label htmlFor="location" className="form-label">
-              Location
-            </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Enter Email"
+                  type="email"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.email || ""}
+                  invalid={
+                    validation.touched.email && validation.errors.email
+                      ? true
+                      : false
+                  }
+                />
 
-            <Input
-              id="location"
-              name="location"
-              className="form-control"
-              placeholder="Enter Location"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.location || ""}
-              invalid={
-                validation.touched.location && validation.errors.location
-                  ? true
-                  : false
-              }
-            />
+                {validation.touched.email && validation.errors.email ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.email}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            {validation.touched.location && validation.errors.location ? (
-              <FormFeedback type="invalid">
-                {validation.errors.location}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="age" className="form-label">
-              Age
-            </Label>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="location" className="form-label">
+                  Location
+                </Label>
 
-            <Input
-              id="age"
-              name="age"
-              className="form-control"
-              placeholder="Enter age"
-              type="number"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.age || ""}
-              invalid={
-                validation.touched.age && validation.errors.age ? true : false
-              }
-            />
+                <Input
+                  id="location"
+                  name="location"
+                  className="form-control"
+                  placeholder="Enter Location"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.location || ""}
+                  invalid={
+                    validation.touched.location && validation.errors.location
+                      ? true
+                      : false
+                  }
+                />
 
-            {validation.touched.age && validation.errors.age ? (
-              <FormFeedback type="invalid">
-                {validation.errors.age}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="aadharNumber" className="form-label">
-              Aadhar No
-            </Label>
+                {validation.touched.location && validation.errors.location ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.location}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            <Input
-              id="aadharNumber"
-              name="aadharNumber"
-              className="form-control"
-              placeholder="Enter aadhar no"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.aadharNumber || ""}
-              invalid={
-                validation.touched.aadharNumber &&
-                validation.errors.aadharNumber
-                  ? true
-                  : false
-              }
-            />
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="age" className="form-label">
+                  Age
+                </Label>
 
-            {validation.touched.aadharNumber &&
-            validation.errors.aadharNumber ? (
-              <FormFeedback type="invalid">
-                {validation.errors.aadharNumber}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="panNo" className="form-label">
-              Pan No
-            </Label>
+                <Input
+                  id="age"
+                  name="age"
+                  className="form-control"
+                  placeholder="Enter age"
+                  type="number"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.age || ""}
+                  invalid={
+                    validation.touched.age && validation.errors.age
+                      ? true
+                      : false
+                  }
+                />
 
-            <Input
-              id="panNo"
-              name="panNo"
-              className="form-control"
-              placeholder="Enter pan no"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.panNo || ""}
-              invalid={
-                validation.touched.panNo && validation.errors.panNo
-                  ? true
-                  : false
-              }
-            />
+                {validation.touched.age && validation.errors.age ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.age}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            {validation.touched.panNo && validation.errors.panNo ? (
-              <FormFeedback type="invalid">
-                {validation.errors.panNo}
-              </FormFeedback>
-            ) : null}
-          </div>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="aadharNumber" className="form-label">
+                  Aadhar No
+                </Label>
 
-          <div className="mb-2">
-            <Label htmlFor="password" className="form-label">
-              Password
-            </Label>
+                <Input
+                  id="aadharNumber"
+                  name="aadharNumber"
+                  className="form-control"
+                  placeholder="Enter aadhar no"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.aadharNumber || ""}
+                  invalid={
+                    validation.touched.aadharNumber &&
+                    validation.errors.aadharNumber
+                      ? true
+                      : false
+                  }
+                />
 
-            <Input
-              id="password"
-              name="password"
-              className="form-control"
-              placeholder="Enter Password"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.password || ""}
-              invalid={
-                validation.touched.password && validation.errors.password
-                  ? true
-                  : false
-              }
-            />
+                {validation.touched.aadharNumber &&
+                validation.errors.aadharNumber ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.aadharNumber}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
 
-            {validation.touched.password && validation.errors.password ? (
-              <FormFeedback type="invalid">
-                {validation.errors.password}
-              </FormFeedback>
-            ) : null}
-          </div>
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="panNo" className="form-label">
+                  Pan No
+                </Label>
+
+                <Input
+                  id="panNo"
+                  name="panNo"
+                  className="form-control"
+                  placeholder="Enter pan no"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.panNo || ""}
+                  invalid={
+                    validation.touched.panNo && validation.errors.panNo
+                      ? true
+                      : false
+                  }
+                />
+
+                {validation.touched.panNo && validation.errors.panNo ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.panNo}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
+
+            <Col md={6}>
+              <div className="mb-2">
+                <Label htmlFor="password" className="form-label">
+                  Password
+                </Label>
+
+                <Input
+                  id="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Enter Password"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.password || ""}
+                  invalid={
+                    validation.touched.password && validation.errors.password
+                      ? true
+                      : false
+                  }
+                />
+
+                {validation.touched.password && validation.errors.password ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.password}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
+          </Row>
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">

@@ -67,6 +67,20 @@ const DailyReport = () => {
     },
   ];
 
+  function handleCalculateVintage(data) {
+    const createdAtDate = new Date(data);
+
+    const currentDate = new Date();
+
+    const differenceInTime = currentDate - createdAtDate;
+
+    const differenceInDays = Math.floor(
+      differenceInTime / (1000 * 60 * 60 * 24)
+    );
+
+    return differenceInDays;
+  }
+
   document.title = "Daily Report";
   return (
     <React.Fragment>
@@ -154,18 +168,30 @@ const DailyReport = () => {
                                 {/* <td className="doj">12/07/2024</td> */}
                                 <td className="doj">
                                   {new Date(
-                                    userData.createdAt
+                                    report.userData.createdAt
                                   ).toLocaleDateString("en-GB")}
                                 </td>
-                                <td className="vintage">0</td>
-                                <td className="talktime">0</td>
+                                <td className="vintage">
+                                  {console.log(
+                                    "VINTAGE TIME ->",
+                                    handleCalculateVintage(
+                                      report.userData.createdAt
+                                    )
+                                  )}
+                                  {handleCalculateVintage(
+                                    report.userData.createdAt
+                                  )}
+                                </td>
+                                <td className="talktime">
+                                  {report.totalTalkTime}
+                                </td>
                                 <td className="attempts">{report.attempts}</td>
                                 <td className="unique_attempts">
                                   {report.uniqueAttempts}
                                 </td>
                                 <td className="interested_count">0</td>
                                 {/* <td className="pending">0</td> */}
-                                <td className="vkyc">0</td>
+                                <td className="vkyc">{report.vkycDoneCount}</td>
                               </tr>
                             ))}
                         </tbody>

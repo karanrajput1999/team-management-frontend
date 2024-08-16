@@ -148,6 +148,8 @@ const AddUsers = () => {
       password: Yup.string().required("Please enter Password"),
     }),
     onSubmit: (values, { resetForm }) => {
+      console.log("NEW VALUES FOR ADD USERS ->", values);
+
       const selectedCenter = centers?.find(
         (center) => center.centerName == values.centerName
       );
@@ -228,6 +230,7 @@ const AddUsers = () => {
       name: userData.name,
       email: userData.email,
       password: userData.password,
+      agentId: userData.agentId,
       userType: userData.userType,
       mobileNumber: userData.mobileNumber,
       location: userData.location,
