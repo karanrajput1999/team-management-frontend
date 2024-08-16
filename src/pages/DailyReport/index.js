@@ -189,7 +189,9 @@ const DailyReport = () => {
                                 <td className="unique_attempts">
                                   {report.uniqueAttempts}
                                 </td>
-                                <td className="interested_count">0</td>
+                                <td className="interested_count">
+                                  {report.interestedClients}
+                                </td>
                                 {/* <td className="pending">0</td> */}
                                 <td className="vkyc">{report.vkycDoneCount}</td>
                               </tr>
