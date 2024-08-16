@@ -25,7 +25,6 @@ import ApplicationReport from "../pages/ApplicationReport";
 import PendingForms from "../pages/PendingForms";
 import ReportUpload from "../pages/ReportUpload";
 import AssignData from "../pages/AssignData";
-import TalktimeUpload from "../pages/TalktimeUpload";
 import CallHistory from "../pages/CallHistory";
 import AppData from "../pages/AppData";
 import FormPermissions from "../pages/FormPermissions";
@@ -49,7 +48,6 @@ const authProtectedRoutes = [
   { path: "/forms", component: <Forms /> },
   { path: "/report-upload", component: <ReportUpload /> },
   { path: "/assign-data", component: <AssignData /> },
-  { path: "/talktime-upload", component: <TalktimeUpload /> },
   { path: "/call-history", component: <CallHistory /> },
   { path: "/app-data", component: <AppData /> },
   { path: "/form-permissions", component: <FormPermissions /> },
