@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -20,7 +20,11 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { useDispatch } from "react-redux";
-import { uploadDailyReport } from "../../slices/DailyReportUpload/thunk";
+import {
+  getDailyReportData,
+  uploadDailyReport,
+} from "../../slices/DailyReportUpload/thunk";
+import { useSelector } from "react-redux";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -28,6 +32,12 @@ const DailyReportUpload = () => {
   const [file, setFile] = useState([]);
 
   const dispatch = useDispatch();
+
+  const { groupedDataByDate } = useSelector((state) => state.DailyReportUpload);
+
+  useEffect(() => {
+    dispatch(getDailyReportData());
+  }, [dispatch]);
 
   const dummyData = [
     {
@@ -114,23 +124,21 @@ const DailyReportUpload = () => {
                         <table className="table align-middle table-nowrap">
                           <thead className="table-light">
                             <tr>
-                              <th className="sort" data-sort="id">
-                                Id
-                              </th>
-                              <th className="sort" data-sort="given_date">
-                                Date
-                              </th>
-                              <th className="sort" data-sort="customer_name">
-                                Data
-                              </th>
+                              <th data-sort="s_no">S.No.</th>
+                              <th data-sort="given_date">Date</th>
+                              <th data-sort="customer_name">Data</th>
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
-                            {dummyData?.map((data) => (
-                              <tr key={data.id}>
-                                <td className="id">{data.id}</td>
-                                <td className="given_date">{data.givenDate}</td>
-                                <td className="data">{data.data}</td>
+                            {groupedDataByDate?.map((data, idx) => (
+                              <tr key={idx}>
+                                <td className="s_no">{idx + 1}</td>
+                                <td className="given_date">
+                                  {new Date(data.createdAt).toLocaleDateString(
+                                    "en-GB"
+                                  )}
+                                </td>
+                                <td className="data">{data._count}</td>
                               </tr>
                             ))}
                           </tbody>

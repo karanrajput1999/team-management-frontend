@@ -836,6 +836,9 @@ export const getBankDropdown = () => {
 // ********************** DAILY REPORT UPLOAD **********************
 // *****************************************************************
 
+export const getDailyReportData = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/daily-report-upload`);
+};
 export const dailyReportUpload = (data) => {
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/daily-report-upload`,
