@@ -857,6 +857,13 @@ export const dailyReportGet = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/daily-report`);
 };
 
+export const filterDailyReport = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/daily-report/filter`,
+    data
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

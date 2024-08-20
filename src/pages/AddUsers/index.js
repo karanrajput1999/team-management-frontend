@@ -34,9 +34,7 @@ import {
   updateCenterUser,
 } from "../../slices/AddUsers/thunk";
 import { clearAlreadyRegisteredError } from "../../slices/AddUsers/reducer";
-import { useNavigate } from "react-router-dom";
 import { getCenters } from "../../slices/Centers/thunk";
-import { RowExpanding } from "@tanstack/react-table";
 
 const AddUsers = () => {
   // register / edit user modal state whether modal is open or not

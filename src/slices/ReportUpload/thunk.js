@@ -49,6 +49,8 @@ export const filterReportUpload = createAsyncThunk(
   async (data) => {
     try {
       const response = await filterReportUploadApi(data);
+      console.log("FILTER DATA QUERY ->", data);
+
       return response;
     } catch (error) {
       console.log("error inside filter report upload thunk", error);

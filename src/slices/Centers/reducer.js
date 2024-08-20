@@ -4,6 +4,7 @@ import { getCenters, createCenter, removeCenter, updateCenter } from "./thunk";
 
 export const initialState = {
   centers: [],
+  centerUsers: [],
   filteredCenters: [], // centers that gets filtered after searching
   alreadyRegisteredError: null,
   error: "",
@@ -13,6 +14,12 @@ const centersSlice = createSlice({
   name: "centers",
   initialState,
   reducers: {
+    getUsersByCenter(state, action) {
+      state.centerUsers = state.centers?.find(
+        (center) => action.payload == center.id
+      ).centerUsers;
+    },
+
     searchCenters(state, action) {
       const inputValue = action.payload.toLowerCase();
 
@@ -110,6 +117,6 @@ const centersSlice = createSlice({
   },
 });
 
-export const { searchCenters, clearAlreadyRegisteredError } =
+export const { searchCenters, clearAlreadyRegisteredError, getUsersByCenter } =
   centersSlice.actions;
 export default centersSlice.reducer;

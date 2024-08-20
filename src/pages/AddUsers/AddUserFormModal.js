@@ -12,7 +12,6 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-import { useEffect, useState } from "react";
 
 function AddUserFormModal({
   modal_list, // modal state

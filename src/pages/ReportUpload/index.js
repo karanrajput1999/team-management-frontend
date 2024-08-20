@@ -320,7 +320,7 @@ const ReportUpload = () => {
                             placeholder="Search Name, Mob No, Pan No"
                             onChange={(e) => {
                               dispatch(
-                                filterApplicationReport({
+                                filterReportUpload({
                                   searchQuery: e.target.value,
                                 })
                               );
@@ -444,7 +444,7 @@ const ReportUpload = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {(filteredReportUploads.length !== 0
+                          {(filteredReportUploads?.length !== 0
                             ? filteredReportUploads
                             : reportUploads
                           )?.map((reportUpload, idx) => (
@@ -519,14 +519,14 @@ const ReportUpload = () => {
                                 )}
                               </td>
                               <td>
-                                {reportUpload.previousBankStatuses.length !==
+                                {reportUpload.previousBankStatuses?.length !==
                                   0 && (
                                   <div className="d-flex align-items-center gap-2">
                                     <span
                                       className={`badge ${
                                         reportUpload.previousBankStatuses[
                                           reportUpload.previousBankStatuses
-                                            .length - 1
+                                            ?.length - 1
                                         ].bankStatus === "Approved" &&
                                         "bg-success-subtle text-success"
                                       }

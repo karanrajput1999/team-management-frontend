@@ -1,71 +1,84 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
+  Form,
+  Input,
   Row,
+  ButtonGroup,
+  DropdownMenu,
+  UncontrolledDropdown,
+  DropdownToggle,
 } from "reactstrap";
+
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { getCenters } from "../../slices/Centers/thunk";
 import Select from "react-select";
 import { useDispatch } from "react-redux";
-import { getDailyReport } from "../../slices/DailyReport/thunk";
+import {
+  filterDailyReport,
+  getDailyReport,
+} from "../../slices/DailyReport/thunk";
 import { useSelector } from "react-redux";
+import { getUsersByCenter } from "../../slices/Centers/reducer";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const DailyReport = () => {
-  const [selectedSingleEmployee, setSelectedSingleEmployee] = useState(null);
-  const { data, userData } = useSelector((state) => state.DailyReport);
+  const [selectedSingleCenter, setSelectedSingleCenter] = useState(null);
+
+  const [centerUserIds, setCenterUserIds] = useState([]);
+  const { data, userData, filteredDailyReports } = useSelector(
+    (state) => state.DailyReport
+  );
+  const { centers, centerUsers } = useSelector((state) => state.Centers);
 
   const dispatch = useDispatch();
 
-  console.log("USER DATA IN DAILY REPORT ->", userData);
-
   useEffect(() => {
     dispatch(getDailyReport());
+    dispatch(getCenters());
   }, [dispatch]);
 
-  function handleSelectSingleEmployee(employee) {
-    setSelectedSingleEmployee(employee);
+  const centerOptions = centers?.map((center) => ({
+    id: center.id,
+    value: center.centerName,
+    label: center.centerName,
+  }));
+
+  function handleSelectSingleCenter(center) {
+    setSelectedSingleCenter(center);
   }
 
-  const AllEmployeeOptions = [
-    {
-      value: "Someone",
-      label: "Someone",
+  const validation = useFormik({
+    initialValues: {
+      centerId: "",
+      // dateRange: "",
     },
-    {
-      value: "Anyone",
-      label: "Anyone",
+    validationSchema: Yup.object({
+      centerId: Yup.string(),
+      // dateRange: Yup.array(),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      dispatch(filterDailyReport({ ...values, centerUserIds }));
     },
-  ];
+  });
 
-  const bankReportData = [
-    {
-      id: 1,
-      applicationId: 73838,
-      customerName: "Lokesh Kumar",
-      phone: "7691090901",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: 85,
-    },
-    {
-      id: 2,
-      applicationId: 638348,
-      customerName: "Surjit singh	",
-      phone: "8590466998",
-      panCard: "AHXPJ388D",
-      clientOf: "Credit Rupay of Qadir on 17 Dec, 22",
-      status1: "VKYC Done",
-      status2: 83,
-    },
-  ];
+  function formHandleSubmit(e) {
+    e.preventDefault();
+
+    validation.handleSubmit();
+
+    if (!validation.errors) {
+      setmodal_list(false);
+    }
+    return false;
+  }
 
   function handleCalculateVintage(data) {
     const createdAtDate = new Date(data);
@@ -79,6 +92,19 @@ const DailyReport = () => {
     );
 
     return differenceInDays;
+  }
+
+  function handleCheckCenterUser(centerUserId) {
+    const alreadyIncluded = centerUserIds.includes(centerUserId);
+
+    if (alreadyIncluded) {
+      const updatedCenterUserId = centerUserIds.filter(
+        (selectedCenterUserId) => selectedCenterUserId !== centerUserId
+      );
+      setCenterUserIds(updatedCenterUserId);
+    } else {
+      setCenterUserIds((prev) => [...prev, centerUserId]);
+    }
   }
 
   document.title = "Daily Report";
@@ -98,8 +124,12 @@ const DailyReport = () => {
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3">
                       <Col className="col-sm-auto w-100 d-flex align-items-center ">
-                        <div className="d-flex" style={{ gap: "10px" }}>
-                          <div className="d-flex">
+                        <Form
+                          className="d-flex"
+                          style={{ gap: "10px" }}
+                          onSubmit={formHandleSubmit}
+                        >
+                          {/* <div className="d-flex">
                             <Flatpickr
                               className="form-control border dash-filter-picker"
                               placeholder="Date Range"
@@ -107,34 +137,90 @@ const DailyReport = () => {
                                 mode: "range",
                                 dateFormat: "d M, Y",
                               }}
+                              onChange={(date) => {
+                                validation.setFieldValue("dateRange", date);
+                              }}
                             />
-                          </div>
+                          </div> */}
 
                           <div>
                             <Select
-                              id="status1"
-                              name="status1"
-                              value={selectedSingleEmployee}
-                              onChange={(employee) => {
-                                handleSelectSingleEmployee(employee);
-                                // validation.setFieldValue(
-                                //   "centerName",
-                                //   centerName.value
-                                // );
+                              id="center"
+                              name="center"
+                              value={selectedSingleCenter}
+                              onChange={(center) => {
+                                handleSelectSingleCenter(center);
+                                validation.setFieldValue("centerId", center.id);
+                                dispatch(getUsersByCenter(center.id));
                               }}
-                              options={AllEmployeeOptions}
-                              placeholder="Select Employee"
+                              options={centerOptions}
+                              placeholder="Select Center"
                             />
                           </div>
 
+                          <ButtonGroup>
+                            <UncontrolledDropdown>
+                              <DropdownToggle
+                                // tag="button"
+                                className="btn btn-light"
+                              >
+                                Select Users{" "}
+                                <i className="mdi mdi-chevron-down"></i>
+                              </DropdownToggle>
+                              <DropdownMenu className="dropdown-menu-sm p-2">
+                                {centerUsers?.map((userOption) => (
+                                  <div className="mb-2" key={userOption.id}>
+                                    <div className="form-check custom-checkbox">
+                                      <Input
+                                        type="checkbox"
+                                        checked={centerUserIds.includes(
+                                          userOption.id
+                                        )}
+                                        className="form-check-input"
+                                        id={userOption.name}
+                                        name={userOption.name}
+                                        onChange={() =>
+                                          handleCheckCenterUser(userOption.id)
+                                        }
+                                      />
+                                      <label
+                                        className="form-check-label"
+                                        htmlFor={userOption.name}
+                                      >
+                                        {userOption.name}
+                                      </label>
+                                    </div>
+                                  </div>
+                                ))}
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </ButtonGroup>
+
+                          {/* <div>
+                            <Select
+                              id="centerUser"
+                              name="centerUser"
+                              value={selectedSingleCenterUser}
+                              onChange={(centerUser) => {
+                                handleSelectSingleCenterUser(centerUser);
+                                validation.setFieldValue(
+                                  "centerUserId",
+                                  centerUser.id
+                                );
+                              }}
+                              options={centerUserOptions}
+                              placeholder="Select Center User"
+                            />
+                          </div> */}
+
                           <button
-                            type="button"
+                            type="submit"
                             className="btn btn-primary btn-label waves-effect waves-light"
                           >
                             <i className="ri-equalizer-fill label-icon align-middle fs-16 me-2"></i>
                             Apply Filters
                           </button>
-                        </div>
+                        </Form>
                       </Col>
                     </Row>
 
@@ -160,42 +246,39 @@ const DailyReport = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {data?.length > 0 &&
-                            data?.map((report, idx) => (
-                              <tr key={idx}>
-                                <td className="sno">{idx + 1}</td>
-                                <td className="name">{report.agentName}</td>
-                                {/* <td className="doj">12/07/2024</td> */}
-                                <td className="doj">
-                                  {new Date(
-                                    report.userData.createdAt
-                                  ).toLocaleDateString("en-GB")}
-                                </td>
-                                <td className="vintage">
-                                  {console.log(
-                                    "VINTAGE TIME ->",
-                                    handleCalculateVintage(
-                                      report.userData.createdAt
-                                    )
-                                  )}
-                                  {handleCalculateVintage(
-                                    report.userData.createdAt
-                                  )}
-                                </td>
-                                <td className="talktime">
-                                  {report.totalTalkTime}
-                                </td>
-                                <td className="attempts">{report.attempts}</td>
-                                <td className="unique_attempts">
-                                  {report.uniqueAttempts}
-                                </td>
-                                <td className="interested_count">
-                                  {report.interestedClients}
-                                </td>
-                                {/* <td className="pending">0</td> */}
-                                <td className="vkyc">{report.vkycDoneCount}</td>
-                              </tr>
-                            ))}
+                          {/* {data?.length > 0 && */}
+                          {(filteredDailyReports.length !== 0
+                            ? filteredDailyReports
+                            : data
+                          )?.map((report, idx) => (
+                            <tr key={idx}>
+                              <td className="sno">{idx + 1}</td>
+                              <td className="name">{report.agentName}</td>
+                              {/* <td className="doj">12/07/2024</td> */}
+                              <td className="doj">
+                                {new Date(
+                                  report.userData.createdAt
+                                ).toLocaleDateString("en-GB")}
+                              </td>
+                              <td className="vintage">
+                                {handleCalculateVintage(
+                                  report.userData.createdAt
+                                )}
+                              </td>
+                              <td className="talktime">
+                                {report.totalTalkTime}
+                              </td>
+                              <td className="attempts">{report.attempts}</td>
+                              <td className="unique_attempts">
+                                {report.uniqueAttempts}
+                              </td>
+                              <td className="interested_count">
+                                {report.interestedClients}
+                              </td>
+                              {/* <td className="pending">0</td> */}
+                              <td className="vkyc">{report.vkycDoneCount}</td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>

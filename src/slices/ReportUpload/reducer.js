@@ -102,6 +102,7 @@ const reportUploadSlice = createSlice({
         state.error = "";
       }
     });
+
     builder.addCase(deleteReportUpload.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
