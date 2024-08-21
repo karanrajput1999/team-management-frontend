@@ -13,7 +13,6 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
 } from "reactstrap";
-
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
@@ -28,6 +27,7 @@ import { useSelector } from "react-redux";
 import { getUsersByCenter } from "../../slices/Centers/reducer";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 const DailyReport = () => {
   const [selectedSingleCenter, setSelectedSingleCenter] = useState(null);
@@ -37,6 +37,12 @@ const DailyReport = () => {
     (state) => state.DailyReport
   );
   const { centers, centerUsers } = useSelector((state) => state.Centers);
+
+  const loggedInUser = getLoggedinUser()?.data;
+
+  const selfCenterUsers = centers.find(
+    (center) => center.emailId === loggedInUser.email
+  );
 
   const dispatch = useDispatch();
 
@@ -65,7 +71,11 @@ const DailyReport = () => {
       // dateRange: Yup.array(),
     }),
     onSubmit: (values, { resetForm }) => {
-      dispatch(filterDailyReport({ ...values, centerUserIds }));
+      loggedInUser.roleId === 1
+        ? dispatch(filterDailyReport({ ...values, centerUserIds }))
+        : dispatch(
+            filterDailyReport({ centerId: selfCenterUsers.id, centerUserIds })
+          );
     },
   });
 
@@ -143,20 +153,25 @@ const DailyReport = () => {
                             />
                           </div> */}
 
-                          <div>
-                            <Select
-                              id="center"
-                              name="center"
-                              value={selectedSingleCenter}
-                              onChange={(center) => {
-                                handleSelectSingleCenter(center);
-                                validation.setFieldValue("centerId", center.id);
-                                dispatch(getUsersByCenter(center.id));
-                              }}
-                              options={centerOptions}
-                              placeholder="Select Center"
-                            />
-                          </div>
+                          {loggedInUser?.roleId === 1 && (
+                            <div>
+                              <Select
+                                id="center"
+                                name="center"
+                                value={selectedSingleCenter}
+                                onChange={(center) => {
+                                  handleSelectSingleCenter(center);
+                                  validation.setFieldValue(
+                                    "centerId",
+                                    center.id
+                                  );
+                                  dispatch(getUsersByCenter(center.id));
+                                }}
+                                options={centerOptions}
+                                placeholder="Select Center"
+                              />
+                            </div>
+                          )}
 
                           <ButtonGroup>
                             <UncontrolledDropdown>
@@ -168,7 +183,10 @@ const DailyReport = () => {
                                 <i className="mdi mdi-chevron-down"></i>
                               </DropdownToggle>
                               <DropdownMenu className="dropdown-menu-sm p-2">
-                                {centerUsers?.map((userOption) => (
+                                {(loggedInUser?.roleId === 1
+                                  ? centerUsers
+                                  : selfCenterUsers?.centerUsers
+                                )?.map((userOption) => (
                                   <div className="mb-2" key={userOption.id}>
                                     <div className="form-check custom-checkbox">
                                       <Input
