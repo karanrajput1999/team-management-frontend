@@ -16,8 +16,8 @@ import { Link } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import AddUserFormModal from "./AddUserFormModal";
-import AddUserRemoveModal from "./AddUserRemoveModal";
+import AddEmployeeModal from "./AddEmployeeModal";
+import RemoveEmployeeModal from "./RemoveEmployeeModal";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,60 +28,45 @@ import {
 } from "../../slices/Users/thunk";
 
 import {
-  getCenterUsers,
-  createCenterUser,
-  removeCenterUser,
-  updateCenterUser,
-} from "../../slices/AddUsers/thunk";
-import { clearAlreadyRegisteredError } from "../../slices/AddUsers/reducer";
-import { getCenters } from "../../slices/Centers/thunk";
+  getEmployees,
+  createEmployee,
+  updateEmployee,
+} from "../../slices/Employees/thunk";
+import { clearAlreadyRegisteredError } from "../../slices/Employees/reducer";
+import { getTeams } from "../../slices/Teams/thunk";
 
-const AddUsers = () => {
+const Employees = () => {
   // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
   // this state triggers when editing the user
-  const [isEditingUser, setIsEditingUser] = useState(false);
+  const [isEditingEmployee, setIsEditingEmployee] = useState(false);
   // delete user confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
-  // const [listUserId, setListUserId] = useState(null);
-  const [selectedSingleRoleType, setSelectedSingleRoleType] = useState(null);
 
-  const [selectedSingleCenterName, setSelectedSingleCenterName] =
-    useState(null);
+  const [selectedSingleTeamName, setSelectedSingleTeamName] = useState(null);
   //
-  const [listUser, setListUser] = useState(null);
-  // fetching all the roles
-  const [roles, setRoles] = useState([]);
+  const [listEmployee, setListEmployee] = useState(null);
 
   // const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
-  const { centerUsers, alreadyRegisteredError } = useSelector(
-    (state) => state.AddUsers
+  const { employees, alreadyRegisteredError } = useSelector(
+    (state) => state.Employees
   );
-  const { centers } = useSelector((state) => state.Centers);
+  const { teams } = useSelector((state) => state.Teams);
 
   const dispatch = useDispatch();
 
-  const roleOptions = roles.map((role) => {
-    return { value: role.id, label: role.name };
+  let teamOptions = teams?.map((team) => {
+    return { value: team.teamName, label: team.teamName };
   });
 
-  let centerOptions = centers?.map((center) => {
-    return { value: center.centerName, label: center.centerName };
-  });
-
-  function handleSelectSingleRole(userType) {
-    setSelectedSingleRoleType(userType);
-  }
-
-  function handleSelectSingleCenter(centerName) {
-    setSelectedSingleCenterName(centerName);
+  function handleSelectSingleTeam(teamName) {
+    setSelectedSingleTeamName(teamName);
   }
 
   // toggles register / edit user modal
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingUser(false);
+    setIsEditingEmployee(false);
     dispatch(clearAlreadyRegisteredError());
   }
 
@@ -91,19 +76,6 @@ const AddUsers = () => {
   }
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/roles`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setRoles(res.data);
-      })
-      .catch((error) => {
-        console.log("error while fetching roles ->", error);
-      });
-  }, []);
-
-  useEffect(() => {
     if (alreadyRegisteredError) {
       setmodal_list(!modal_list);
     }
@@ -111,98 +83,57 @@ const AddUsers = () => {
 
   useEffect(() => {
     dispatch(getUsers());
-    dispatch(getCenters());
-    dispatch(getCenterUsers());
+    dispatch(getTeams());
+    dispatch(getEmployees());
   }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
     initialValues: {
-      name: "",
-      agentId: "",
+      teamName: "",
+      employeeName: "",
       email: "",
       password: "",
-      centerName: "",
-      userType: "",
-      mobileNumber: "",
-      location: "",
-      age: "",
-      aadharNumber: "",
-      panNo: "",
     },
     validationSchema: Yup.object({
-      centerName: Yup.string().required("Please center name"),
-      userType: Yup.string().required("Please select user role"),
-      name: Yup.string().required("Please enter Name"),
-      agentId: Yup.string().required("Please end agent Id"),
-      mobileNumber: Yup.string()
-        .length(10, "Mobile No length should be of 10 digit only")
-        .required("Please enter mobile number"),
+      teamName: Yup.string().required("Please team name"),
+      employeeName: Yup.string().required("Please enter employee"),
       email: Yup.string().email().required("Please enter email"),
-      location: Yup.string().required("Please enter select location"),
-      age: Yup.number().required("Please enter age"),
-      aadharNumber: Yup.string().required("Please enter aadhar card"),
-      panNo: Yup.string().required("Please enter pan card"),
       password: Yup.string().required("Please enter Password"),
     }),
     onSubmit: (values, { resetForm }) => {
-      console.log("NEW VALUES FOR ADD USERS ->", values);
-
-      const selectedCenter = centers?.find(
-        (center) => center.centerName == values.centerName
+      const selectedTeam = teams?.find(
+        (team) => team.teamName == values.teamName
       );
 
-      if (isEditingUser) {
+      if (isEditingEmployee) {
+        console.log("EMPLOYEE UPDATE FORMIK ->");
+
         dispatch(
-          updateCenterUser({
+          updateEmployee({
             values,
-            centerUserId: listUser.id,
-            centerId: selectedCenter.id,
-            branchId: selectedCenter.branchId,
+            employeeId: listEmployee.id,
+            teamId: selectedTeam.id,
           })
         );
-
-        // dispatch(
-        //   updateUser({
-        //     values: {
-        //       name: values.name,
-        //       email: values.email,
-        //       password: values.password,
-        //       roleId: values.userType,
-        //       userId: listUser.id,
-        //     },
-        //   })
-        // );
       } else {
         dispatch(
-          createCenterUser({
+          createEmployee({
             ...values,
-            centerId: selectedCenter.id,
-            branchId: selectedCenter.branchId,
+            teamId: selectedTeam.id,
           })
         );
-
-        // dispatch(
-        //   createUser({
-        //     name: values.name,
-        //     email: values.email,
-        //     password: values.password,
-        //     roleId: values.userType,
-        //   })
-        // );
       }
 
-      if (!isEditingUser) {
+      if (!isEditingEmployee) {
         resetForm();
-        setSelectedSingleRoleType(null);
-        setSelectedSingleCenterName(null);
+        setSelectedSingleTeamName(null);
       }
 
       setmodal_list(false);
     },
   });
 
-  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();
 
@@ -214,47 +145,33 @@ const AddUsers = () => {
     return false;
   }
 
-  function handleRoleChange(e) {
-    validation.setFieldValue("roleId", e.target.value);
-  }
-
   // to update the values of register form when editing the user
-  function handleEditUser(userData) {
-    setIsEditingUser(true);
+  function handleEditEmployee(employeeData) {
+    setIsEditingEmployee(true);
     setmodal_list(!modal_list);
-    setListUser(userData);
+    setListEmployee(employeeData);
 
     validation.setValues({
-      name: userData.name,
-      email: userData.email,
-      password: userData.password,
-      agentId: userData.agentId,
-      userType: userData.userType,
-      mobileNumber: userData.mobileNumber,
-      location: userData.location,
-      age: userData.age,
-      aadharNumber: userData.aadharNumber,
-      panNo: userData.panNo,
-      centerName: userData.centerName,
+      employeeName: employeeData.employeeName,
+      email: employeeData.email,
+      password: employeeData.password,
     });
 
-    const selectedRole = roleOptions.find(
-      (role) => role.value === userData.userType
-    );
-    const selectedCenter = centerOptions.find(
-      (role) => role.value === userData.centerName
+    const selectedTeam = teamOptions.find(
+      (team) => team.value === employeeData.teamName
     );
 
-    handleSelectSingleRole(selectedRole);
-    handleSelectSingleCenter(selectedCenter);
+    handleSelectSingleTeam(selectedTeam);
   }
 
-  function handleActivateDeactivate(status, centerUserId, centerId) {
+  function handleActivateDeactivate(status, employeeId, teamId) {
+    console.log("HANDLE ACTIVATE DEACTIVATE ->", status, employeeId, teamId);
+
     dispatch(
-      updateCenterUser({
+      updateEmployee({
         status,
-        centerUserId,
-        centerId,
+        employeeId,
+        teamId,
       })
     );
     // dispatch(
@@ -265,7 +182,7 @@ const AddUsers = () => {
     // );
   }
 
-  document.title = "All Users";
+  document.title = "All Employees";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -275,13 +192,13 @@ const AddUsers = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">All Users</h4>
+                  <h4 className="card-title mb-0">All Employees</h4>
                 </CardHeader>
 
                 <CardBody>
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3 d-flex justify-content-between">
-                      <Col className="col-sm-auto">
+                      {/* <Col className="col-sm-auto">
                         <div className="search-box">
                           <input
                             type="text"
@@ -293,7 +210,7 @@ const AddUsers = () => {
                           />
                           <i className="ri-search-line search-icon"></i>
                         </div>
-                      </Col>
+                      </Col> */}
 
                       <Col className="col-sm-auto">
                         <div>
@@ -304,7 +221,7 @@ const AddUsers = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add User
+                            Add Employee
                           </Button>
                         </div>
                       </Col>
@@ -327,21 +244,18 @@ const AddUsers = () => {
                                 />
                               </div>
                             </th>
-                            <th>ID</th>
-                            <th>Name</th>
+                            <th>S.No</th>
+                            <th>Employee Name</th>
                             <th>Email</th>
                             <th>Password</th>
-                            <th>Location</th>
-                            <th>Branch ID</th>
-                            <th>Type</th>
-                            <th>User Status</th>
+                            <th>Status</th>
 
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {centerUsers?.map((user) => (
-                            <tr key={user.id}>
+                          {employees?.map((employee) => (
+                            <tr key={employee.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -354,31 +268,23 @@ const AddUsers = () => {
                               </th>
                               <td className="id">
                                 <Link to="#" className="fw-medium link-primary">
-                                  {user.id}
+                                  {employee.id}
                                 </Link>
                               </td>
-                              <td className="name">{user.name}</td>
-                              <td className="email">{user.email} </td>
-                              <td className="password">{user.password}</td>
-                              <td className="location">{user.location}</td>
-                              <td className="branch_id">{user.branchId}</td>
-                              <td className="type">
-                                {
-                                  roles?.find(
-                                    (role) => role.id === user.userType
-                                  )?.name
-                                }
-                              </td>
+                              <td className="name">{employee.employeeName}</td>
+                              <td className="email">{employee.email} </td>
+                              <td className="password">{employee.password}</td>
+
                               <td className="user_status">
-                                {user?.status === 0 ? (
+                                {employee?.status === 0 ? (
                                   <button
                                     type="button"
                                     className="btn btn-ghost-success waves-effect waves-light"
                                     onClick={() =>
                                       handleActivateDeactivate(
                                         1,
-                                        user?.id,
-                                        user?.centerId
+                                        employee?.id,
+                                        employee?.teamId
                                       )
                                     }
                                   >
@@ -392,8 +298,8 @@ const AddUsers = () => {
                                     onClick={() =>
                                       handleActivateDeactivate(
                                         0,
-                                        user?.id,
-                                        user?.centerId
+                                        employee?.id,
+                                        employee?.teamId
                                       )
                                     }
                                   >
@@ -411,7 +317,7 @@ const AddUsers = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        handleEditUser(user);
+                                        handleEditEmployee(employee);
                                       }}
                                     >
                                       Edit
@@ -477,34 +383,29 @@ const AddUsers = () => {
       </div>
 
       {/* Add Modal */}
-      <AddUserFormModal
+      <AddEmployeeModal
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
         validation={validation}
-        isEditingUser={isEditingUser}
+        isEditingEmployee={isEditingEmployee}
         alreadyRegisteredError={alreadyRegisteredError}
-        handleRoleChange={handleRoleChange}
-        roles={roles}
-        centers={centers}
-        roleOptions={roleOptions}
-        selectedSingleRoleType={selectedSingleRoleType}
-        handleSelectSingleRole={handleSelectSingleRole}
-        selectedSingleCenterName={selectedSingleCenterName}
-        handleSelectSingleCenter={handleSelectSingleCenter}
-        centerOptions={centerOptions}
+        teams={teams}
+        selectedSingleTeamName={selectedSingleTeamName}
+        handleSelectSingleTeam={handleSelectSingleTeam}
+        teamOptions={teamOptions}
       />
 
       {/* Remove Modal */}
-      <AddUserRemoveModal
+      <RemoveEmployeeModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteUser={() => {
+        handleDeleteEmployee={() => {
           dispatch(
-            updateCenterUser({
-              centerId: listUser.centerId,
-              centerUserId: listUser.id,
+            updateEmployee({
+              teamId: listEmployee.teamId,
+              employeeId: listEmployee.id,
               status: 0,
             })
           );
@@ -515,4 +416,4 @@ const AddUsers = () => {
   );
 };
 
-export default AddUsers;
+export default Employees;

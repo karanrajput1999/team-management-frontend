@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
-import { getCenters } from "../../slices/Centers/thunk";
+import { getTeams } from "../../slices/Teams/thunk";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import {
@@ -87,7 +87,7 @@ const ReportUpload = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getCenters());
+    dispatch(getTeams());
     dispatch(getApplicatinReport());
     dispatch(getReportUpload());
   }, [dispatch]);

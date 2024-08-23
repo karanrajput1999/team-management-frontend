@@ -1,9 +1,9 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function CenterRemoveModal({
-  modal_delete,
-  setmodal_delete,
-  handleDeleteCenter,
+function RemoveEmployeeModal({
+  modal_delete, // delete user confirmation modal
+  setmodal_delete, // change user confirmation modal state
+  handleDeleteEmployee, // function to delete a user
 }) {
   return (
     <Modal
@@ -50,7 +50,7 @@ function CenterRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteCenter}
+            onClick={handleDeleteEmployee}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +60,4 @@ function CenterRemoveModal({
   );
 }
 
-export default CenterRemoveModal;
+export default RemoveEmployeeModal;

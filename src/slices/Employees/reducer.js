@@ -1,22 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { getUsers, createUser, removeUser, updateUser } from "./thunk";
-import {
-  getCenterUsers,
-  createCenterUser,
-  removeCenterUser,
-  updateCenterUser,
-} from "./thunk";
+import { getEmployees, createEmployee, updateEmployee } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
-  centerUsers: [],
-  allCenterUsers: [],
+  employees: [],
   alreadyRegisteredError: null,
   error: "",
 };
 
-const usersSlice = createSlice({
-  name: "addUsers",
+const employeesSlice = createSlice({
+  name: "employees",
   initialState,
   reducers: {
     clearAlreadyRegisteredError: (state) => {
@@ -24,25 +18,24 @@ const usersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getCenterUsers.fulfilled, (state, action) => {
+    builder.addCase(getEmployees.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.centerUsers = action.payload?.data.users;
-        state.allCenterUsers = action.payload?.data.centerUsers; // these users are going to be used on the form page
+        state.employees = action.payload?.data.employees;
         state.error = "";
       }
     });
 
-    builder.addCase(createCenterUser.fulfilled, (state, action) => {
+    builder.addCase(createEmployee.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        state.centerUsers = [...state.centerUsers, action.payload.data];
+        state.employees = [...state.employees, action.payload.data];
         state.alreadyRegisteredError = null;
         state.error = "";
-        toast.success("Center user has been added !", {
+        toast.success("Employee has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -50,12 +43,12 @@ const usersSlice = createSlice({
       }
     });
 
-    builder.addCase(updateCenterUser.fulfilled, (state, action) => {
+    builder.addCase(updateEmployee.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const updatedCenterUser = action.payload?.data?.updatedCenterUser;
+        const updatedEmployee = action.payload?.data?.updatedEmployee;
 
         // if (updatedCenterUser.status === 0) {
         //   state.centerUsers = state.centerUsers.filter(
@@ -70,9 +63,9 @@ const usersSlice = createSlice({
 
         //   state.alreadyRegisteredError = null;
         // } else {
-        state.centerUsers = state.centerUsers.map((user) => {
-          if (user.id == updatedCenterUser.id) {
-            user = action.payload.data.updatedCenterUser;
+        state.employees = state.employees.map((user) => {
+          if (user.id == updatedEmployee.id) {
+            user = action.payload.data.updatedEmployee;
             return user;
           } else {
             return user;
@@ -82,7 +75,7 @@ const usersSlice = createSlice({
         state.alreadyRegisteredError = null;
         state.error = "";
 
-        toast.success("Center User details updated !", {
+        toast.success("Employee details updated !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -105,6 +98,6 @@ const usersSlice = createSlice({
     // });
   },
 });
-export const { clearAlreadyRegisteredError } = usersSlice.actions;
+export const { clearAlreadyRegisteredError } = employeesSlice.actions;
 
-export default usersSlice.reducer;
+export default employeesSlice.reducer;

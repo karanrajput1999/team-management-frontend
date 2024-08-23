@@ -14,11 +14,12 @@ const Navdata = () => {
   const menuDataOfUser = userData.data.menus;
 
   //state data
-  // const [isAdminTools, setIsAdminTools] = useState(false);
   const [isSettings, setIsSettings] = useState(false);
-  // const [isLeadManagement, setIsLeadManagement] = useState(false);
-  const [isCenters, setIsCenters] = useState(false);
-  // const [isPayments, setIsPayments] = useState(false);
+
+  // const [isCenters, setIsCenters] = useState(false);
+  //
+  const [isManagement, setIsManagement] = useState(false);
+
   const [isDashboard, setIsDashboard] = useState(false);
 
   const [isApplications, setIsApplications] = useState(false);
@@ -61,8 +62,8 @@ const Navdata = () => {
     // if (iscurrentState !== "LeadManagement") {
     //   setIsLeadManagement(false);
     // }
-    if (iscurrentState !== "Centers") {
-      setIsCenters(false);
+    if (iscurrentState !== "Management") {
+      setIsManagement(false);
     }
     // if (iscurrentState !== "Payments") {
     //   setIsPayments(false);
@@ -95,7 +96,7 @@ const Navdata = () => {
     // isAdminTools,
     isSettings,
     // isLeadManagement,
-    isCenters,
+    isManagement,
     // isPayments,
     isDashboard,
     isApplications,
@@ -109,7 +110,7 @@ const Navdata = () => {
   const parentMenuStates = {
     // AdminTools: isAdminTools,
     Settings: isSettings,
-    Centers: isCenters,
+    Management: isManagement,
     // LeadManagement: isLeadManagement,
     // Payments: isPayments,
     Dashboard: isDashboard,
@@ -135,8 +136,8 @@ const Navdata = () => {
         //   setIsLeadManagement(!isLeadManagement);
         //   setIscurrentState(menuLabelId);
         //   updateIconSidebar(e);
-        case "Centers":
-          setIsCenters(!isCenters);
+        case "Management":
+          setIsManagement(!isManagement);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
         // case "Payments":

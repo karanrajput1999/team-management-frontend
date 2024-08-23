@@ -6,47 +6,44 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 //   updateUser as updateUserApi,
 // } from "../../helpers/fakebackend_helper";
 import {
-  getCenterUsers as getCenterUsersApi,
-  createCenterUser as createCenterUserApi,
-  updateCenterUser as updateCenterUserApi,
-  removeCenterUser as removeCenterUserApi,
+  getEmployees as getEmployeesApi,
+  createEmployee as createEmployeeApi,
+  updateEmployee as updateEmployeeApi,
 } from "../../helpers/fakebackend_helper";
 
-export const getCenterUsers = createAsyncThunk(
-  "addUsers/getCenterUsers",
+export const getEmployees = createAsyncThunk(
+  "employees/getEmployees",
   async () => {
     try {
-      const response = await getCenterUsersApi();
+      const response = await getEmployeesApi();
       return response;
     } catch (error) {
-      console.log("error inside getUsers thunk", error);
+      console.log("error inside get employees thunk", error);
     }
   }
 );
 
-export const createCenterUser = createAsyncThunk(
-  "addUsers/createCenterUser",
+export const createEmployee = createAsyncThunk(
+  "employees/createEmployee",
   async (values) => {
     try {
-      const response = await createCenterUserApi(values);
+      const response = await createEmployeeApi(values);
 
       return response;
     } catch (error) {
-      console.log("error inside createUser thunk", error);
+      console.log("error inside create employee thunk", error);
     }
   }
 );
 
-export const updateCenterUser = createAsyncThunk(
-  "addUsers/updateCenterUser",
+export const updateEmployee = createAsyncThunk(
+  "employees/updateEmployee",
   async (data) => {
     try {
-      console.log("UPDATE CENTER USER");
-
-      const response = await updateCenterUserApi(data);
+      const response = await updateEmployeeApi(data);
       return response;
     } catch (error) {
-      console.log("error inside update center user thunk", error);
+      console.log("error inside update employee thunk", error);
     }
   }
 );

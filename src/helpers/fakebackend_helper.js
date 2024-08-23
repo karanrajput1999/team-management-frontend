@@ -477,7 +477,6 @@ export const removePayment = ({ invoiceId, paymentId }) => {
 // *****************************************************************
 
 export const getEvents = (leadMobileNo) => {
-  console.log("MOBILE NUMBER IN BACKEND HELPER ->", leadMobileNo);
   return api.get(`${process.env.REACT_APP_SERVER_URL}/${leadMobileNo}/events`);
 };
 
@@ -505,23 +504,21 @@ export const removeEvent = (eventId) => {
 };
 
 // *****************************************************************
-// ************************* CENTERS *******************************
+// ************************** TEAMS  *******************************
 // *****************************************************************
-export const getCenters = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/centers`);
+export const getTeams = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/teams`);
 };
 
-export const createCenter = (data) => {
-  return api.create(`${process.env.REACT_APP_SERVER_URL}/center/create`, data);
+export const createTeam = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/team/create`, data);
 };
 
-export const updateCenter = (centerId, data, status) => {
-  console.log("UPDATE CENTER STATUS ->", centerId, status);
-
-  return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/edit`,
-    { ...data, status }
-  );
+export const updateTeam = (teamId, data, status) => {
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/team/${teamId}/edit`, {
+    ...data,
+    status,
+  });
 };
 
 // export const removeCenter = (centerId) => {
@@ -559,31 +556,32 @@ export const updateBankCode = (bankCodeId, data, status) => {
 // };
 
 // *****************************************************************
-// *********************** CENTER USERS ****************************
+// *********************** EMPLOYEES ****************************
 // *****************************************************************
-export const getCenterUsers = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/center/center-users`);
+export const getEmployees = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/employees`);
 };
 
-export const createCenterUser = (data) => {
+export const createEmployee = (data) => {
   return api.create(
-    `${process.env.REACT_APP_SERVER_URL}/center/${data.centerId}/center-user/create`,
+    `${process.env.REACT_APP_SERVER_URL}/employee/create`,
     data
   );
 };
 
-export const updateCenterUser = ({
-  centerId,
-  centerUserId,
-  branchId,
-  status,
-  values,
-}) => {
+export const updateEmployee = ({ teamId, employeeId, status, values }) => {
+  console.log(
+    "EMPLOYEE UPDATE BACKEND HELPER CALLED",
+    teamId,
+    employeeId,
+    status,
+    values
+  );
+
   return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/center/${centerId}/center-user/${centerUserId}/edit`,
+    `${process.env.REACT_APP_SERVER_URL}/team/${teamId}/employee/${employeeId}/edit`,
     {
       ...values,
-      branchId,
       status,
     }
   );

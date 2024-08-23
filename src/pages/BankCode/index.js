@@ -14,7 +14,7 @@ import AddBankCodeModal from "./AddBankCodeModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import BankCodeRemoveModal from "./BankCodeRemoveModal";
-import { getCenters } from "../../slices/Centers/thunk";
+import { getTeams } from "../../slices/Teams/thunk";
 import {
   getBankCodes,
   createBankCode,
@@ -57,7 +57,7 @@ const BankCode = () => {
 
   useEffect(() => {
     dispatch(getBankCodes());
-    dispatch(getCenters());
+    dispatch(getTeams());
   }, [dispatch]);
 
   function handleSearchCenter(e) {

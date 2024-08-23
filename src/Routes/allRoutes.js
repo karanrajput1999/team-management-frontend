@@ -13,9 +13,8 @@ import Register from "../pages/Authentication/Register";
 import UserProfile from "../pages/Authentication/user-profile";
 
 //APi Key
-import AddUsers from "../pages/AddUsers";
+import Employees from "../pages/Employees";
 import Mapping from "../pages/Mapping";
-import AllCenters from "../pages/AllCenters";
 import BankCode from "../pages/BankCode";
 import BankReport from "../pages/BankReport";
 import Home from "../pages/Home";
@@ -33,13 +32,14 @@ import DataCorrection from "../pages/DataCorrection";
 import OBDData from "../pages/OBDData";
 import DownloadData from "../pages/DownloadData";
 import DailyReportUpload from "../pages/DailyReportUpload";
+import Teams from "../pages/Teams";
 
 const authProtectedRoutes = [
   // { path: "/users", component: <Users /> },
   { path: "/home", component: <Home /> },
   { path: "/roles", component: <Mapping /> },
-  { path: "/all-centers", component: <AllCenters /> },
-  { path: "/add-users", component: <AddUsers /> },
+  { path: "/teams", component: <Teams /> },
+  { path: "/employees", component: <Employees /> },
   { path: "/bank-code", component: <BankCode /> },
   { path: "/bank-report", component: <BankReport /> },
   { path: "/daily-report", component: <DailyReport /> },

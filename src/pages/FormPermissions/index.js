@@ -17,7 +17,7 @@ import {
   updateFormPermissions,
   getFormPermissions,
 } from "../../slices/FormPermissions/thunk";
-import { getCenters } from "../../slices/Centers/thunk";
+import { getTeams } from "../../slices/Teams/thunk";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -34,7 +34,7 @@ const FormPermissions = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCenters());
+    dispatch(getTeams());
   }, [dispatch]);
 
   function handleCenterChange(e) {

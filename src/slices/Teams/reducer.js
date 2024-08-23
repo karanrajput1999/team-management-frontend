@@ -1,21 +1,21 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getCenters, createCenter, removeCenter, updateCenter } from "./thunk";
+import { getTeams, createTeam, updateTeam } from "./thunk";
 
 export const initialState = {
-  centers: [],
+  teams: [],
   centerUsers: [],
-  filteredCenters: [], // centers that gets filtered after searching
+  filteredTeams: [], // centers that gets filtered after searching
   alreadyRegisteredError: null,
   error: "",
 };
 
-const centersSlice = createSlice({
-  name: "centers",
+const teamSlice = createSlice({
+  name: "teams",
   initialState,
   reducers: {
     getUsersByCenter(state, action) {
-      state.centerUsers = state.centers?.find(
+      state.centerUsers = state.teams?.find(
         (center) => action.payload == center.id
       ).centerUsers;
     },
@@ -24,11 +24,11 @@ const centersSlice = createSlice({
       const inputValue = action.payload.toLowerCase();
 
       if (inputValue === "") {
-        state.filteredCenters = [];
+        state.filteredTeams = [];
       } else {
-        state.filteredCenters = state.centers.filter((center) => {
-          return Object.values(center).some((centerVal) => {
-            return String(centerVal).toLowerCase().includes(inputValue);
+        state.filteredTeams = state.teams.filter((team) => {
+          return Object.values(team).some((teamVal) => {
+            return String(teamVal).toLowerCase().includes(inputValue);
           });
         });
       }
@@ -38,24 +38,24 @@ const centersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getCenters.fulfilled, (state, action) => {
+    builder.addCase(getTeams.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.centers = action.payload?.data.centers;
+        state.teams = action.payload?.data.teams;
         state.error = "";
       }
     });
 
-    builder.addCase(createCenter.fulfilled, (state, action) => {
+    builder.addCase(createTeam.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        state.centers = [...state.centers, action.payload.data];
+        state.teams = [...state.teams, action.payload.data];
         state.alreadyRegisteredError = null;
         state.error = "";
-        toast.success("Center has been added !", {
+        toast.success("Team has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -63,12 +63,12 @@ const centersSlice = createSlice({
       }
     });
 
-    builder.addCase(updateCenter.fulfilled, (state, action) => {
+    builder.addCase(updateTeam.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const updatedCenter = action.payload.data.updatedCenter;
+        const updatedTeam = action.payload.data.updatedTeam;
 
         // if (updatedCenter.status === 0) {
         //   state.centers = state.centers.filter(
@@ -81,19 +81,19 @@ const centersSlice = createSlice({
         //     theme: "colored",
         //   });
         // } else {
-        state.centers = state.centers.map((center) => {
-          if (center.id == updatedCenter.id) {
-            center = action.payload.data.updatedCenter;
-            return center;
+        state.teams = state.teams.map((team) => {
+          if (team.id == updatedTeam.id) {
+            team = action.payload.data.updatedTeam;
+            return team;
           } else {
-            return center;
+            return team;
           }
         });
 
         state.alreadyRegisteredError = null;
         state.error = "";
 
-        toast.success("Centers details updated !", {
+        toast.success("Team details updated !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -101,22 +101,9 @@ const centersSlice = createSlice({
       }
       // }
     });
-
-    // builder.addCase(removeCenter.fulfilled, (state, action) => {
-    //   const deletedCenterId = action.payload.deletedCenter.id;
-    //   state.centers = state.centers.filter(
-    //     (center) => center.id !== deletedCenterId
-    //   );
-    //   state.error = "";
-    //   toast.error("Center has been removed !", {
-    //     position: "bottom-center",
-    //     autoClose: 3000,
-    //     theme: "colored",
-    //   });
-    // });
   },
 });
 
 export const { searchCenters, clearAlreadyRegisteredError, getUsersByCenter } =
-  centersSlice.actions;
-export default centersSlice.reducer;
+  teamSlice.actions;
+export default teamSlice.reducer;

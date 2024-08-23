@@ -8,9 +8,9 @@ import LoginReducer from "./auth/login/reducer";
 import UsersReducer from "./Users/reducer";
 import MappingReducer from "./Mapping/reducer";
 import ReportReducer from "./Report/reducer";
-import CenterReducer from "./Centers/reducer";
+import TeamsReducer from "./Teams/reducer";
 import BankCodeReducer from "./BankCode/reducer";
-import AddUsersReducer from "./AddUsers/reducer";
+import EmployeesReducer from "./Employees/reducer";
 import CreditCardFormReducer from "./CreditCardForm/reducer";
 import LoanFormReducer from "./LoanForm/reducer";
 import ApplicationReportReducer from "./ApplicationReport/reducer";
@@ -37,9 +37,9 @@ const rootReducer = combineReducers({
   Users: UsersReducer,
   Mapping: MappingReducer,
   Report: ReportReducer,
-  Centers: CenterReducer,
+  Teams: TeamsReducer,
   BankCodes: BankCodeReducer,
-  AddUsers: AddUsersReducer,
+  Employees: EmployeesReducer,
   CreditCardForms: CreditCardFormReducer,
   LoanForms: LoanFormReducer,
   PendingForms: PendingFormsReducer,

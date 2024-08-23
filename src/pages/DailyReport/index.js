@@ -16,7 +16,7 @@ import {
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
-import { getCenters } from "../../slices/Centers/thunk";
+import { getTeams } from "../../slices/Teams/thunk";
 import Select from "react-select";
 import { useDispatch } from "react-redux";
 import {
@@ -24,7 +24,7 @@ import {
   getDailyReport,
 } from "../../slices/DailyReport/thunk";
 import { useSelector } from "react-redux";
-import { getUsersByCenter } from "../../slices/Centers/reducer";
+import { getUsersByCenter } from "../../slices/Teams/reducer";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getLoggedinUser } from "../../helpers/api_helper";
@@ -48,7 +48,7 @@ const DailyReport = () => {
 
   useEffect(() => {
     dispatch(getDailyReport());
-    dispatch(getCenters());
+    dispatch(getTeams());
   }, [dispatch]);
 
   const centerOptions = centers?.map((center) => ({

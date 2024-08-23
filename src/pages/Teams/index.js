@@ -10,58 +10,32 @@ import {
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
-import AddCenterModal from "./AddCenterModal";
+import AddTeamModal from "./AddTeamModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import CenterRemoveModal from "./CenterRemoveModal";
-import {
-  getCenters,
-  createCenter,
-  removeCenter,
-  updateCenter,
-} from "../../slices/Centers/thunk";
+import TeamRemoveModal from "./TeamRemoveModal";
+import { getTeams, createTeam, updateTeam } from "../../slices/Teams/thunk";
 
-import {
-  getUsers,
-  createUser,
-  removeUser,
-  updateUser,
-} from "../../slices/Users/thunk";
-import {
-  clearAlreadyRegisteredError,
-  searchCenters,
-} from "../../slices/Centers/reducer";
+import { clearAlreadyRegisteredError } from "../../slices/Teams/reducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getRoles } from "../../slices/Mapping/thunk";
 
-const AllCenters = () => {
+const Teams = () => {
   const [modal_list, setmodal_list] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  const [isEditingCenter, setIsEditingCenter] = useState(false);
+  const [isEditingTeam, setIsEditingTeam] = useState(false);
 
-  const [listCenterId, setListCenterId] = useState(null);
-
-  const [selectedSingleRoleType, setSelectedSingleRoleType] = useState(null);
+  const [listTeamId, setListTeamId] = useState(null);
 
   const dispatch = useDispatch();
 
-  const { centers, filteredCenters, alreadyRegisteredError } = useSelector(
-    (state) => state.Centers
+  const { teams, filteredTeams, alreadyRegisteredError } = useSelector(
+    (state) => state.Teams
   );
-  const { roles } = useSelector((state) => state.Mapping);
-
-  const roleOptions = roles.map((role) => {
-    return { value: role.id, label: role.name };
-  });
-
-  function handleSelectSingleRole(userType) {
-    setSelectedSingleRoleType(userType);
-  }
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -79,72 +53,30 @@ const AllCenters = () => {
   }, [alreadyRegisteredError]);
 
   useEffect(() => {
-    dispatch(getCenters());
-    dispatch(getRoles());
+    dispatch(getTeams());
   }, [dispatch]);
-
-  function handleSearchCenter(e) {
-    dispatch(searchCenters(e.target.value));
-  }
 
   const validation = useFormik({
     initialValues: {
-      centerName: "",
-      ownerName: "",
-      mobileNumber: "",
-      emailId: "",
-      location: "",
-      branchId: "",
-      userType: "",
+      teamName: "",
+      email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      centerName: Yup.string().required("Please enter center name"),
-      ownerName: Yup.string().required("Please enter owner name"),
-      mobileNumber: Yup.string()
-        .length(10, "Mobile no should be of 10 digit only")
-        .required("Please enter mobile number"),
-      emailId: Yup.string().email().required("Please enter email id"),
-      location: Yup.string().required("Please enter location"),
-      branchId: Yup.string().required("Please enter branch id"),
-      userType: Yup.string(),
-      password: Yup.string().required("Please enter password id"),
+      teamName: Yup.string().required("Please enter team name"),
+      email: Yup.string().email().required("Please enter email id"),
+      password: Yup.string().required("Please enter password"),
     }),
     onSubmit: (values, { resetForm }) => {
-      if (isEditingCenter) {
-        dispatch(updateCenter({ values, centerId: listCenterId }));
-
-        // dispatch(
-        //   updateUser({
-        //     values: {
-        //       name: values.centerName,
-        //       email: values.emailId,
-        //       password: values.password,
-        //       roleId: values.userType,
-        //     },
-        //   })
-        // );
+      if (isEditingTeam) {
+        dispatch(updateTeam({ values, teamId: listTeamId }));
       } else {
-        dispatch(createCenter(values));
-
-        // dispatch(
-        //   createUser({
-        //     name: values.centerName,
-        //     email: values.emailId,
-        //     password: values.password,
-        //     roleId: values.userType,
-        //   })
-        // );
+        dispatch(createTeam(values));
       }
 
-      if (!isEditingCenter) {
+      if (!isEditingTeam) {
         resetForm();
-        setSelectedSingleRoleType(null);
       }
-
-      // isEditingCenter
-      //   ? dispatch(updateCenter({ values, centerId: listCenterId }))
-      //   : dispatch(createCenter(values));
 
       setmodal_list(false);
     },
@@ -161,75 +93,56 @@ const AllCenters = () => {
     return false;
   }
 
-  //   function handleEditUser(userData) {
-  function handleEditCenter(centerData) {
-    setIsEditingCenter(true);
+  function handleEditTeam(teamData) {
+    setIsEditingTeam(true);
     setmodal_list(!modal_list);
-    setListCenterId(centerData.id);
+    setListTeamId(teamData.id);
 
-    // setting the value of role according to roleId because in select element roleId is used as value
     validation.setValues({
-      centerName: centerData.centerName,
-      ownerName: centerData.ownerName,
-      mobileNumber: centerData.mobileNumber,
-      location: centerData.location,
-      branchId: centerData.branchId,
-      status: centerData.status,
-      emailId: centerData.emailId,
-      password: centerData.password,
-      userType: centerData.userType,
+      teamName: teamData.teamName,
+      status: teamData.status,
+      email: teamData.email,
+      password: teamData.password,
     });
-
-    handleSelectSingleRole(
-      roleOptions.find((role) => role.value === centerData.userType)
-    );
   }
 
-  function handleActivateDeactivate(status, centerId) {
-    console.log("STATUS ->", status, "CENTER ID ->", centerId);
-
+  function handleActivateDeactivate(status, teamId) {
     dispatch(
-      updateCenter({
+      updateTeam({
         status,
-        centerId,
+        teamId,
       })
     );
-    // dispatch(
-    //   updateUser({
-    //     userId,
-    //     status,
-    //   })
-    // );
   }
 
-  document.title = "All Centers";
+  document.title = "Teams";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="All Centers" pageTitle="Centers" />
+          <BreadCrumb title="Teams" pageTitle="Management" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Create a center</h4>
+                  <h4 className="card-title mb-0">Create a Team</h4>
                 </CardHeader>
 
                 <CardBody>
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3">
                       <Col className="col-sm-auto w-100 d-flex justify-content-between">
-                        <div className="search-box">
+                        {/* <div className="search-box">
                           <input
                             type="text"
                             className="form-control bg-light border-light"
                             autoComplete="off"
                             id="searchList"
                             onChange={handleSearchCenter}
-                            placeholder="Search center"
+                            placeholder="Search Team"
                           />
                           <i className="ri-search-line search-icon"></i>
-                        </div>
+                        </div> */}
                         <Button
                           color="primary"
                           className="add-btn me-1"
@@ -237,7 +150,7 @@ const AllCenters = () => {
                           id="create-btn"
                         >
                           <i className="ri-add-line align-bottom me-1"></i> Add
-                          Center
+                          Team
                         </Button>
                       </Col>
                     </Row>
@@ -249,48 +162,46 @@ const AllCenters = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th>ID</th>
-                            <th>Center Name</th>
-                            <th>Owner Name</th>
-                            <th>Phone Number</th>
+                            <th>S.No</th>
+                            <th>Team Name</th>
+                            {/* <th>Owner Name</th> */}
+                            {/* <th>Phone Number</th> */}
                             <th>Email ID</th>
                             <th>Password</th>
-                            <th>Branch Id</th>
+                            {/* <th>Branch Id</th> */}
                             <th>Status</th>
 
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {(filteredCenters.length > 0
-                            ? filteredCenters
-                            : centers
-                          )?.map((center) => (
-                            <tr key={center?.id}>
+                          {(filteredTeams.length > 0
+                            ? filteredTeams
+                            : teams
+                          )?.map((team) => (
+                            <tr key={team?.id}>
                               <td className="id">
                                 <Link to="#" className="fw-medium link-primary">
-                                  {center?.id}
+                                  {team?.id}
                                 </Link>
                               </td>
-                              <td className="center_name">
-                                {center?.centerName}
-                              </td>
-                              <td className="owner_name">
+                              <td className="team_name">{team?.teamName}</td>
+                              {/* <td className="owner_name">
                                 {center?.ownerName}
-                              </td>
-                              <td className="phone_number">
+                              </td> */}
+                              {/* <td className="phone_number">
                                 {center?.mobileNumber}
-                              </td>
-                              <td className="email_id">{center?.emailId}</td>
-                              <td className="password">{center?.password}</td>
-                              <td className="branchId">{center?.branchId}</td>
+                              </td> */}
+                              <td className="email_id">{team?.email}</td>
+                              <td className="password">{team?.password}</td>
+                              {/* <td className="branchId">{center?.branchId}</td> */}
                               <td className="status">
-                                {center?.status === 0 ? (
+                                {team?.status === 0 ? (
                                   <button
                                     type="button"
                                     className="btn btn-ghost-success waves-effect waves-light"
                                     onClick={() =>
-                                      handleActivateDeactivate(1, center?.id)
+                                      handleActivateDeactivate(1, team?.id)
                                     }
                                   >
                                     {" "}
@@ -301,7 +212,7 @@ const AllCenters = () => {
                                     type="button"
                                     className="btn btn-ghost-danger waves-effect waves-light"
                                     onClick={() =>
-                                      handleActivateDeactivate(0, center?.id)
+                                      handleActivateDeactivate(0, team?.id)
                                     }
                                   >
                                     {" "}
@@ -318,7 +229,7 @@ const AllCenters = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        handleEditCenter(center);
+                                        handleEditTeam(team);
                                       }}
                                     >
                                       Edit
@@ -368,26 +279,22 @@ const AllCenters = () => {
       </div>
       <ToastContainer />
 
-      <AddCenterModal
+      <AddTeamModal
         validation={validation}
-        isEditingCenter={isEditingCenter}
+        isEditingTeam={isEditingTeam}
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
-        roles={roles}
-        roleOptions={roleOptions}
-        handleSelectSingleRole={handleSelectSingleRole}
-        selectedSingleRoleType={selectedSingleRoleType}
         alreadyRegisteredError={alreadyRegisteredError}
       />
 
-      <CenterRemoveModal
+      <TeamRemoveModal
         modal_delete={modal_delete}
         setmodal_delete={setmodal_delete}
         tog_delete={tog_delete}
-        handleDeleteCenter={() => {
+        handleDeleteTeam={() => {
           // dispatch(removeCenter({ centerId: listCenterId }));
-          dispatch(updateCenter({ centerId: listCenterId, status: 0 }));
+          dispatch(updateTeam({ teamId: listTeamId, status: 0 }));
 
           setmodal_delete(false);
         }}
@@ -396,4 +303,4 @@ const AllCenters = () => {
   );
 };
 
-export default AllCenters;
+export default Teams;

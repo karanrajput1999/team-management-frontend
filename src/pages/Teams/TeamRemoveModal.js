@@ -1,10 +1,6 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function AddUserRemoveModal({
-  modal_delete, // delete user confirmation modal
-  setmodal_delete, // change user confirmation modal state
-  handleDeleteUser, // function to delete a user
-}) {
+function TeamRemoveModal({ modal_delete, setmodal_delete, handleDeleteTeam }) {
   return (
     <Modal
       isOpen={modal_delete}
@@ -50,7 +46,7 @@ function AddUserRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteUser}
+            onClick={handleDeleteTeam}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +56,4 @@ function AddUserRemoveModal({
   );
 }
 
-export default AddUserRemoveModal;
+export default TeamRemoveModal;
