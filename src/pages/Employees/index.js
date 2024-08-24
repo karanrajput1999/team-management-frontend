@@ -138,8 +138,6 @@ const Employees = () => {
     },
   });
 
-  console.log("ADD EMPLOYEE ERROR ->", validation.errors);
-
   function formHandleSubmit(e) {
     e.preventDefault();
 
@@ -172,8 +170,6 @@ const Employees = () => {
   }
 
   function handleActivateDeactivate(status, employeeId, teamId) {
-    console.log("HANDLE ACTIVATE DEACTIVATE ->", status, employeeId, teamId);
-
     dispatch(
       updateEmployee({
         status,

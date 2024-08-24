@@ -24,6 +24,7 @@ import DownloadDataReducer from "./DownloadData/reducer";
 import ReportUploadReducer from "./ReportUpload/reducer";
 import DailyReportUploadReducer from "./DailyReportUpload/reducer";
 import DailyReportReducer from "./DailyReport/reducer";
+import HomeReducer from "./Home/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -55,6 +56,7 @@ const rootReducer = combineReducers({
   DailyReportUpload: DailyReportUploadReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
+  Home: HomeReducer,
 });
 
 export default rootReducer;

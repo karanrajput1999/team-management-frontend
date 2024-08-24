@@ -21,17 +21,20 @@ import Select from "react-select";
 import { Link } from "react-router-dom";
 import avatar from "./user-icon.png";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getHomeData } from "../../slices/Home/thunk";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 const Home = () => {
-  const [activeTab, setactiveTab] = useState("1");
-
   const [formData, setFormData] = useState([]);
+  const dispatch = useDispatch();
 
-  const toggle = (tab) => {
-    if (activeTab !== tab) {
-      setactiveTab(tab);
-    }
-  };
+  const { data } = getLoggedinUser();
+
+  const { teamMembers, teams } = useSelector((state) => state.Home);
+
+  console.log("TEAMS ON HOME ->", teams);
+  console.log("TEAM MEMBERS ON HOME ->", teamMembers);
 
   useEffect(() => {
     axios
@@ -44,13 +47,58 @@ const Home = () => {
       });
   }, []);
 
-  const VKYCDoneData = formData?.filter((data) => {
-    return data.app_status1 == "VKYC Done";
+  useEffect(() => {
+    dispatch(getHomeData());
+  }, []);
+
+  const memberObjects = teamMembers?.map((member) => ({
+    name: member.employeeName,
+    email: member.email,
+    vkyc: 0,
+    approved: 0,
+  }));
+
+  formData?.forEach((item2) => {
+    memberObjects?.forEach((item1) => {
+      if (item1.email === item2.emailid.toLowerCase()) {
+        if (item2.app_status1 === "VKYC Done") {
+          item1.vkyc += 1;
+        } else if (item2.app_status1 === null) {
+          item1.approved += 1;
+        }
+      }
+    });
   });
 
-  const ApprovedData = formData?.filter((data) => {
-    return data.app_status1 !== "VKYC Done";
-  });
+  let VKYCDoneData;
+
+  let ApprovedData;
+
+  if (data.roleId === 1) {
+    VKYCDoneData = formData?.filter((data) => {
+      return data.app_status1 == "VKYC Done";
+    });
+
+    ApprovedData = formData?.filter((data) => {
+      return data.app_status1 !== "VKYC Done";
+    });
+  } else if (data.roleId === 2) {
+    VKYCDoneData = memberObjects.reduce((acc, curr) => {
+      if (curr.vkyc) {
+        acc += curr.vkyc;
+      }
+
+      return acc;
+    }, 0);
+
+    ApprovedData = memberObjects.reduce((acc, curr) => {
+      if (curr.approved) {
+        acc += curr.approved;
+      }
+
+      return acc;
+    }, 0);
+  }
 
   document.title = "Home";
   return (
@@ -73,17 +121,21 @@ const Home = () => {
                 <tr>
                   <th>S.NO</th>
                   <th>Employee Name</th>
-                  <th>Approved</th>
+                  <th>Email</th>
                   <th>VKYC Done</th>
+                  <th>Approved</th>
                 </tr>
               </thead>
               <tbody className="list form-check-all">
-                <tr>
-                  <td className="id">1</td>
-                  <td className="center_name">Someone</td>
-                  <td className="owner_name">23</td>
-                  <td className="phone_number">45</td>
-                </tr>
+                {memberObjects?.map((memberData, idx) => (
+                  <tr key={idx}>
+                    <td className="id">{idx + 1}</td>
+                    <td className="center_name">{memberData.name}</td>
+                    <td className="center_name">{memberData.email}</td>
+                    <td className="owner_name">{memberData.vkyc}</td>
+                    <td className="phone_number">{memberData.approved}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
