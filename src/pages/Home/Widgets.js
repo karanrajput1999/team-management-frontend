@@ -6,8 +6,6 @@ import CountUp from "react-countup";
 import FeatherIcon from "feather-icons-react";
 
 const Widgets = ({ VKYCDoneData, ApprovedData }) => {
-  console.log("SFSFSDFSF", VKYCDoneData, ApprovedData);
-
   return (
     <React.Fragment>
       <Row>

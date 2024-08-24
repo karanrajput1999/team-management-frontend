@@ -31,7 +31,7 @@ const Home = () => {
 
   const { data } = getLoggedinUser();
 
-  const { teamMembers, teams } = useSelector((state) => state.Home);
+  const { teamMembers, teams, employee } = useSelector((state) => state.Home);
 
   useEffect(() => {
     axios
@@ -116,6 +116,28 @@ const Home = () => {
 
       return acc;
     }, 0);
+  } else if (data.roleId === 3) {
+    VKYCDoneData = formData?.reduce((acc, curr) => {
+      if (curr.emailid.toLowerCase() === data.email) {
+        if (curr.app_status1 === "VKYC Done") {
+          acc += 1;
+        }
+      }
+
+      return acc;
+    }, 0);
+    ApprovedData = formData?.reduce((acc, curr) => {
+      if (curr.emailid.toLowerCase() === data.email) {
+        if (curr.app_status1 === null) {
+          acc += 1;
+        }
+      }
+
+      return acc;
+    }, 0);
+
+    console.log("VKYC DONE FOR EMPLOYEE ->", VKYCDoneData);
+    console.log("APPROVED FOR EMPLOYEE ->", ApprovedData);
   }
 
   document.title = "Home";
