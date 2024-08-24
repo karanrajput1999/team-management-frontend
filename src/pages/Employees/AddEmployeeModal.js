@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 function AddEmployeeModal({
   modal_list, // modal state
@@ -24,15 +25,7 @@ function AddEmployeeModal({
   handleSelectSingleTeam,
   teamOptions,
 }) {
-  // useEffect(() => {
-  //   if (isEditingUser) {
-  //     const centerName = CenterOptions.find(
-  //       (option) => option.value === validation.values.centerName
-  //     );
-
-  //     setSelectedSingleCenterName(centerName);
-  //   }
-  // }, [isEditingUser]);
+  const { data } = getLoggedinUser();
 
   return (
     <Modal
@@ -58,31 +51,33 @@ function AddEmployeeModal({
             </Alert>
           )}
 
-          <div className="mb-2">
-            <Label htmlFor="teamName" className="form-label">
-              Team Name
-            </Label>
-            <Select
-              id="teamName"
-              name="teamName"
-              value={selectedSingleTeamName}
-              onChange={(teamName) => {
-                handleSelectSingleTeam(teamName);
-                validation.setFieldValue("teamName", teamName.value);
-              }}
-              options={teamOptions}
-              placeholder="Select Team Name"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  borderColor: state.isFocused ? "#a8d9f3" : "#ced4da",
-                  "&:hover": {
-                    borderColor: "#ced4da",
-                  },
-                }),
-              }}
-            />
-          </div>
+          {data.roleId === 1 && (
+            <div className="mb-2">
+              <Label htmlFor="teamName" className="form-label">
+                Team Name
+              </Label>
+              <Select
+                id="teamName"
+                name="teamName"
+                value={selectedSingleTeamName}
+                onChange={(teamName) => {
+                  handleSelectSingleTeam(teamName);
+                  validation.setFieldValue("teamName", teamName.value);
+                }}
+                options={teamOptions}
+                placeholder="Select Team Name"
+                styles={{
+                  control: (provided, state) => ({
+                    ...provided,
+                    borderColor: state.isFocused ? "#a8d9f3" : "#ced4da",
+                    "&:hover": {
+                      borderColor: "#ced4da",
+                    },
+                  }),
+                }}
+              />
+            </div>
+          )}
 
           <div className="mb-2">
             <Label htmlFor="name" className="form-label">

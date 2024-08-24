@@ -40,6 +40,8 @@ export const updateEmployee = createAsyncThunk(
   "employees/updateEmployee",
   async (data) => {
     try {
+      console.log("UPDATE EMPLOYEE DATA ->", data);
+
       const response = await updateEmployeeApi(data);
       return response;
     } catch (error) {

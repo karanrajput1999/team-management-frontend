@@ -25,8 +25,6 @@ export const postFakeRegister = (data) =>
 
 // Login Method
 export const postLogin = (data) => {
-  console.log("post login data ->", data);
-
   return api.create(url.POST_LOGIN, data);
 };
 // *****************************************************************

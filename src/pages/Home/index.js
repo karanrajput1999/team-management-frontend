@@ -20,7 +20,6 @@ import Flatpickr from "react-flatpickr";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import avatar from "./user-icon.png";
-import FormRow from "./FormRow";
 import axios from "axios";
 
 const Home = () => {
@@ -41,6 +40,7 @@ const Home = () => {
       })
       .then((res) => {
         setFormData(res.data);
+        console.log("FORM DATA ->", res.data);
       });
   }, []);
 

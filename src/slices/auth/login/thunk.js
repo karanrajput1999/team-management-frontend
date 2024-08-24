@@ -14,8 +14,6 @@ export const loginUser = (user, history) => async (dispatch) => {
   try {
     let response;
 
-    console.log("inside thunk ->", user);
-
     response = postLogin({
       email: user.email,
       password: user.password,
@@ -52,7 +50,6 @@ export const logoutUser = () => async (dispatch) => {
       })
       .then((res) => {
         dispatch(logoutUserSuccess(true));
-        console.log("user logout", res);
       })
       .catch((err) => {
         console.log("error while logging out", err);

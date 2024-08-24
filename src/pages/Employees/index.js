@@ -34,6 +34,7 @@ import {
 } from "../../slices/Employees/thunk";
 import { clearAlreadyRegisteredError } from "../../slices/Employees/reducer";
 import { getTeams } from "../../slices/Teams/thunk";
+import { getLoggedinUser } from "../../helpers/api_helper";
 
 const Employees = () => {
   // register / edit user modal state whether modal is open or not
@@ -53,10 +54,12 @@ const Employees = () => {
   );
   const { teams } = useSelector((state) => state.Teams);
 
+  const { data } = getLoggedinUser();
+
   const dispatch = useDispatch();
 
   let teamOptions = teams?.map((team) => {
-    return { value: team.teamName, label: team.teamName };
+    return { value: team.teamName, label: team.teamName, id: team.id };
   });
 
   function handleSelectSingleTeam(teamName) {
@@ -96,7 +99,10 @@ const Employees = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      teamName: Yup.string().required("Please team name"),
+      teamName:
+        data.roleId === 1
+          ? Yup.string().required("Please team name")
+          : Yup.string(),
       employeeName: Yup.string().required("Please enter employee"),
       email: Yup.string().email().required("Please enter email"),
       password: Yup.string().required("Please enter Password"),
@@ -107,8 +113,6 @@ const Employees = () => {
       );
 
       if (isEditingEmployee) {
-        console.log("EMPLOYEE UPDATE FORMIK ->");
-
         dispatch(
           updateEmployee({
             values,
@@ -120,7 +124,7 @@ const Employees = () => {
         dispatch(
           createEmployee({
             ...values,
-            teamId: selectedTeam.id,
+            teamId: selectedTeam?.id,
           })
         );
       }
@@ -133,6 +137,8 @@ const Employees = () => {
       setmodal_list(false);
     },
   });
+
+  console.log("ADD EMPLOYEE ERROR ->", validation.errors);
 
   function formHandleSubmit(e) {
     e.preventDefault();
@@ -151,15 +157,16 @@ const Employees = () => {
     setmodal_list(!modal_list);
     setListEmployee(employeeData);
 
+    const selectedTeam = teamOptions.find(
+      (team) => team.id === employeeData.teamId
+    );
+
     validation.setValues({
+      teamName: selectedTeam.value,
       employeeName: employeeData.employeeName,
       email: employeeData.email,
       password: employeeData.password,
     });
-
-    const selectedTeam = teamOptions.find(
-      (team) => team.value === employeeData.teamName
-    );
 
     handleSelectSingleTeam(selectedTeam);
   }
@@ -234,16 +241,7 @@ const Employees = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
+                            <th scope="col" style={{ width: "50px" }}></th>
                             <th>S.No</th>
                             <th>Employee Name</th>
                             <th>Email</th>
@@ -256,16 +254,7 @@ const Employees = () => {
                         <tbody className="list form-check-all">
                           {employees?.map((employee) => (
                             <tr key={employee.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
+                              <th scope="row"></th>
                               <td className="id">
                                 <Link to="#" className="fw-medium link-primary">
                                   {employee.id}
