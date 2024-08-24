@@ -25,7 +25,7 @@ const Widgets = ({ VKYCDoneData, ApprovedData }) => {
                         decimals={0}
                         duration={2}
                       /> */}
-                      {VKYCDoneData.length || VKYCDoneData}
+                      {VKYCDoneData?.length || VKYCDoneData}
                     </span>{" "}
                   </h2>
                 </div>
@@ -53,7 +53,7 @@ const Widgets = ({ VKYCDoneData, ApprovedData }) => {
                   <h2 className="mt-4 ff-secondary fw-semibold">
                     <span className="counter-value" data-target="3">
                       {/* <CountUp start={0} end={0} duration={4} /> */}
-                      {ApprovedData.length || ApprovedData}
+                      {ApprovedData?.length || ApprovedData}
                     </span>{" "}
                   </h2>
                 </div>

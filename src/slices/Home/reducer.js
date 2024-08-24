@@ -17,7 +17,7 @@ const homeSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.teams = action.payload?.data.teams;
+        state.teams = action.payload?.data.teamWithEmployees;
         state.teamMembers = action.payload?.data.teamMembers;
 
         state.error = "";

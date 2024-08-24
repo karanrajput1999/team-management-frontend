@@ -33,9 +33,6 @@ const Home = () => {
 
   const { teamMembers, teams } = useSelector((state) => state.Home);
 
-  console.log("TEAMS ON HOME ->", teams);
-  console.log("TEAM MEMBERS ON HOME ->", teamMembers);
-
   useEffect(() => {
     axios
       .post("https://indiagolive.in/api/blackboard.php", {
@@ -70,8 +67,29 @@ const Home = () => {
     });
   });
 
-  let VKYCDoneData;
+  const teamObjects = teams?.map((team) => ({
+    teamName: team.teamName,
+    email: team.email,
+    vkyc: 0,
+    approved: 0,
+    employees: team.employees,
+  }));
 
+  teamObjects?.forEach((team) => {
+    team.employees?.forEach((employee) => {
+      formData?.forEach((data) => {
+        if (data.emailid.toLowerCase() === employee.email) {
+          if (data.app_status1 === "VKYC Done") {
+            team.vkyc += 1;
+          } else if (data.app_status1 === null) {
+            team.approved += 1;
+          }
+        }
+      });
+    });
+  });
+
+  let VKYCDoneData;
   let ApprovedData;
 
   if (data.roleId === 1) {
@@ -83,7 +101,7 @@ const Home = () => {
       return data.app_status1 !== "VKYC Done";
     });
   } else if (data.roleId === 2) {
-    VKYCDoneData = memberObjects.reduce((acc, curr) => {
+    VKYCDoneData = memberObjects?.reduce((acc, curr) => {
       if (curr.vkyc) {
         acc += curr.vkyc;
       }
@@ -91,7 +109,7 @@ const Home = () => {
       return acc;
     }, 0);
 
-    ApprovedData = memberObjects.reduce((acc, curr) => {
+    ApprovedData = memberObjects?.reduce((acc, curr) => {
       if (curr.approved) {
         acc += curr.approved;
       }
@@ -118,24 +136,46 @@ const Home = () => {
           <div className="table-responsive table-card mt-3 mb-1">
             <table className="table align-middle table-nowrap" id="userTable">
               <thead className="table-light">
-                <tr>
-                  <th>S.NO</th>
-                  <th>Employee Name</th>
-                  <th>Email</th>
-                  <th>VKYC Done</th>
-                  <th>Approved</th>
-                </tr>
+                {data.roleId === 1 && (
+                  <tr>
+                    <th>S.NO</th>
+                    <th>Team Name</th>
+                    <th>Email</th>
+                    <th>VKYC Done</th>
+                    <th>Approved</th>
+                  </tr>
+                )}
+                {data.roleId === 2 && (
+                  <tr>
+                    <th>S.NO</th>
+                    <th>Employee Name</th>
+                    <th>Email</th>
+                    <th>VKYC Done</th>
+                    <th>Approved</th>
+                  </tr>
+                )}
               </thead>
               <tbody className="list form-check-all">
-                {memberObjects?.map((memberData, idx) => (
-                  <tr key={idx}>
-                    <td className="id">{idx + 1}</td>
-                    <td className="center_name">{memberData.name}</td>
-                    <td className="center_name">{memberData.email}</td>
-                    <td className="owner_name">{memberData.vkyc}</td>
-                    <td className="phone_number">{memberData.approved}</td>
-                  </tr>
-                ))}
+                {data.roleId === 1 &&
+                  teamObjects?.map((team, idx) => (
+                    <tr key={idx}>
+                      <td className="id">{idx + 1}</td>
+                      <td className="center_name">{team.teamName}</td>
+                      <td className="owner_name">{team.email}</td>
+                      <td className="owner_name">{team.vkyc}</td>
+                      <td className="phone_number">{team.approved}</td>
+                    </tr>
+                  ))}
+                {data.roleId === 2 &&
+                  memberObjects?.map((memberData, idx) => (
+                    <tr key={idx}>
+                      <td className="id">{idx + 1}</td>
+                      <td className="center_name">{memberData.name}</td>
+                      <td className="center_name">{memberData.email}</td>
+                      <td className="owner_name">{memberData.vkyc}</td>
+                      <td className="phone_number">{memberData.approved}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
